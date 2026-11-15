@@ -19,6 +19,7 @@ tıkanmalıdır. 3D görselleştirme bu çekirdeğin üzerine, kuralları etkile
 | Proje adı | **CubeHaul3D** (depo adıyla aynı) | Unity projesi depo kökünde; asmdef/namespace önekleri `CubeHaul.*`; JSON `format` değerleri `cubehaul.*` |
 | Kamera | **Ortografik** | Tüm küpler ekranda aynı boyda; okunabilirlik riski (R-17) azalır; derinlik hissi ışık ve eğik açıyla verilir (§3.5) |
 | TS bulguları F-2, F-3, F-4 ([TS_BASELINE §4](TS_BASELINE.md#4-bulgular)) | **Aynen korunur** | Boş bölümün `playing` başlaması, `Collect`'in claim aramaması ve `minBlock`/`maxBlock` sınırları C#'ta TS ile aynı; düzeltmeler golden eşitlikten sonra, ayrı değişiklikte |
+| Bölüm formatı ([LEVEL_FORMAT](LEVEL_FORMAT.md)) | **LevelDefinition v1**: düz `cells`, `Crate[][]` kolonlar, statik `tray` ile `generation` ayrı | Unity'den bağımsız C# okuyucu; `JsonUtility` yok; TS ve C# aynı kurallar |
 | "Your image" | **İlk sürümde yok** | Galeri eklentisi, izinler ve çalışma zamanında bölüm üretimi v1 kapsamından çıktı (§2.3, §8) |
 
 ---
@@ -531,8 +532,12 @@ okur; `Tools/` ve belgeler etkilenmez). `Library/`, `Temp/`, `Logs/`, `UserSetti
 CubeHaul3D/                         (bu depo = Unity 6.3 LTS projesi, URP)
 ├─ docs/
 │  ├─ PORTING_PLAN.md               Bu belge
-│  └─ TS_BASELINE.md                TS referans test raporu ve golden değerler
+│  ├─ TS_BASELINE.md                TS referans test raporu ve golden değerler
+│  └─ LEVEL_FORMAT.md               LevelDefinition v1 formatı
+├─ LevelFormat/                     Bölüm formatı: JSON Schema, örnekler, iki dilin ortak test verileri (Görev 03)
 ├─ Tools/
+│  ├─ level-format/                 TS okuyucu/doğrulayıcı ve kanonik yazıcı (Görev 03)
+│  ├─ dotnet/                       CubeHaul.Data'yı Unity dışında derleyen ve test eden .NET projeleri
 │  ├─ ts-reference/                 TS referans testleri (Görev 02, docs/TS_BASELINE.md); kaynağı pinli commit'ten okur
 │  └─ ts-export/                    Node betiği: kaynak TS'yi pinli commit'ten okur, JSON + golden fixture üretir
 │                                   (TS projesini değiştirmez; ayrı klon/alt modül üzerinden içe aktarır)
@@ -726,7 +731,7 @@ classDiagram
 | Sınıf | Tür | Görev |
 |---|---|---|
 | `GameBootstrap` | MonoBehaviour | Servisleri kurar, ilk bölümü yükler (geliştirme için komut satırı/Inspector'dan bölüm seçimi, `?level=` karşılığı) |
-| `LevelRepository` | C# servis | `catalog.json` + seviye `TextAsset`'leri → `JsonUtility` → `Data.LevelMapper` → `LevelSpec` + hazır `Level` |
+| `LevelRepository` | C# servis | Katalog + seviye `TextAsset`'leri → `LevelDefinitionReader.Read` → `LevelDefinition` → `Core.Level` |
 | `LevelLibrary` | ScriptableObject | Katalog ve seviye `TextAsset` referansları (Android'de `StreamingAssets` okuma karmaşasından kaçınmak için) |
 | ~~`LevelBuildService`~~ | — | *v1 sonrası:* özel resim için `Task.Run(LevelGenerator.Build)`, iptal, ana iş parçacığına aktarma |
 | ~~`ImagePickerService`~~ | — | *v1 sonrası:* galeriden resim, `Texture2D` → GPU ile küçültme → `byte[] rgba` |
@@ -828,7 +833,7 @@ C# yolları `Assets/CubeHaul/Scripts/` altına görelidir. "—" = taşınmaz.
 | `levels/art.ts` | `Sketch`, 10 resim fonksiyonu | — → `Tools/ts-export` | — | Çıktı: `Content/Levels/*.json` (R-04) |
 | | `LevelSpec` | `Levels/LevelSpec.cs` | `sealed class LevelSpec` | JSON'dan |
 | | `builtInLevels` | `App/LevelRepository.cs` | `LevelRepository.LoadBuiltIn()` | JSON → `LevelSpec` + `Level` |
-| (yeni) | JSON şeması | `Data/LevelFileDto.cs`, `Data/CatalogDto.cs`, `Data/LevelMapper.cs`, `Data/LevelValidator.cs` | DTO'lar, eşleyici, doğrulayıcı | §6 |
+| (yeni) | JSON formatı | `Data/LevelDefinition.cs`, `Data/LevelDefinitionReader.cs`, `Data/LevelValidator.cs`, `Data/LevelIssue.cs`, `Data/Json/JsonParser.cs` | Model, okuyucu, doğrulayıcı, JSON ayrıştırıcı (**yazıldı**, Görev 03) | [LEVEL_FORMAT](LEVEL_FORMAT.md) |
 | `levels/worker.ts` | `BuildRequest`, `BuiltMessage`, `onmessage` | — | — | v1'de çalışma zamanı üretimi yok |
 | `main.ts` | zorluk eşikleri | `Levels/DifficultyLabel.cs` | `DifficultyLabel.From(double)` | B-25 |
 
@@ -898,7 +903,7 @@ Oklar "bağlıdır" anlamındadır. Saf derlemeler (üst sıra) `UnityEngine`'e 
 flowchart BT
   Core["CubeHaul.Core<br/>Board · Game · Level · Picture · Crate"]
   Levels["CubeHaul.Levels<br/>Mulberry32 · LevelGenerator · GreedySolver · RandomPlayer · ImageQuantizer"]
-  Data["CubeHaul.Data<br/>LevelFileDto · LevelMapper · LevelValidator"]
+  Data["CubeHaul.Data<br/>LevelDefinition · LevelDefinitionReader · LevelValidator"]
   Sim["CubeHaul.Simulation<br/>FieldLayout · RoadMap · DispatchScheduler · TruckFleet · GameSession"]
   App["CubeHaul.App<br/>GameBootstrap · LevelRepository · LevelLibrary · GameController"]
   View["CubeHaul.View<br/>BoardView · TruckView · TrayView · SlotView · HudView · CameraRig · InputRouter"]
@@ -1037,7 +1042,7 @@ G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç
 ### 5.4 JSON veri testleri (EditMode)
 
 - Her katalog girdisinin dosyası var, `id` benzersiz, sıra §1.3 ile aynı.
-- Şema doğrulaması (§6.4): `rows` sayısı = `height`, her satır uzunluğu = `width`, palet anahtarları benzersiz ve
+- Şema doğrulaması ([LEVEL_FORMAT §5](LEVEL_FORMAT.md#5-doğrulama-kuralları); Görev 03'te TS ve C# için yazıldı). Eski taslak: `rows` sayısı = `height`, her satır uzunluğu = `width`, palet anahtarları benzersiz ve
   tek karakter, `.` palet anahtarı değil, renkler `#rrggbb`, `edges` geçerli, kolon sayısı = `generation.columns`.
 - **Toplam eşitliği:** her renk için kasa sayıları toplamı = resimdeki küp sayısı (B-26); kasa `id`'leri benzersiz.
 - **Çözülebilirlik:** her yerleşik bölüm `GreedySolver` ile kazanılıyor; `difficulty.winRate` yeniden hesaplanınca aynı.
@@ -1060,139 +1065,24 @@ G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç
 
 ## 6. Bölüm verisi için JSON formatı
 
-### 6.1 Tasarım ilkeleri
+> **Görev 03 ile kesinleşti:** format, şema, örnekler, doğrulama kuralları ve sürümleme
+> **[`LEVEL_FORMAT.md`](LEVEL_FORMAT.md)** belgesindedir. Bu bölümdeki ilk taslağın (karakter satırları, `JsonUtility`
+> uyumlu `[{ "crates": [...] }]` kolonları, `format` alanı) yerini almıştır.
 
-1. **`JsonUtility` ile doğrudan okunabilir:** iç içe dizi yok (`[[...]]` yerine `[{ "crates": [...] }]`), `null` yok,
-   sözlük yok, kök nesne. Enum'lar metin olarak tutulur ve elle ayrıştırılır (`JsonUtility` enum'ları sayı olarak yazar).
-   Aynı dosyalar Newtonsoft ile de okunabilir.
-2. **İnsan tarafından okunabilir ve diff'lenebilir:** resim, karakter satırları olarak (`art.ts`'deki gibi).
-3. **Pişirilmiş tepsi + üretim tarifi birlikte:** oyun `tray`'i doğrudan kullanır (çalışma zamanında üretim yok);
-   `generation` ise yeniden üretim ve doğrulama içindir.
-4. **Sürümlü:** `schemaVersion` alanı; okuyucu bilmediği büyük sürümü reddeder.
+Özet:
 
-### 6.2 Dosyalar
-
-```
-Assets/CubeHaul/Content/Levels/
-  catalog.json
-  level_01_strawberry.json
-  level_02_mushroom.json
-  …
-  level_10_watermelon.json
-```
-
-**`catalog.json`**
-
-```json
-{
-  "format": "cubehaul.catalog",
-  "schemaVersion": 1,
-  "levels": [
-    { "id": "strawberry", "file": "level_01_strawberry" },
-    { "id": "mushroom", "file": "level_02_mushroom" }
-  ]
-}
-```
-
-### 6.3 Bölüm dosyası
-
-Tam ve geçerli bir örnek (testlerdeki 3×3 "ring" bölümü; yerleşik bölümler aynı yapıda, yalnızca daha büyük):
-
-```json
-{
-  "format": "cubehaul.level",
-  "schemaVersion": 1,
-  "id": "ring",
-  "name": "Ring",
-  "picture": {
-    "width": 3,
-    "height": 3,
-    "empty": ".",
-    "palette": [
-      { "key": "R", "hex": "#ff0000" },
-      { "key": "B", "hex": "#0000ff" }
-    ],
-    "rows": [
-      "RRR",
-      "RBR",
-      "RRR"
-    ]
-  },
-  "rules": {
-    "edges": "all",
-    "slotCount": 5
-  },
-  "generation": {
-    "seed": 11,
-    "shuffle": 0.2,
-    "targetWinRate": 1.0,
-    "columns": 5,
-    "bigChance": 0.15,
-    "minBlock": 0,
-    "maxBlock": 0,
-    "candidates": 16
-  },
-  "tray": {
-    "columns": [
-      { "crates": [ { "id": 0, "color": 0, "count": 8 } ] },
-      { "crates": [ { "id": 1, "color": 1, "count": 1 } ] }
-    ]
-  },
-  "difficulty": {
-    "winRate": 1.0
-  },
-  "provenance": {
-    "generator": "cube-hunt-ts",
-    "sourceCommit": "559dfd90977b1e15367bd7de25aec9fbae4b52f6",
-    "exportedAt": "2026-11-15T00:00:00Z",
-    "greedySolved": true,
-    "greedyTicks": 0,
-    "greedyTaps": 0
-  }
-}
-```
-
-### 6.4 Alan başvurusu ve doğrulama kuralları
-
-| Alan | Tür | Zorunlu | Anlam / kural |
-|---|---|---|---|
-| `format` | string | evet | `"cubehaul.level"` |
-| `schemaVersion` | int | evet | Şu an `1` |
-| `id` | string | evet | `[a-z0-9_]+`, katalogda benzersiz |
-| `name` | string | evet | Görünen ad (TS `Picture.name`) |
-| `picture.width`, `picture.height` | int | evet | 1–64 (mevcut en büyük 46) |
-| `picture.empty` | string | evet | Tek karakter, saydam hücre; varsayılan `"."` |
-| `picture.palette[]` | `{key, hex}` | evet | Sıra = `ColorId`. `key` tek ASCII karakter, benzersiz, `empty`'den farklı. `hex` = `#rrggbb` (sRGB, küçük harf) |
-| `picture.rows[]` | string[] | evet | `rows[0]` **en üst** satır (rampadan en uzak). Hücre indeksi `y*width + x` (B-01) |
-| `rules.edges` | string | evet | `"all"` / `"sides"` / `"bottom"` (ordinal, küçük harf) |
-| `rules.slotCount` | int | evet | Başlangıç slot sayısı (TS varsayılan 5) |
-| `generation.seed` | int | evet | 0 … 2³¹−1 |
-| `generation.shuffle` | double | evet | ≥ 0 |
-| `generation.targetWinRate` | double | evet | 0–1 (TS varsayılan 1) |
-| `generation.columns` | int | evet | TS varsayılan 5 |
-| `generation.bigChance` | double | evet | TS varsayılan 0.15 |
-| `generation.minBlock`, `maxBlock` | int | evet | **0 = otomatik** (TS'de `undefined`; B-22 formülleri) |
-| `generation.candidates` | int | evet | TS varsayılan 16 |
-| `tray.columns[].crates[]` | `{id, color, count}` | evet | `crates[0]` kolonun **önü**. `color` paletteki indeks, `count ≥ 1`, `id` benzersiz |
-| `difficulty.winRate` | double | evet | Seçilen tepsinin ölçülen rastgele oyuncu kazanma oranı; etiket bundan türetilir (B-25) |
-| `provenance.*` | çeşitli | hayır | Kaynak ve doğrulama bilgisi; oyun okumaz, testler ve araçlar okur |
-
-Ek kurallar: her renk için `Σ count` = o rengin küp sayısı; palette kullanılmayan renk olmamalı (uyarı);
-tüm sayılar JSON sayısı (metin değil), ondalık ayırıcı nokta.
-
-**Özel resim ("Your image", v1 sonrası) bölümleri** aynı biçimi kullanır: `palette` anahtarları `0–9a–z`, `tray` ve `difficulty`
-çalışma zamanında `LevelBuildService` tarafından doldurulur. Böylece ileride kaydetme/paylaşma da aynı formatla yapılır.
-
-### 6.5 Dosyaların üretimi
-
-`Tools/ts-export` betiği kaynak TS'yi değiştirmeden içe aktarır ve:
-1. `builtInLevels()` → her resmi `rows`'a çevirir (palet anahtarı = `art.ts`'deki harf, sıra = `Object.keys` sırası),
-2. `buildLevel()` → `tray` ve `difficulty.winRate`,
-3. `solveGreedy()` → `provenance`,
-4. §5.2'deki golden fixture'ları yazar.
-
-C# üretici G-05/G-06'yı geçtikten sonra, aynı dosyaları Unity içinden bir Editör aracıyla (`Tools > CubeHaul > Rebake Levels`)
-yeniden pişirmek mümkün olur; o noktadan sonra TS'ye bağımlılık kalkar.
+- **LevelDefinition v1:** `schemaVersion`, `levelId`, `themeId`, `name`, `picture` (`width`, `height`, düz `cells`
+  dizisi — `-1` boş, aksi hâlde palet indeksi —, `palette`), `edges`, `slotCount`, statik `tray.columns`
+  (`Crate[][]`), ayrı `generation` ayarları (`seed`, `shuffle`, …) ve `difficultyMetadata`.
+- **Statik ve üretim ayrı:** `tray` varsa oyun onu olduğu gibi oynar; yalnızca `generation` varsa tepsi üretilir.
+  En az biri zorunlu.
+- **Unity'den bağımsız:** C# okuyucu (`CubeHaul.Data`) kendi JSON ayrıştırıcısıyla çalışır; `JsonUtility` ve
+  Newtonsoft kullanılmaz (R-13, R-15). Kaynak Unity dışında `netstandard2.1` + C# 9 ile derlenip test edilir.
+- **İki dilde aynı doğrulama:** TS (`Tools/level-format`) ve C# (`Assets/CubeHaul/Scripts/Data`) okuyucuları aynı
+  kuralları aynı sırayla uygular ve aynı kodları aynı JSON Pointer yollarında bildirir; `LevelFormat/fixtures`
+  altındaki ortak test verileri ikisini birlikte bağlar.
+- **Katalog** (bölüm sırası, `levelId` benzersizliği) ve Unity'ye yükleme (`LevelRepository`, `LevelLibrary`) ayrı
+  bir görevin konusudur.
 
 ---
 
@@ -1219,9 +1109,9 @@ portlanmadan önce yazılır.
 | R-10 | **Piksel cinsinden epsilon'lar.** `RoadMap.along` ve `roadPath` 0.5 px eşik kullanıyor; birimler dünya metresine çevrilirse rota yanlış kenarı seçer. | O | O | `RoadMap` tasarım pikselinde kalır; dünyaya yalnızca `WorldMapper` çevirir |
 | R-11 | **Mobil performans/GC.** `opensUp` her çağrıda tahta boyunda dizi ayırıyor ve her karede her slot için çağrılıyor; `Tick` dizi döndürüyor; 2116 ayrı `GameObject`/materyal çizim çağrısı. | Y | O | Tampon yeniden kullanımı, sürüm sayaçlı önbellek; instancing tek materyal; nesne havuzları; Profiler bütçesi |
 | R-12 | **Üretim süresi.** Masaüstünde 36–482 ms; IL2CPP + düşük segment telefonda saniyeler sürebilir; ana iş parçacığında donma. | O | O | Yerleşik bölümler pişirilmiş; özel resim `Task.Run` + "Building level…" göstergesi + iptal |
-| R-13 | **`JsonUtility` kısıtları.** İç içe dizi, `null`, sözlük, metin enum desteklenmez; opsiyonel alanlar varsayılana düşer. | Y | O | Şema buna göre tasarlandı (§6.1); `minBlock = 0` = otomatik; doğrulayıcı |
+| R-13 | **`JsonUtility` kısıtları.** İç içe dizi, `null`, sözlük, metin enum desteklenmez; opsiyonel alanlar varsayılana düşer. | Y | O | **Giderildi (Görev 03):** `JsonUtility` kullanılmıyor; `CubeHaul.Data` kendi katı JSON ayrıştırıcısıyla okuyor ([LEVEL_FORMAT §4](LEVEL_FORMAT.md#4-okuma-sırası-ve-iki-dilde-aynı-davranış)) |
 | R-14 | **Türkçe yerel ayar (tr-TR).** `"SIDES".ToLower()` → `"sıdes"`; `double.Parse("0.2")` ondalık virgül bekler; `ToString()` virgüllü yazar. Hedef kitlede yaygın. | Y | Y | Her yerde `ToLowerInvariant`, `StringComparison.Ordinal`, `CultureInfo.InvariantCulture`; enum'lar için `switch` ile ordinal ayrıştırma; testler tr-TR altında da |
-| R-15 | **IL2CPP kod ayıklama / AOT.** Yansımaya dayalı JSON (Newtonsoft) ve jenerikler iOS'ta çalışma zamanında kırılabilir. | O | O | `JsonUtility` + `[Serializable]` DTO'lar; Newtonsoft gerekirse `link.xml`; cihazda IL2CPP derlemesiyle test |
+| R-15 | **IL2CPP kod ayıklama / AOT.** Yansımaya dayalı JSON (Newtonsoft) ve jenerikler iOS'ta çalışma zamanında kırılabilir. | O | O | Bölüm verisi yansıma kullanmayan kendi ayrıştırıcımızla okunuyor (Görev 03); başka yerde Newtonsoft gerekirse `link.xml`; cihazda IL2CPP derlemesiyle test |
 | R-16 | **Renk uzayı.** URP projeleri Linear renk uzayında; `#rrggbb` sRGB'dir. Instancing dizilerine (`SetVectorArray`) ham değer verilirse renkler soluk/yanlış görünür; ışık/gölge benzer renkleri birbirine yaklaştırabilir (oyun renk ayırt etmeye dayanıyor). | O | Y | `ColorUtility.TryParseHtmlString` + gerektiğinde `.linear`; unlit/az gölgeli küp materyali; renk körlüğü simülasyonuyla kontrol |
 | R-17 | **3D okunabilirlik.** 46×46 tarlada küpler telefonda küçük; kamyonlar küplerin arkasında kalabilir; ortografik kamerada derinlik algısı zayıflar. | O | Y | **Ortografik kamera seçildi** (uzak satırlar küçülmez); eğik açı + gölge/AO ile derinlik; kamyonlar küplerden yüksekte okunur boyutta; küp boyu ≥ ~7 dp hedefi; gri kutu aşamasında erken kullanıcı testi |
 | R-18 | **Ekran oranları ve güvenli alan.** TS sabit 420×900 tasarım; telefonlar 16:9 – 21:9, çentik/Dynamic Island. | Y | O | `CameraRig` + Canvas Scaler + `Screen.safeArea`; cihaz matrisi |
@@ -1246,7 +1136,7 @@ Her aşama bir öncekinin testleri yeşilken başlar.
 | Aşama | İçerik | Bitti sayılır |
 |---|---|---|
 | **0 — Bu belge** | Analiz, mimari, test planı, JSON şeması, riskler | Bu belgenin onayı |
-| **1 — Dışa aktarma aracı** | `Tools/ts-export`: 10 bölüm JSON'u + golden fixture'lar (TS'ye dokunmadan) | JSON'lar §6.4 doğrulamasından geçer |
+| **1 — Dışa aktarma aracı** | `Tools/ts-export`: 10 bölüm JSON'u + golden fixture'lar (TS'ye dokunmadan) | JSON'lar [LEVEL_FORMAT](LEVEL_FORMAT.md) doğrulamasından geçer |
 | **2 — Unity iskeleti** | Unity 6.3 LTS URP projesi, asmdef'ler, Test Framework, CI'da EditMode koşusu | Boş test paketi CI'da yeşil |
 | **3 — Core portu** | `Board`, `Game` + §5.1 kural testleri | 17 tahta/oyun testi yeşil, G-08 yeşil |
 | **4 — Levels portu** | RNG, üretici, çözücü, quantize | G-01…G-07, G-10 yeşil; §1.3 tablosu birebir |

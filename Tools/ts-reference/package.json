@@ -9,10 +9,12 @@
     "test": "node scripts/fetch-source.mjs && vitest run",
     "test:source": "node scripts/fetch-source.mjs && vitest run vendor/cube-hunt/tests",
     "test:new": "node scripts/fetch-source.mjs && vitest run tests",
-    "typecheck": "node scripts/fetch-source.mjs && tsc --noEmit"
+    "typecheck": "node scripts/fetch-source.mjs && tsc --noEmit",
+    "export:examples": "node scripts/fetch-source.mjs && tsx scripts/export-level-examples.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
+    "tsx": "^4.20.6",
     "typescript": "5.9.3",
     "vitest": "5.1.0"
   }

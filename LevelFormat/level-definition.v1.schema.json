@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/yunusemreerinc/CubeHaul3D/LevelFormat/level-definition.v1.schema.json",
+  "title": "CubeHaul3D LevelDefinition v1",
+  "description": "Structural schema for editors and generic tools. The rules that relate fields to each other (cells length = width * height, cell and crate colors within the palette, truck totals per color, difficulty label, column count) are checked by the reference validators; see docs/LEVEL_FORMAT.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "levelId", "themeId", "name", "picture", "edges", "slotCount"],
+  "anyOf": [{ "required": ["tray"] }, { "required": ["generation"] }],
+  "dependentRequired": { "difficultyMetadata": ["tray"] },
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "levelId": { "$ref": "#/$defs/id" },
+    "themeId": { "$ref": "#/$defs/id" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "\\S" },
+    "picture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "cells", "palette"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 1, "maximum": 64 },
+        "height": { "type": "integer", "minimum": 1, "maximum": 64 },
+        "palette": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }
+        },
+        "cells": {
+          "description": "Row-major, width * height entries, row 0 at the top. -1 = EMPTY, otherwise a palette index.",
+          "type": "array",
+          "items": { "type": "integer", "minimum": -1, "maximum": 31 }
+        }
+      }
+    },
+    "edges": { "enum": ["bottom", "sides", "all"] },
+    "slotCount": { "type": "integer", "minimum": 1, "maximum": 6 },
+    "tray": {
+      "description": "Static tray: the exact crates to play. columns[c][0] is the front crate of column c.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["columns"],
+      "properties": {
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "items": { "type": "array", "items": { "$ref": "#/$defs/crate" } }
+        }
+      }
+    },
+    "generation": {
+      "description": "Generation settings (cube-hunt BuildOptions). Omitted optional fields take the documented defaults.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["seed", "shuffle"],
+      "properties": {
+        "seed": { "type": "integer", "minimum": 0, "maximum": 2147483647 },
+        "shuffle": { "type": "number", "minimum": 0, "maximum": 100 },
+        "targetWinRate": { "type": "number", "minimum": 0, "maximum": 1, "default": 1 },
+        "columns": { "type": "integer", "minimum": 1, "maximum": 10, "default": 5 },
+        "bigChance": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.15 },
+        "minBlock": { "type": "integer", "minimum": 1, "maximum": 9999 },
+        "maxBlock": { "type": "integer", "minimum": 1, "maximum": 9999 },
+        "candidates": { "type": "integer", "minimum": 1, "maximum": 1000, "default": 16 }
+      }
+    },
+    "difficultyMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["winRate", "label"],
+      "properties": {
+        "winRate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "label": { "enum": ["Easy", "Medium", "Hard", "Expert"] },
+        "randomGames": { "type": "integer", "minimum": 1, "maximum": 10000 },
+        "greedy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["solved", "ticks", "taps"],
+          "properties": {
+            "solved": { "type": "boolean" },
+            "ticks": { "type": "integer", "minimum": 0 },
+            "taps": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "extensions": { "type": "object" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$" },
+    "crate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "color", "count"],
+      "properties": {
+        "id": { "type": "integer", "minimum": 0, "maximum": 999999 },
+        "color": { "type": "integer", "minimum": 0 },
+        "count": { "type": "integer", "minimum": 1, "maximum": 9999 }
+      }
+    }
+  }
+}
