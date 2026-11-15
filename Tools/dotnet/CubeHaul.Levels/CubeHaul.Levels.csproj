@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Builds the Unity sources in Assets/_CubeHaul/Levels/Scripts outside Unity, against .NET Standard 2.1 (Unity's API compatibility
+    level) with no UnityEngine reference, to prove the assembly is engine-free. Mirrors CubeHaul.Levels.asmdef.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>CubeHaul.Levels</AssemblyName>
+    <RootNamespace>CubeHaul.Levels</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../../Assets/_CubeHaul/Levels/Scripts/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../CubeHaul.Domain/CubeHaul.Domain.csproj" />
+  </ItemGroup>
+</Project>

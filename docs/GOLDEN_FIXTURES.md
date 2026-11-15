@@ -33,8 +33,8 @@ bağlı hiçbir girdi kullanılmaz.
 
 | Yol | İçerik | Plan kimliği |
 |---|---|---|
-| `Assets/CubeHaul/Content/Levels/level-NN-<id>.level.json` | 10 yerleşik bölüm, [LevelDefinition v1](LEVEL_FORMAT.md) olarak: resim matrisi (`cells`), palet, `buildLevel`'in seçtiği kolonlar (`tray.columns`), üretim ayarları ve zorluk | G-02, G-06 |
-| `Assets/Tests/Fixtures/Golden/rng.json` | `mulberry32` — 6 tohum × ilk 256 değer, uint32 olarak | G-01 |
+| `Assets/_CubeHaul/Levels/Content/level-NN-<id>.level.json` | 10 yerleşik bölüm, [LevelDefinition v1](LEVEL_FORMAT.md) olarak: resim matrisi (`cells`), palet, `buildLevel`'in seçtiği kolonlar (`tray.columns`), üretim ayarları ve zorluk | G-02, G-06 |
+| `Assets/_CubeHaul/Tests/Fixtures/Golden/rng.json` | `mulberry32` — 6 tohum × ilk 256 değer, uint32 olarak | G-01 |
 | `…/Golden/peel-layers.json` | Her bölümün kendi kenar türüyle `peelLayers` sonucu | G-03 |
 | `…/Golden/generate.json` | Her bölüm için `generateLevel`, tohum {1, 77} × karıştırma {0, 1.5}: kasa sayısı, kolon uzunlukları, öndeki kasalar, kolon özeti | G-05 |
 | `…/Golden/build.json` | `buildLevel`'in tam izi: denenen her aday (tohum, kolon özeti, açgözlü çözücü sonucu, 24 rastgele oyunun tek tek sonucu, kazanma oranı), seçilen aday | G-06, G-07 |
@@ -120,7 +120,7 @@ h = 2166136261
 for each int v: for k in 0..3: h = (h XOR ((v >>> 8k) AND 0xFF)) * 16777619  (mod 2^32)
 ```
 
-C# karşılığı `Tools/dotnet/CubeHaul.Data.Tests/GoldenFixtureTests.cs › Fnv1a`; iki dilin aynı sonucu verdiği test edilir.
+C# karşılığı `Tools/dotnet/CubeHaul.Tests/GoldenFixtureTests.cs › Fnv1a`; iki dilin aynı sonucu verdiği test edilir.
 
 **`columnsSha256`** (generate/build): `JSON.stringify(columns)` metninin SHA-256'sı — anahtarlar `id, color, count`
 sırasında, boşluksuz, örn. `[[{"id":2,"color":0,"count":10},…],…]`.
@@ -130,7 +130,7 @@ sırasında, boşluksuz, örn. `[[{"id":2,"color":0,"count":10},…],…]`.
 | Takım | Ne sınar |
 |---|---|
 | `Tools/ts-reference › tests/golden.test.ts` (28) | Diskteki dosyalar dışa aktarıcının çıktısıyla bayt bayt aynı; eski dosya yok; ikinci üretim aynı; manifest doğru; 10 bölüm geçerli ve resmi, paleti, tepsisi TS'tekiyle aynı; `rng.json` = `mulberry32`; `build.json`'da seçilen aday bölüm dosyasının tepsisi ve oyun sonuçlarının ortalaması kazanma oranı; **her senaryo yalnızca kaydedilen hamlelerden yeni bir `Game` üzerinde birebir aynı durumları veriyor** ve her adımda invariantlar sağlanıyor |
-| `Tools/dotnet › GoldenFixtureTests` (25) | Manifest SHA-256'ları ve boyutları tutuyor (satır sonu değişirse yakalar), 10 bölüm C# okuyucusuyla hatasız okunuyor, tüm dosyalar ayrıştırılıyor, senaryolar iyi biçimli, `fnv1a` tanımı iki dilde aynı |
+| `Tools/dotnet/CubeHaul.Tests › GoldenFixtureTests` (25) | Manifest SHA-256'ları ve boyutları tutuyor (satır sonu değişirse yakalar), 10 bölüm C# okuyucusuyla hatasız okunuyor, tüm dosyalar ayrıştırılıyor, senaryolar iyi biçimli, `fnv1a` tanımı iki dilde aynı |
 
 `.gitattributes` JSON dosyalarını LF satır sonuyla sabitler. Windows'ta git'in satır sonlarını CRLF'e çevirmesi
 SHA-256'ları bozacağı için bu gereklidir.

@@ -1,0 +1,21 @@
+{
+    "name": "CubeHaul.Presentation",
+    "rootNamespace": "CubeHaul.Presentation",
+    "references": [
+        "CubeHaul.Domain",
+        "CubeHaul.Levels",
+        "CubeHaul.Gameplay",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -22,8 +22,8 @@ export const SOURCE = {
   repo: "https://github.com/yunusemreerinc/cube-hunt",
   commit: "559dfd90977b1e15367bd7de25aec9fbae4b52f6",
 };
-export const LEVELS_DIR = "Assets/CubeHaul/Content/Levels";
-export const GOLDEN_DIR = "Assets/Tests/Fixtures/Golden";
+export const LEVELS_DIR = "Assets/_CubeHaul/Levels/Content";
+export const GOLDEN_DIR = "Assets/_CubeHaul/Tests/Fixtures/Golden";
 
 /** levelId and file name of each built-in level, in game order. */
 export const LEVEL_IDS = [
