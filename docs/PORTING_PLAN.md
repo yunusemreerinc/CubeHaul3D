@@ -529,8 +529,10 @@ okur; `Tools/` ve belgeler etkilenmez). `Library/`, `Temp/`, `Logs/`, `UserSetti
 ```
 CubeHaul3D/                         (bu depo = Unity 6.3 LTS projesi, URP)
 ├─ docs/
-│  └─ PORTING_PLAN.md               Bu belge
+│  ├─ PORTING_PLAN.md               Bu belge
+│  └─ TS_BASELINE.md                TS referans test raporu ve golden değerler
 ├─ Tools/
+│  ├─ ts-reference/                 TS referans testleri (Görev 02, docs/TS_BASELINE.md); kaynağı pinli commit'ten okur
 │  └─ ts-export/                    Node betiği: kaynak TS'yi pinli commit'ten okur, JSON + golden fixture üretir
 │                                   (TS projesini değiştirmez; ayrı klon/alt modül üzerinden içe aktarır)
 ├─ Packages/manifest.json           URP, Input System, Test Framework, uGUI/TextMeshPro, sabit sürümler
@@ -1231,6 +1233,7 @@ portlanmadan önce yazılır.
 | R-25 | **Sürüm ve mağaza gereksinimleri.** Unity 6.3 LTS paket sürümleri, Android hedef API seviyesi (Google Play'in güncel şartı), ARM64 + IL2CPP zorunluluğu, iOS asgari sürümü. | O | O | `manifest.json`'da sabit sürümler; CI'da iki platform derlemesi; mağaza şartları yayın öncesi yeniden kontrol |
 | R-27 | **İki mesafe ölçütünün "düzeltilmesi".** `wayIn` yolu (derinlik, yol) sözlük sırasıyla seçer, `pickTarget` küpleri toplamla karşılaştırır (I-08). Tutarsız görünür; portlarken birleştirmek hedef sırasını değiştirir. | O | Y | Kodda açıklama + `TargetingTests` + G-08 izleri |
 | R-28 | **Kare içi çağrı sırası.** `tick` → rampa → sürüş/`collect` sırası değişirse (ör. sürüşün önce çalışması) küpler bir adım erken claim edilir, oyun akışı değişir (I-18). | O | Y | `GameSession.Advance` sırası sabit; G-11 tarayıcı simülasyonu eşdeğerlik testi |
+| R-29 | **Hız düğmesi oyunu değiştirir** ([TS_BASELINE F-1](TS_BASELINE.md#f-1--hız-düğmesi-kural-çağrılarının-sırasını-değiştirir-tasarım-bulgusu-etkisi-var)). Tarayıcıda kare süresi hızla çarpılıp kasa uçuşu gerçek zamanda kaldığı için 2x/3x farklı claim sırası üretir (ölçümde ilk 3–88 kamyonda ayrışma). `main.ts` zamanlaması birebir kopyalanırsa port da cihaza ve hıza bağlı olur. | Y | O | Sabit adımlı simülasyon; 2x/3x = kare başına 2/3 sabit adım → oyun kare hızından ve cihazdan bağımsız olur (hızlar arası fark kalır: oyuncu ve uçuş gerçek zamanlı, B-32). Golden eşitlik yalnızca kurallar ve üretim için aranır; G-11, `Tools/ts-reference/tests/appModel.ts` ile kurulur |
 | R-26 | **Paket kimliği.** Ad `CubeHaul3D` olarak kesinleşti; uygulama paket kimliği (`com.<şirket>.cubehaul3d`) mağazaya çıktıktan sonra değiştirilemez. | D | O | Paket kimliği ilk Unity commit'inden önce kesinleşmeli (§9) |
 
 ---
