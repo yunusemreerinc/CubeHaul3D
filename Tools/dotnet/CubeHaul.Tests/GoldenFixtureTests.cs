@@ -92,7 +92,7 @@ namespace CubeHaul.Tests.LevelFormat
                 Assert.That(level.Picture.Cells.Count(c => c >= 0), Is.EqualTo(cubes[i]), ids[i]);
                 Assert.That(level.Tray.Columns.Sum(c => c.Length), Is.EqualTo(crates[i]), ids[i]);
                 Assert.That(level.Generation, Is.Not.Null);
-                Assert.That(level.Difficulty, Is.Not.Null);
+                Assert.That(level.DifficultyMetadata, Is.Not.Null);
             }
         }
 

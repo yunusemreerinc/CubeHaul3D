@@ -23,6 +23,8 @@ namespace CubeHaul.Levels
         public const string NoTrayOrGeneration = "NO_TRAY_OR_GENERATION";
         public const string DifficultyWithoutTray = "DIFFICULTY_WITHOUT_TRAY";
         public const string DifficultyLabelMismatch = "DIFFICULTY_LABEL_MISMATCH";
+        // repository (C# only: a set of level files, not one file)
+        public const string DuplicateLevelId = "DUPLICATE_LEVEL_ID";
         // warnings
         public const string UnusedPaletteColor = "UNUSED_PALETTE_COLOR";
         public const string DuplicatePaletteColor = "DUPLICATE_PALETTE_COLOR";
@@ -59,6 +61,30 @@ namespace CubeHaul.Levels
             Level = level;
             Errors = errors;
             Warnings = warnings;
+        }
+
+        /// <summary>
+        /// A readable report, one issue per line, e.g.
+        /// <code>
+        /// 2 errors:
+        ///   - CELLS_LENGTH at /picture/cells: has 8 cells, expected width * height = 9
+        ///   - DUPLICATE_CRATE_ID at /tray/columns/1/0/id: crate id 0 is used more than once
+        /// </code>
+        /// </summary>
+        public string Describe()
+        {
+            var sb = new System.Text.StringBuilder();
+            void Section(IReadOnlyList<LevelIssue> issues, string one, string many)
+            {
+                if (issues.Count == 0) return;
+                if (sb.Length > 0) sb.Append('\n');
+                sb.Append(issues.Count).Append(' ').Append(issues.Count == 1 ? one : many).Append(':');
+                foreach (LevelIssue i in issues)
+                    sb.Append("\n  - ").Append(i.Code).Append(" at ").Append(i.Path.Length == 0 ? "(root)" : i.Path).Append(": ").Append(i.Message);
+            }
+            Section(Errors, "error", "errors");
+            Section(Warnings, "warning", "warnings");
+            return sb.Length == 0 ? "no issues" : sb.ToString();
         }
     }
 }

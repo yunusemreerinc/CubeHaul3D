@@ -16,7 +16,8 @@ namespace CubeHaul.Levels.Json
     /// <summary>
     /// A parsed JSON value. Numbers are IEEE doubles, as in JavaScript, so both languages see the same values.
     /// Object members keep the order of their first appearance; a repeated key keeps that place and takes the
-    /// last value, which is what JavaScript's JSON.parse does.
+    /// last value, which is what JavaScript's JSON.parse does. Immutable once built: only the parser and the
+    /// writer in this assembly add members, so a JsonValue can be shared freely.
     /// </summary>
     public sealed class JsonValue
     {
@@ -40,8 +41,8 @@ namespace CubeHaul.Levels.Json
         public static JsonValue FromBoolean(bool value) => new JsonValue(JsonKind.Boolean) { Boolean = value };
         public static JsonValue FromNumber(double value) => new JsonValue(JsonKind.Number) { Number = value };
         public static JsonValue FromString(string value) => new JsonValue(JsonKind.String) { String = value };
-        public static JsonValue NewArray() => new JsonValue(JsonKind.Array);
-        public static JsonValue NewObject() => new JsonValue(JsonKind.Object);
+        internal static JsonValue NewArray() => new JsonValue(JsonKind.Array);
+        internal static JsonValue NewObject() => new JsonValue(JsonKind.Object);
 
         public bool IsObject => Kind == JsonKind.Object;
         public bool IsArray => Kind == JsonKind.Array;
@@ -75,6 +76,33 @@ namespace CubeHaul.Levels.Json
             for (int i = 0; i < members.Count; i++)
                 if (string.Equals(members[i].Key, key, StringComparison.Ordinal)) return i;
             return -1;
+        }
+
+        /// <summary>Same JSON value: numbers by value, strings ordinally, arrays in order, objects by key regardless of order.</summary>
+        public bool DeepEquals(JsonValue other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (other == null || other.Kind != Kind) return false;
+            switch (Kind)
+            {
+                case JsonKind.Null: return true;
+                case JsonKind.Boolean: return Boolean == other.Boolean;
+                case JsonKind.Number: return Number.Equals(other.Number);
+                case JsonKind.String: return string.Equals(String, other.String, StringComparison.Ordinal);
+                case JsonKind.Array:
+                    if (items.Count != other.items.Count) return false;
+                    for (int i = 0; i < items.Count; i++)
+                        if (!items[i].DeepEquals(other.items[i])) return false;
+                    return true;
+                default:
+                    if (members.Count != other.members.Count) return false;
+                    foreach (KeyValuePair<string, JsonValue> m in members)
+                    {
+                        JsonValue o = other.Get(m.Key);
+                        if (o == null || !m.Value.DeepEquals(o)) return false;
+                    }
+                    return true;
+            }
         }
 
         public string TypeName

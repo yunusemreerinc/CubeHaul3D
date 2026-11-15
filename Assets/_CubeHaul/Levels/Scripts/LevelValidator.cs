@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using CubeHaul.Domain;
 using CubeHaul.Levels.Json;
 
 namespace CubeHaul.Levels
@@ -46,6 +47,17 @@ namespace CubeHaul.Levels
         static readonly string[] DifficultyKeys = { "winRate", "label", "randomGames", "greedy" };
         static readonly string[] DifficultyRequired = { "winRate", "label" };
         static readonly string[] GreedyKeys = { "solved", "ticks", "taps" };
+
+        /// <summary>
+        /// Validates a level built or changed in code, with exactly the rules used for JSON files (it is written to a
+        /// JSON tree and checked like one). Result.Level is a fresh copy read back from that tree.
+        /// </summary>
+        public static LevelReadResult Validate(LevelDefinition level)
+        {
+            if (level == null) return Validate((JsonValue)null);
+            JsonValue tree = LevelDefinitionWriter.ToJsonValue(level);
+            return Validate(tree);
+        }
 
         /// <summary>Validates a parsed JSON document and, if there are no errors, builds the LevelDefinition.</summary>
         public static LevelReadResult Validate(JsonValue root)
@@ -92,7 +104,7 @@ namespace CubeHaul.Levels
             if (root.Has("edges"))
             {
                 string s = c.String(root.Get("edges"), "/edges");
-                if (s != null && !EdgeModes.TryParse(s, out _)) c.Error(IssueCodes.InvalidValue, "/edges", $"\"{s}\" is not one of bottom, sides, all");
+                if (s != null && !OpenEdgesJson.TryParse(s, out _)) c.Error(IssueCodes.InvalidValue, "/edges", $"\"{s}\" is not one of bottom, sides, all");
             }
             if (root.Has("slotCount")) c.Integer(root.Get("slotCount"), "/slotCount", MinSlots, MaxSlots);
             if (root.Has("extensions") && !root.Get("extensions").IsObject)
@@ -367,10 +379,11 @@ namespace CubeHaul.Levels
             for (int i = 0; i < palette.Length; i++) palette[i] = rawPalette[i].String;
             var cells = new int[rawCells.Count];
             for (int i = 0; i < cells.Length; i++) cells[i] = (int)rawCells[i].Number;
-            EdgeModes.TryParse(root.Get("edges").String, out EdgeMode edges);
+            OpenEdgesJson.TryParse(root.Get("edges").String, out OpenEdges edges);
 
             var level = new LevelDefinition
             {
+                SchemaUri = root.Has("$schema") ? root.Get("$schema").String : null,
                 SchemaVersion = (int)root.Get("schemaVersion").Number,
                 LevelId = root.Get("levelId").String,
                 ThemeId = root.Get("themeId").String,
@@ -378,20 +391,21 @@ namespace CubeHaul.Levels
                 Picture = new PictureDefinition { Width = (int)p.Get("width").Number, Height = (int)p.Get("height").Number, Palette = palette, Cells = cells },
                 Edges = edges,
                 SlotCount = (int)root.Get("slotCount").Number,
+                Extensions = root.Has("extensions") ? root.Get("extensions") : null,
             };
 
             if (root.Has("tray"))
             {
                 IReadOnlyList<JsonValue> cols = root.Get("tray").Get("columns").Items;
-                var columns = new CrateDefinition[cols.Count][];
+                var columns = new BlockDefinition[cols.Count][];
                 for (int c = 0; c < cols.Count; c++)
                 {
-                    IReadOnlyList<JsonValue> crates = cols[c].Items;
-                    columns[c] = new CrateDefinition[crates.Count];
-                    for (int k = 0; k < crates.Count; k++)
+                    IReadOnlyList<JsonValue> blocks = cols[c].Items;
+                    columns[c] = new BlockDefinition[blocks.Count];
+                    for (int k = 0; k < blocks.Count; k++)
                     {
-                        JsonValue x = crates[k];
-                        columns[c][k] = new CrateDefinition { Id = (int)x.Get("id").Number, Color = (int)x.Get("color").Number, Count = (int)x.Get("count").Number };
+                        JsonValue x = blocks[k];
+                        columns[c][k] = new BlockDefinition((int)x.Get("id").Number, (int)x.Get("color").Number, (int)x.Get("count").Number);
                     }
                 }
                 level.Tray = new TrayDefinition { Columns = columns };
@@ -400,14 +414,17 @@ namespace CubeHaul.Levels
             if (root.Has("generation"))
             {
                 JsonValue g = root.Get("generation");
-                var gen = new GenerationSettings { Seed = (int)g.Get("seed").Number, Shuffle = g.Get("shuffle").Number };
-                if (g.Has("targetWinRate")) gen.TargetWinRate = g.Get("targetWinRate").Number;
-                if (g.Has("columns")) gen.Columns = (int)g.Get("columns").Number;
-                if (g.Has("bigChance")) gen.BigChance = g.Get("bigChance").Number;
-                if (g.Has("minBlock")) gen.MinBlock = (int)g.Get("minBlock").Number;
-                if (g.Has("maxBlock")) gen.MaxBlock = (int)g.Get("maxBlock").Number;
-                if (g.Has("candidates")) gen.Candidates = (int)g.Get("candidates").Number;
-                level.Generation = gen;
+                level.Generation = new GenerationSettings
+                {
+                    Seed = (int)g.Get("seed").Number,
+                    Shuffle = g.Get("shuffle").Number,
+                    TargetWinRate = g.Has("targetWinRate") ? g.Get("targetWinRate").Number : (double?)null,
+                    Columns = g.Has("columns") ? (int)g.Get("columns").Number : (int?)null,
+                    BigChance = g.Has("bigChance") ? g.Get("bigChance").Number : (double?)null,
+                    MinBlock = g.Has("minBlock") ? (int)g.Get("minBlock").Number : (int?)null,
+                    MaxBlock = g.Has("maxBlock") ? (int)g.Get("maxBlock").Number : (int?)null,
+                    Candidates = g.Has("candidates") ? (int)g.Get("candidates").Number : (int?)null,
+                };
             }
 
             if (root.Has("difficultyMetadata"))
@@ -421,7 +438,7 @@ namespace CubeHaul.Levels
                     JsonValue g = d.Get("greedy");
                     meta.Greedy = new GreedyResult { Solved = g.Get("solved").Boolean, Ticks = (int)g.Get("ticks").Number, Taps = (int)g.Get("taps").Number };
                 }
-                level.Difficulty = meta;
+                level.DifficultyMetadata = meta;
             }
             return level;
         }

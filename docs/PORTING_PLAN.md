@@ -803,11 +803,11 @@ C# yolları `Assets/_CubeHaul/` altına görelidir. "—" = taşınmaz.
 | TS dosyası | TS sembolü | C# dosyası | C# türü / üyesi | Not |
 |---|---|---|---|---|
 | `core/types.ts` | `ColorId` | — | `int` | |
-| | `OpenEdges` | `Core/OpenEdges.cs` | `enum OpenEdges { All, Sides, Bottom }` | JSON'da metin |
+| | `OpenEdges` | `Domain/OpenEdges.cs` | `enum OpenEdges { All, Sides, Bottom }` | JSON'da metin (`OpenEdgesJson`); **yazıldı, Görev 06** |
 | | `EMPTY` | `Core/Cells.cs` | `Cells.Empty = -1` | |
-| | `Picture` | `Core/Picture.cs` | `sealed class Picture` | `short[] Cells`, `string[] PaletteHex` |
-| | `Block` | `Core/Crate.cs` | `sealed class Crate` | `Count` değişken |
-| | `Level`, `cloneLevel` | `Core/Level.cs` | `sealed class Level`, `Level.Clone()` | |
+| | `Picture` | `Core/Picture.cs` | `sealed class Picture` | `short[] Cells`, `string[] PaletteHex`. Veri modeli `PictureDefinition` **yazıldı (Görev 06)** |
+| | `Block` | `Core/Crate.cs` | `sealed class Crate` | `Count` değişken. Veri modeli `BlockDefinition` **yazıldı (Görev 06)** |
+| | `Level`, `cloneLevel` | `Core/Level.cs` | `sealed class Level`, `Level.Clone()` | Veri modeli `LevelDefinition` + `DeepCopy()`, `LevelRepository` **yazıldı (Görev 06)**; [LEVEL_FORMAT §9](LEVEL_FORMAT.md#9-c-veri-modeli-görev-06) |
 | `core/board.ts` | `Side` | `Core/OpenEdges.cs` | `enum Side` | |
 | | `Board` | `Core/Board.cs` | `sealed class Board` | Tüm genel ve özel üyeler aynı adla (§3.2); `better` → `private static bool Better(...)` |
 | `core/game.ts` | `Status` | `Core/GameStatus.cs` | `enum GameStatus` | |

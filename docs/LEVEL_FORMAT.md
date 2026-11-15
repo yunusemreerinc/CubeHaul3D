@@ -273,16 +273,18 @@ const result = readLevelDefinition(text); // { ok, level?, errors, warnings }
 cd Tools/level-format && npm ci && npm run validate -- ../../LevelFormat/examples/*.json
 ```
 
-**C#** ([`Assets/_CubeHaul/Levels/Scripts`](../Assets/_CubeHaul/Levels/Scripts), namespace `CubeHaul.Levels`):
+**C#** ([`Assets/_CubeHaul/Levels/Scripts`](../Assets/_CubeHaul/Levels/Scripts), namespace `CubeHaul.Levels`) — §9'da ayrıntılı:
 
 ```csharp
-LevelReadResult result = LevelDefinitionReader.Read(text);
-if (!result.Ok) foreach (LevelIssue e in result.Errors) Debug.LogError(e); // e.Code, e.Path, e.Message
-LevelDefinition level = result.Level; // Picture.Cells, Tray?.Columns, Generation, Difficulty
+LevelRepository levels = LevelRepository.LoadDirectory("Assets/_CubeHaul/Levels/Content"); // Unity'de: LevelLibrary.Load()
+if (levels.HasErrors) Debug.LogError(string.Join("\n", levels.Errors));                   // dosya adı + kod + yol + neden
+LevelDefinition level = levels.Get("strawberry");                                          // her seferinde bağımsız bir kopya
 ```
 
-Unity'de dosyalar `TextAsset` olarak gelir (`textAsset.text`); bölüm kataloğu ve Unity'ye yükleme sonraki görevin
-konusudur. `Assets/` altında henüz Unity projesi yok; `.meta` dosyaları proje oluşturulunca Unity tarafından üretilir.
+```csharp
+LevelReadResult result = LevelDefinitionReader.Read(text);   // tek dosya; asla istisna atmaz
+if (!result.Ok) Debug.LogError(result.Describe());           // "2 errors:\n  - CELLS_LENGTH at /picture/cells: …"
+```
 
 **Testler:**
 
@@ -302,7 +304,8 @@ cd Tools/dotnet/CubeHaul.Tests && dotnet test
 |---|--:|---|
 | `Tools/level-format` | 152 | Ortak test verileri (58 geçersiz, 12 geçerli, 3 örnek), JSON Schema uyumu (Ajv), kanonik yazıcı, etiket eşikleri |
 | `Tools/ts-reference › levelFormat` | 15 | Örnekler TS kaynağının çıktısıyla aynı; 10 yerleşik bölüm JSON'a dönüşüp doğrulanıyor ve JSON'dan kurulan bölüm orijinaliyle **aynı oyunu** oynuyor; yalnızca üretimli örnekten tepsi üretilip geçerli statik bölüm oluyor |
-| `Tools/dotnet/CubeHaul.Tests` (bölüm formatı kısmı) | 122 | Aynı ortak test verileri ve aynı beklentiler, JSON dilbilgisi, model alanları, kültür bağımsızlığı. Kaynak `netstandard2.1` + C# 9 ile ayrıca derlenir |
+| `Tools/dotnet/CubeHaul.Tests` (bölüm formatı kısmı) | 138 | Aynı ortak test verileri ve aynı beklentiler, JSON dilbilgisi, model alanları, kültür bağımsızlığı, geçerli dosyaların gidiş-dönüşü. Kaynak `netstandard2.1` + C# 9 ile ayrıca derlenir |
+| `Assets/_CubeHaul/Tests/EditMode` (Unity ve `dotnet`) | 67 | §9: 10 bölümün kayıpsız okunması, iki gerçek bölümün alan alan kontrolü, deep-copy, depo, hata raporları, JS uyumlu yazıcı |
 
 ---
 
@@ -318,3 +321,58 @@ cd Tools/dotnet/CubeHaul.Tests && dotnet test
 | `Crate.id` | 0–999 999 | |
 | `generation.seed` | 0–2 147 483 647 | C# `int` ve JS'te güvenli; `mulberry32` tohumu |
 | `name` | 1–64 karakter | |
+
+---
+
+## 9. C# veri modeli (Görev 06)
+
+TypeScript `src/core/types.ts` → C# (`CubeHaul.Domain`, `CubeHaul.Levels`; TS kodu C#'ta çalıştırılmaz, kurallar
+yeniden yazılır):
+
+| TypeScript | C# | Not |
+|---|---|---|
+| `ColorId` (number) | `int` | Palet indeksi |
+| `EMPTY = -1` | `Cells.Empty` (Domain) = `LevelDefinition.Empty` | |
+| `OpenEdges` | `OpenEdges { All, Sides, Bottom }` (Domain) | JSON adları `OpenEdgesJson` ile, kültürden bağımsız ve büyük/küçük harfe duyarlı |
+| `Picture` | `PictureDefinition` (`Width`, `Height`, `Cells`, `Palette`) | Ad `LevelDefinition.Name`'de |
+| `Block` | `BlockDefinition` (`Id`, `Color`, `Count`) | |
+| `Level` | `LevelDefinition` (`Picture`, `Tray.Columns`, `SlotCount`, `Edges`, …) | Formatın tüm alanları: `SchemaUri` (`$schema`), `Generation`, `DifficultyMetadata`, `Extensions` |
+| `cloneLevel(level)` | `level.DeepCopy()` | TS yalnızca blokları kopyalar; C# resmi de kopyalar |
+
+**Veri kaybı yok.** JSON'da olan her şey modelde durur: isteğe bağlı üretim alanları yazılmadıysa `null` kalır
+(varsayılan değer uydurulmaz, kullanılacak değer `EffectiveColumns` gibi özelliklerden okunur), `$schema` ve
+`extensions` olduğu gibi saklanır, palet renkleri yazıldığı gibi kalır. `LevelDefinitionWriter.ToJson` TS yazıcısının
+kanonik metnini bayt bayt üretir; 10 bölüm dosyası okunup geri yazılınca aynı dosya çıkar. Ayrıca tepsilerin özeti TS
+üreticisinin `build.json`'a kaydettiğiyle aynıdır. `JsonWriter` sayıları ve metinleri JavaScript'in `JSON.stringify`'ı
+gibi yazar; bunun için her .NET çalışma zamanında (Mono ve IL2CPP dahil) doğru çalışan bir yöntem kullanılır.
+
+**Yanlış değişikliğe karşı koruma.** Modeller TS nesneleri gibi düz ve değiştirilebilir veridir; çünkü oyun (kamyon
+harcarken) ve editör araçları kendi kopyalarını değiştirir. Koruma kopyalamayla sağlanır:
+
+- `DeepCopy()` her düzeyde vardır (`LevelDefinition`, `PictureDefinition`, `TrayDefinition`, `BlockDefinition`,
+  `GenerationSettings`, `DifficultyMetadata`). Kopya ile asıl hiçbir değiştirilebilir parçayı paylaşmaz. `JsonValue`
+  (`Extensions`) değiştirilemez olduğundan paylaşılması güvenlidir.
+- `PictureDefinition` ve `TrayDefinition` kurucuları kendilerine verilen dizileri kopyalar.
+- `LevelRepository` yüklediği bölümleri dışarı vermez; `Get`, `GetAt` ve `TryGet` her çağrıda yeni bir `DeepCopy`
+  döndürür. Bir çağıranın yaptığı değişiklik depoya da, başka bir çağıranın kopyasına da ulaşmaz.
+- `ContentEquals` iki bölümün aynı veriyi taşıyıp taşımadığını söyler.
+
+**Doğrulama.** JSON'dan okunan her bölüm §5'teki kurallardan geçer. Kodla kurulan ya da değiştirilen bir bölüm
+`LevelValidator.Validate(level)` ile aynı kurallarla denetlenir: model önce JSON ağacına yazılır, sonra o ağaç
+denetlenir. Eksik parçalar (`null` dizi, tanımsız enum) istisna yerine yollu birer hata olur.
+
+**Depo.** `LevelRepository.Load(IEnumerable<LevelSource>)` (Unity'de `Presentation/LevelLibrary` bunu `TextAsset`'lerle
+çağırır) ya da `LoadDirectory(klasör)`. Hatalı dosyalar dışarıda bırakılır ve `Errors`'ta dosya adıyla listelenir; aynı
+`levelId` ikinci kez gelirse `DUPLICATE_LEVEL_ID` verilir. `ThrowIfErrors()` hepsini tek bir okunur `LevelLoadException`
+mesajında toplar.
+
+**Hata mesajları.** `LevelReadResult.Describe()` ve `LevelLoadError.ToString()`, kod, JSON Pointer yolu ve neden
+içeren satırlar üretir:
+
+```text
+broken.json:
+  - JSON_SYNTAX at (root): expected a string key at line 1, column 23
+level-03.json:
+  - UNSUPPORTED_SCHEMA_VERSION at /schemaVersion: schema version 2 is not supported (this reader knows 1)
+  - CELLS_LENGTH at /picture/cells: has 8 cells, expected width * height = 9
+```

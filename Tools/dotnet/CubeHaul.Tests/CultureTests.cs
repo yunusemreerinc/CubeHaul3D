@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using NUnit.Framework;
 
+using CubeHaul.Domain;
 using CubeHaul.Levels;
 
 namespace CubeHaul.Tests.LevelFormat
@@ -26,7 +27,7 @@ namespace CubeHaul.Tests.LevelFormat
                         string dir = f.EndsWith(".level.json") ? "examples" : "fixtures/invalid";
                         LevelReadResult r = LevelDefinitionReader.Read(Fixtures.ReadRaw(dir, f));
                         // Formatted invariantly: this compares what was read, not how the test prints it.
-                        string model = r.Level == null ? "" : FormattableString.Invariant($"{r.Level.Edges} {r.Level.Generation?.Shuffle:R} {r.Level.Difficulty?.WinRate:R} {r.Level.Picture.Cells.Sum()}");
+                        string model = r.Level == null ? "" : FormattableString.Invariant($"{r.Level.Edges} {r.Level.Generation?.Shuffle:R} {r.Level.DifficultyMetadata?.WinRate:R} {r.Level.Picture.Cells.Sum()}");
                         return f + ": " + string.Join(",", Fixtures.Keys(r.Errors)) + " | " + model;
                     });
                     return string.Join("\n", parts);
@@ -47,10 +48,10 @@ namespace CubeHaul.Tests.LevelFormat
         public void EdgesAreMatchedExactlyNotByLowercasing()
         {
             // In tr-TR "SIDES".ToLower() is "sıdes"; the reader never lowercases, it rejects anything but the exact word.
-            Assert.That(EdgeModes.TryParse("sides", out EdgeMode e), Is.True);
-            Assert.That(e, Is.EqualTo(EdgeMode.Sides));
-            Assert.That(EdgeModes.TryParse("SIDES", out _), Is.False);
-            Assert.That(EdgeModes.TryParse("sıdes", out _), Is.False);
+            Assert.That(OpenEdgesJson.TryParse("sides", out OpenEdges e), Is.True);
+            Assert.That(e, Is.EqualTo(OpenEdges.Sides));
+            Assert.That(OpenEdgesJson.TryParse("SIDES", out _), Is.False);
+            Assert.That(OpenEdgesJson.TryParse("sıdes", out _), Is.False);
         }
     }
 }
