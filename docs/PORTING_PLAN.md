@@ -20,6 +20,7 @@ tıkanmalıdır. 3D görselleştirme bu çekirdeğin üzerine, kuralları etkile
 | Kamera | **Ortografik** | Tüm küpler ekranda aynı boyda; okunabilirlik riski (R-17) azalır; derinlik hissi ışık ve eğik açıyla verilir (§3.5) |
 | TS bulguları F-2, F-3, F-4 ([TS_BASELINE §4](TS_BASELINE.md#4-bulgular)) | **Aynen korunur** | Boş bölümün `playing` başlaması, `Collect`'in claim aramaması ve `minBlock`/`maxBlock` sınırları C#'ta TS ile aynı; düzeltmeler golden eşitlikten sonra, ayrı değişiklikte |
 | Bölüm formatı ([LEVEL_FORMAT](LEVEL_FORMAT.md)) | **LevelDefinition v1**: düz `cells`, `Crate[][]` kolonlar, statik `tray` ile `generation` ayrı | Unity'den bağımsız C# okuyucu; `JsonUtility` yok; TS ve C# aynı kurallar |
+| Unity proje yapısı ([UNITY_PROJECT](UNITY_PROJECT.md)) | **`Assets/_CubeHaul`**, katmanlar Domain / Levels / Gameplay / Presentation / UI / Editor / Tests / Art / Audio | Domain, Levels, Gameplay `noEngineReferences`; plandaki Core/Simulation/App/View adları bunlara eşlendi |
 | "Your image" | **İlk sürümde yok** | Galeri eklentisi, izinler ve çalışma zamanında bölüm üretimi v1 kapsamından çıktı (§2.3, §8) |
 
 ---
@@ -529,42 +530,35 @@ okur; `Tools/` ve belgeler etkilenmez). `Library/`, `Temp/`, `Logs/`, `UserSetti
 `.gitignore`'a girer.
 
 ```
-CubeHaul3D/                         (bu depo = Unity 6.3 LTS projesi, URP)
-├─ docs/
-│  ├─ PORTING_PLAN.md               Bu belge
-│  ├─ TS_BASELINE.md                TS referans test raporu ve golden değerler
-│  └─ LEVEL_FORMAT.md               LevelDefinition v1 formatı
+CubeHaul3D/                         (bu depo = Unity 6.3 LTS projesi, URP) — ayrıntı: docs/UNITY_PROJECT.md
+├─ docs/                            PORTING_PLAN, TS_BASELINE, LEVEL_FORMAT, GOLDEN_FIXTURES, UNITY_PROJECT
 ├─ LevelFormat/                     Bölüm formatı: JSON Schema, örnekler, iki dilin ortak test verileri (Görev 03)
 ├─ Tools/
 │  ├─ level-format/                 TS okuyucu/doğrulayıcı ve kanonik yazıcı (Görev 03)
-│  ├─ dotnet/                       CubeHaul.Data'yı Unity dışında derleyen ve test eden .NET projeleri
-│  ├─ ts-reference/                 TS referans testleri (Görev 02, docs/TS_BASELINE.md); kaynağı pinli commit'ten okur
-│  └─ (ts-export)                   Görev 04'te ts-reference'a katıldı: npm run export:golden / check:golden
-│                                   (TS projesini değiştirmez; ayrı klon/alt modül üzerinden içe aktarır)
-├─ Packages/manifest.json           URP, Input System, Test Framework, uGUI/TextMeshPro, sabit sürümler
-├─ ProjectSettings/
-└─ Assets/
-   ├─ CubeHaul/
-   │  ├─ Scripts/
-   │  │  ├─ Core/          CubeHaul.Core.asmdef         noEngineReferences: true
-   │  │  ├─ Levels/        CubeHaul.Levels.asmdef       noEngineReferences: true  → Core
-   │  │  ├─ Data/          CubeHaul.Data.asmdef         noEngineReferences: true  → Core
-   │  │  ├─ Simulation/    CubeHaul.Simulation.asmdef   noEngineReferences: true  → Core, Levels
-   │  │  ├─ App/           CubeHaul.App.asmdef          → Core, Levels, Data, Simulation, UnityEngine
-   │  │  └─ View/          CubeHaul.View.asmdef         → Simulation, App, UnityEngine, URP, Input System
-   │  ├─ Content/Levels/   level-01-strawberry.level.json … level-10-watermelon.level.json (Görev 04)
-   │  ├─ Art/              Modeller, materyaller, shader'lar
-   │  └─ Scenes/           Boot.unity, Game.unity
-   └─ Tests/
-      ├─ EditMode/         CubeHaul.Tests.EditMode.asmdef  (NUnit; saf katmanlar + JSON)
-      ├─ PlayMode/         CubeHaul.Tests.PlayMode.asmdef  (sahne, giriş, akış)
-      └─ Fixtures/Golden/  TS'den dışa aktarılan referans çıktılar
+│  ├─ ts-reference/                 TS referans testleri (Görev 02); export:golden / check:golden (Görev 04)
+│  ├─ dotnet/                       Saf assembly'leri Unity dışında derleyen ve EditMode testlerini koşturan .NET projeleri
+│  └─ unity/metas.mjs               Eksik .meta dosyalarını deterministik GUID'lerle üretir
+├─ Packages/manifest.json           URP 17.3, Test Framework, uGUI, Input System (Görev 05)
+├─ ProjectSettings/                 ProjectVersion.txt (6000.3); diğerlerini Unity ilk açılışta üretir
+└─ Assets/_CubeHaul/                (Görev 05)
+   ├─ Domain/          CubeHaul.Domain.asmdef        noEngineReferences: true   (plandaki "Core")
+   ├─ Levels/Scripts/  CubeHaul.Levels.asmdef        noEngineReferences: true   → Domain   (plandaki "Levels" + "Data")
+   ├─ Levels/Content/  level-01-strawberry.level.json … level-10-watermelon.level.json (Görev 04)
+   ├─ Gameplay/        CubeHaul.Gameplay.asmdef      noEngineReferences: true   → Domain, Levels   (plandaki "Simulation")
+   ├─ Presentation/    CubeHaul.Presentation.asmdef  → Gameplay, URP, Input System   (plandaki "App" + "View" 3D kısmı)
+   ├─ UI/              CubeHaul.UI.asmdef            → Presentation, uGUI, TextMeshPro   (plandaki "View" HUD kısmı)
+   ├─ Editor/          CubeHaul.Editor.asmdef        yalnızca Editor
+   ├─ Tests/EditMode/  CubeHaul.Tests.EditMode.asmdef
+   ├─ Tests/PlayMode/  CubeHaul.Tests.PlayMode.asmdef
+   ├─ Tests/Fixtures/Golden/   TS'den dışa aktarılan referans çıktılar (Görev 04)
+   ├─ Art/             Materials, Models, Textures, Shaders, Prefabs
+   └─ Audio/           Music, Sfx
 ```
 
 `noEngineReferences: true` saf katmanların yanlışlıkla `UnityEngine` kullanmasını derleyici düzeyinde engeller.
 Böylece bu katmanlar istenirse Unity dışında, `dotnet test` ile de çalıştırılabilir.
 
-### 3.2 Core — oyun kuralları (`CubeHaul.Core`)
+### 3.2 Core — oyun kuralları (`CubeHaul.Domain`)
 
 | C# türü | TS karşılığı | Tasarım notu |
 |---|---|---|
@@ -635,7 +629,7 @@ arka sıradaki kasaları da çizer. `Tick` çıktıyı çağıranın listesine y
 | `static class DifficultyLabel` (`From(double winRate)`) | `main.ts` eşikleri | B-25 |
 | `sealed class LevelSpec` | `LevelSpec` | JSON'dan gelir |
 
-### 3.4 Simulation — kurala etki eden zamanlama (`CubeHaul.Simulation`)
+### 3.4 Simulation — kurala etki eden zamanlama (`CubeHaul.Gameplay`)
 
 ```mermaid
 classDiagram
@@ -798,7 +792,11 @@ sequenceDiagram
 
 ### 3.7 TypeScript → C# dosya/sınıf eşleme tablosu
 
-C# yolları `Assets/CubeHaul/Scripts/` altına görelidir. "—" = taşınmaz.
+C# yolları `Assets/_CubeHaul/` altına görelidir. "—" = taşınmaz.
+
+> **Görev 05 adları:** bu tablodaki `Core/` → `Domain/` (`CubeHaul.Domain`), `Data/` ve `Levels/` → `Levels/Scripts/`
+> (`CubeHaul.Levels`), `Simulation/` → `Gameplay/` (`CubeHaul.Gameplay`), `App/` ve 3D `View/` → `Presentation/`
+> (`CubeHaul.Presentation`), HUD/panel `View/` dosyaları → `UI/` (`CubeHaul.UI`). Bkz. [UNITY_PROJECT.md](UNITY_PROJECT.md).
 
 **Kurallar (`src/core`) → `CubeHaul.Core`**
 
@@ -881,7 +879,7 @@ C# yolları `Assets/CubeHaul/Scripts/` altına görelidir. "—" = taşınmaz.
 
 **Testler**
 
-| TS testi | C# test dosyası (`Assets/Tests/EditMode/`) |
+| TS testi | C# test dosyası (`Assets/_CubeHaul/Tests/EditMode/`) |
 |---|---|
 | `tests/core.test.ts › Board`, `sealed gaps` | `BoardTests.cs` |
 | `› Board edges` | `BoardEdgeTests.cs` |
@@ -901,12 +899,12 @@ Oklar "bağlıdır" anlamındadır. Saf derlemeler (üst sıra) `UnityEngine`'e 
 
 ```mermaid
 flowchart BT
-  Core["CubeHaul.Core<br/>Board · Game · Level · Picture · Crate"]
+  Core["CubeHaul.Domain<br/>Board · Game · Level · Picture · Crate"]
   Levels["CubeHaul.Levels<br/>Mulberry32 · LevelGenerator · GreedySolver · RandomPlayer · ImageQuantizer"]
-  Data["CubeHaul.Data<br/>LevelDefinition · LevelDefinitionReader · LevelValidator"]
-  Sim["CubeHaul.Simulation<br/>FieldLayout · RoadMap · DispatchScheduler · TruckFleet · GameSession"]
-  App["CubeHaul.App<br/>GameBootstrap · LevelRepository · LevelLibrary · GameController"]
-  View["CubeHaul.View<br/>BoardView · TruckView · TrayView · SlotView · HudView · CameraRig · InputRouter"]
+  Data["CubeHaul.Levels (biçim)<br/>LevelDefinition · LevelDefinitionReader · LevelValidator"]
+  Sim["CubeHaul.Gameplay<br/>FieldLayout · RoadMap · DispatchScheduler · TruckFleet · GameSession"]
+  App["CubeHaul.Presentation (önyükleme)<br/>GameBootstrap · LevelRepository · LevelLibrary · GameController"]
+  View["CubeHaul.Presentation + CubeHaul.UI<br/>BoardView · TruckView · TrayView · SlotView · HudView · CameraRig · InputRouter"]
   Unity[["UnityEngine · URP · Input System · TextMeshPro"]]
   TE["CubeHaul.Tests.EditMode"]
   TP["CubeHaul.Tests.PlayMode"]
@@ -1002,7 +1000,7 @@ bir **hata** sayılır, testin "düzeltilmesi" değil.
 
 ### 5.2 Diferansiyel (golden) testler — TS ↔ C# eşdeğerliği
 
-`Tools/ts-reference` (`npm run export:golden`), kaynak TS kodunu pinli commit'ten içe aktarıp `Assets/Tests/Fixtures/Golden/` altına JSON yazar.
+`Tools/ts-reference` (`npm run export:golden`), kaynak TS kodunu pinli commit'ten içe aktarıp `Assets/Tests/Fixtures/Golden/` altına JSON yazar (Görev 05'ten beri `Assets/_CubeHaul/Tests/Fixtures/Golden/`).
 Görev 04'te üretilenler ve biçimleri: [GOLDEN_FIXTURES.md](GOLDEN_FIXTURES.md). Aşağıdaki tablo ilk plandır; durum sütunu güncel hâlidir.
 C# testleri aynı girdileri çalıştırıp çıktıyı **tam eşitlikle** karşılaştırır.
 
@@ -1077,9 +1075,9 @@ G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç
   (`Crate[][]`), ayrı `generation` ayarları (`seed`, `shuffle`, …) ve `difficultyMetadata`.
 - **Statik ve üretim ayrı:** `tray` varsa oyun onu olduğu gibi oynar; yalnızca `generation` varsa tepsi üretilir.
   En az biri zorunlu.
-- **Unity'den bağımsız:** C# okuyucu (`CubeHaul.Data`) kendi JSON ayrıştırıcısıyla çalışır; `JsonUtility` ve
+- **Unity'den bağımsız:** C# okuyucu (`CubeHaul.Levels`, eski adıyla `CubeHaul.Data`) kendi JSON ayrıştırıcısıyla çalışır; `JsonUtility` ve
   Newtonsoft kullanılmaz (R-13, R-15). Kaynak Unity dışında `netstandard2.1` + C# 9 ile derlenip test edilir.
-- **İki dilde aynı doğrulama:** TS (`Tools/level-format`) ve C# (`Assets/CubeHaul/Scripts/Data`) okuyucuları aynı
+- **İki dilde aynı doğrulama:** TS (`Tools/level-format`) ve C# (`Assets/_CubeHaul/Levels/Scripts`) okuyucuları aynı
   kuralları aynı sırayla uygular ve aynı kodları aynı JSON Pointer yollarında bildirir; `LevelFormat/fixtures`
   altındaki ortak test verileri ikisini birlikte bağlar.
 - **Katalog** (bölüm sırası, `levelId` benzersizliği) ve Unity'ye yükleme (`LevelRepository`, `LevelLibrary`) ayrı

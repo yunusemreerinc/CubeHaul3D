@@ -11,7 +11,7 @@
     "test:new": "node scripts/fetch-source.mjs && vitest run tests",
     "typecheck": "node scripts/fetch-source.mjs && tsc --noEmit",
     "export:examples": "node scripts/fetch-source.mjs && tsx scripts/export-level-examples.ts",
-    "export:golden": "node scripts/fetch-source.mjs && tsx scripts/export-golden.ts",
+    "export:golden": "node scripts/fetch-source.mjs && tsx scripts/export-golden.ts && node ../unity/metas.mjs",
     "check:golden": "node scripts/fetch-source.mjs && tsx scripts/export-golden.ts --check"
   },
   "devDependencies": {

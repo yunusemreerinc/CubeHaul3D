@@ -1,6 +1,6 @@
 /**
  * Reader and validator for LevelDefinition v1. The C# twin is
- * Assets/CubeHaul/Scripts/Data/LevelValidator.cs: both apply the same rules in the same order and report the
+ * Assets/_CubeHaul/Levels/Scripts/LevelValidator.cs: both apply the same rules in the same order and report the
  * same issue codes at the same JSON Pointer paths, which the shared fixtures in LevelFormat/fixtures check.
  * The rules are listed in docs/LEVEL_FORMAT.md §5.
  */

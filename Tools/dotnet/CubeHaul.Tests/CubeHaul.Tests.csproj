@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Runs, outside Unity:
+    - the Unity EditMode tests in Assets/_CubeHaul/Tests/EditMode (they use only NUnit and plain .NET), and
+    - the tests in this folder (level format, golden fixtures, Unity project structure).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../../Assets/_CubeHaul/Tests/EditMode/**/*.cs" Link="EditMode/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../CubeHaul.Domain/CubeHaul.Domain.csproj" />
+    <ProjectReference Include="../CubeHaul.Levels/CubeHaul.Levels.csproj" />
+    <ProjectReference Include="../CubeHaul.Gameplay/CubeHaul.Gameplay.csproj" />
+  </ItemGroup>
+</Project>

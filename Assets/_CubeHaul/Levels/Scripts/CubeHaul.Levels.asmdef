@@ -1,0 +1,16 @@
+{
+    "name": "CubeHaul.Levels",
+    "rootNamespace": "CubeHaul.Levels",
+    "references": [
+        "CubeHaul.Domain"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

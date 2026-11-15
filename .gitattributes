@@ -3,3 +3,10 @@
 *.md text eol=lf
 *.ts text eol=lf
 *.cs text eol=lf
+# Unity text assets
+*.meta text eol=lf
+*.asmdef text eol=lf
+*.asset text eol=lf
+*.unity text eol=lf
+*.prefab text eol=lf
+*.mat text eol=lf

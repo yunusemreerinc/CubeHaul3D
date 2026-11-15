@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Builds the Unity sources in Assets/_CubeHaul/Gameplay outside Unity, against .NET Standard 2.1 (Unity's API compatibility
+    level) with no UnityEngine reference, to prove the assembly is engine-free. Mirrors CubeHaul.Gameplay.asmdef.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>CubeHaul.Gameplay</AssemblyName>
+    <RootNamespace>CubeHaul.Gameplay</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../../Assets/_CubeHaul/Gameplay/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../CubeHaul.Domain/CubeHaul.Domain.csproj" />
+    <ProjectReference Include="../CubeHaul.Levels/CubeHaul.Levels.csproj" />
+  </ItemGroup>
+</Project>

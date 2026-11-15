@@ -10,7 +10,7 @@ okur; ikisi de aynı kurallarla doğrular ve aynı hataları aynı yerlerde bild
 | **Örnekler** | [`LevelFormat/examples/`](../LevelFormat/examples) — tam, statik ve yalnızca üretimli birer bölüm |
 | **Ortak test verisi** | [`LevelFormat/fixtures/`](../LevelFormat/fixtures) — 58 geçersiz + 12 geçerli dosya, beklenen sonuçlarıyla |
 | **TypeScript okuyucu** | [`Tools/level-format/src/validate.ts`](../Tools/level-format/src/validate.ts) |
-| **C# okuyucu** | [`Assets/CubeHaul/Scripts/Data/`](../Assets/CubeHaul/Scripts/Data) — `CubeHaul.Data`, Unity'ye bağımlı değil |
+| **C# okuyucu** | [`Assets/_CubeHaul/Levels/Scripts/`](../Assets/_CubeHaul/Levels/Scripts) — `CubeHaul.Levels`, Unity'ye bağımlı değil |
 
 Bu belge [`PORTING_PLAN.md`](PORTING_PLAN.md) §6'daki ilk taslağın yerini alır (karakter satırları ve
 `JsonUtility` uyumlu kolonlar yerine: düz `cells` dizisi ve iki boyutlu `columns`).
@@ -20,7 +20,7 @@ Bu belge [`PORTING_PLAN.md`](PORTING_PLAN.md) §6'daki ilk taslağın yerini al�
 ## 1. Tasarım kararları
 
 1. **Unity'den bağımsız.** Format hiçbir Unity türüne (`Color`, `Vector2`, `ScriptableObject`) dayanmaz. C# okuyucu
-   `noEngineReferences: true` olan `CubeHaul.Data` derlemesinde, bağımlılıksız kendi JSON ayrıştırıcısıyla çalışır;
+   `noEngineReferences: true` olan `CubeHaul.Levels` derlemesinde, bağımlılıksız kendi JSON ayrıştırıcısıyla çalışır;
    aynı kaynak Unity dışında `netstandard2.1` + C# 9 ile derlenip test edilir. Unity'nin `JsonUtility`'si iki
    boyutlu dizileri (`columns`) okuyamadığı ve `null`/eksik alan ayrımı yapamadığı için kullanılmaz; Newtonsoft gibi
    bir paket de gerekmez.
@@ -273,7 +273,7 @@ const result = readLevelDefinition(text); // { ok, level?, errors, warnings }
 cd Tools/level-format && npm ci && npm run validate -- ../../LevelFormat/examples/*.json
 ```
 
-**C#** ([`Assets/CubeHaul/Scripts/Data`](../Assets/CubeHaul/Scripts/Data), namespace `CubeHaul.Data`):
+**C#** ([`Assets/_CubeHaul/Levels/Scripts`](../Assets/_CubeHaul/Levels/Scripts), namespace `CubeHaul.Levels`):
 
 ```csharp
 LevelReadResult result = LevelDefinitionReader.Read(text);
@@ -295,14 +295,14 @@ cd Tools/ts-reference && npm test
 ```
 
 ```bash
-cd Tools/dotnet/CubeHaul.Data.Tests && dotnet test
+cd Tools/dotnet/CubeHaul.Tests && dotnet test
 ```
 
 | Takım | Test | İçerik |
 |---|--:|---|
 | `Tools/level-format` | 152 | Ortak test verileri (58 geçersiz, 12 geçerli, 3 örnek), JSON Schema uyumu (Ajv), kanonik yazıcı, etiket eşikleri |
 | `Tools/ts-reference › levelFormat` | 15 | Örnekler TS kaynağının çıktısıyla aynı; 10 yerleşik bölüm JSON'a dönüşüp doğrulanıyor ve JSON'dan kurulan bölüm orijinaliyle **aynı oyunu** oynuyor; yalnızca üretimli örnekten tepsi üretilip geçerli statik bölüm oluyor |
-| `Tools/dotnet/CubeHaul.Data.Tests` | 122 | Aynı ortak test verileri ve aynı beklentiler, JSON dilbilgisi, model alanları, kültür bağımsızlığı. Kaynak `netstandard2.1` + C# 9 ile ayrıca derlenir |
+| `Tools/dotnet/CubeHaul.Tests` (bölüm formatı kısmı) | 122 | Aynı ortak test verileri ve aynı beklentiler, JSON dilbilgisi, model alanları, kültür bağımsızlığı. Kaynak `netstandard2.1` + C# 9 ile ayrıca derlenir |
 
 ---
 

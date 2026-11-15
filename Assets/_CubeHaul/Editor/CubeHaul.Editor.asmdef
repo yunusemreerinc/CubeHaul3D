@@ -1,0 +1,22 @@
+{
+    "name": "CubeHaul.Editor",
+    "rootNamespace": "CubeHaul.EditorTools",
+    "references": [
+        "CubeHaul.Domain",
+        "CubeHaul.Levels",
+        "CubeHaul.Gameplay",
+        "CubeHaul.Presentation",
+        "CubeHaul.UI"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

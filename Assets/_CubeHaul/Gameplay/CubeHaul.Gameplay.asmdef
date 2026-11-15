@@ -1,0 +1,17 @@
+{
+    "name": "CubeHaul.Gameplay",
+    "rootNamespace": "CubeHaul.Gameplay",
+    "references": [
+        "CubeHaul.Domain",
+        "CubeHaul.Levels"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

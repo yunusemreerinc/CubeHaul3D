@@ -1,0 +1,826 @@
+{
+  "format": "cubehaul.golden.build",
+  "version": 1,
+  "source": {
+    "repo": "https://github.com/yunusemreerinc/cube-hunt",
+    "commit": "559dfd90977b1e15367bd7de25aec9fbae4b52f6"
+  },
+  "description": "buildLevel(spec.picture, spec) traced: candidates k = 0.. with seed spec.seed + 7919k until the win rate is within 0.04 of the target. games[g] is randomWinRate(level, 1, spec.seed + 101g).",
+  "levels": [
+    {
+      "levelId": "strawberry",
+      "file": "Assets/_CubeHaul/Levels/Content/level-01-strawberry.level.json",
+      "options": {
+        "seed": 11,
+        "shuffle": 0.2,
+        "targetWinRate": 1,
+        "edges": "all",
+        "columns": 5,
+        "slots": 5,
+        "bigChance": 0.15
+      },
+      "candidates": [
+        {
+          "k": 0,
+          "seed": 11,
+          "crates": 45,
+          "columnsSha256": "5c52ecd9bcdaa7e834d105235e1736c5d52a42f872a743a0046ed087a106d72c",
+          "greedy": [true, 114, 45],
+          "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+          "winRate": 1
+        }
+      ],
+      "chosen": 0,
+      "winRate": 1
+    },
+    {
+      "levelId": "mushroom",
+      "file": "Assets/_CubeHaul/Levels/Content/level-02-mushroom.level.json",
+      "options": {
+        "seed": 10,
+        "shuffle": 0.2,
+        "targetWinRate": 0.85,
+        "edges": "bottom",
+        "columns": 5,
+        "slots": 5,
+        "bigChance": 0.15
+      },
+      "candidates": [
+        {
+          "k": 0,
+          "seed": 10,
+          "crates": 62,
+          "columnsSha256": "1eef023cc6d2e0609912824fafcd42d0b5821349aed53d76044e05d07b7ca8f3",
+          "greedy": [true, 280, 62],
+          "games": [0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+          "winRate": 0.625
+        },
+        {
+          "k": 1,
+          "seed": 7929,
+          "crates": 67,
+          "columnsSha256": "26a2cd98a77005067132f5dfefd63d325437046ecdd9bf581862aa1b0617ecce",
+          "greedy": [true, 297, 67],
+          "games": [1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0],
+          "winRate": 0.4166666666666667
+        },
+        {
+          "k": 2,
+          "seed": 15848,
+          "crates": 69,
+          "columnsSha256": "09ad1b424f95c2f4e52cebd0b77ed967919540d5f8b49865037598c51bb60fa1",
+          "greedy": [true, 289, 69],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          "winRate": 0.041666666666666664
+        },
+        {
+          "k": 3,
+          "seed": 23767,
+          "crates": 51,
+          "columnsSha256": "8c7c63f1d1984e545b706d5efd2856436f98393fb32e184f5423d519f8283a53",
+          "greedy": [true, 295, 51],
+          "games": [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0],
+          "winRate": 0.16666666666666666
+        },
+        {
+          "k": 4,
+          "seed": 31686,
+          "crates": 56,
+          "columnsSha256": "123c801d7f47a91e910e1cf95ab397df45b04a7f26f4c9e81e937dab2b54b66d",
+          "greedy": [true, 296, 56],
+          "games": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+          "winRate": 0.08333333333333333
+        },
+        {
+          "k": 5,
+          "seed": 39605,
+          "crates": 56,
+          "columnsSha256": "48656eb8ffef1a9fe5136fde9830911d54e7cf3a0d41faf61b7d5ed1591ebfdf",
+          "greedy": [true, 284, 56],
+          "games": [0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1],
+          "winRate": 0.5833333333333334
+        },
+        {
+          "k": 6,
+          "seed": 47524,
+          "crates": 63,
+          "columnsSha256": "3cbdff222e89f1b17adfd287a9ce547b8635eb577d1e4dc84e6723a9bc2639b6",
+          "greedy": [true, 311, 63],
+          "games": [1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1],
+          "winRate": 0.5416666666666666
+        },
+        {
+          "k": 7,
+          "seed": 55443,
+          "crates": 61,
+          "columnsSha256": "7a567381753699959ef2f94c77acf049f437a7d3327229e120db3216d8da8e2f",
+          "greedy": [true, 278, 61],
+          "games": [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+          "winRate": 0.25
+        },
+        {
+          "k": 8,
+          "seed": 63362,
+          "crates": 56,
+          "columnsSha256": "994dd0294e21edfbecc656e12c5c279e6d2012baf33d46ad193cf3e41288a904",
+          "greedy": [true, 330, 56],
+          "games": [0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1],
+          "winRate": 0.5833333333333334
+        },
+        {
+          "k": 9,
+          "seed": 71281,
+          "crates": 61,
+          "columnsSha256": "fcdd58e556b5cf46872396bc9ad7c19c47a103beb08cf3c640ae436dccf9b0b3",
+          "greedy": [true, 311, 61],
+          "games": [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+          "winRate": 0.8333333333333334
+        }
+      ],
+      "chosen": 9,
+      "winRate": 0.8333333333333334
+    },
+    {
+      "levelId": "sunset",
+      "file": "Assets/_CubeHaul/Levels/Content/level-03-sunset.level.json",
+      "options": {
+        "seed": 12,
+        "shuffle": 0.2,
+        "targetWinRate": 0.6,
+        "edges": "bottom",
+        "columns": 5,
+        "slots": 5,
+        "bigChance": 0.25
+      },
+      "candidates": [
+        {
+          "k": 0,
+          "seed": 12,
+          "crates": 52,
+          "columnsSha256": "caa2f538bf194912e2a0101ce6e0dee1276bca4b096a8d0fc5d11d5902daecb3",
+          "greedy": [true, 290, 52],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0],
+          "winRate": 0.125
+        },
+        {
+          "k": 1,
+          "seed": 7931,
+          "crates": 58,
+          "columnsSha256": "d6a0d5227ca97cba933133d22c30b3975f3477449e940326c3fc6c30ba008c07",
+          "greedy": [true, 298, 58],
+          "games": [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+          "winRate": 0.125
+        },
+        {
+          "k": 2,
+          "seed": 15850,
+          "crates": 59,
+          "columnsSha256": "35bcf1f489c1b30dc333f92a9404d185086363a6119dea3af2f00829dda0002a",
+          "greedy": [true, 302, 59],
+          "games": [0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          "winRate": 0.16666666666666666
+        },
+        {
+          "k": 3,
+          "seed": 23769,
+          "crates": 53,
+          "columnsSha256": "1aef2264fdd393aa6ca261e2d9c2a963c131fe0d50cf867c6d843aa6d3addc95",
+          "greedy": [true, 312, 53],
+          "games": [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+          "winRate": 0.16666666666666666
+        },
+        {
+          "k": 4,
+          "seed": 31688,
+          "crates": 51,
+          "columnsSha256": "f800896e816d7bd5707887b7343f779208a4cc33bc279c1c5991e6eb71fce1eb",
+          "greedy": [true, 331, 51],
+          "games": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+          "winRate": 0.16666666666666666
+        },
+        {
+          "k": 5,
+          "seed": 39607,
+          "crates": 56,
+          "columnsSha256": "eeaeb18d5d6a685f232acfd867dac50f1bd37a3dac30789dc820c37a5a814fdf",
+          "greedy": [true, 327, 56],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+          "winRate": 0.08333333333333333
+        },
+        {
+          "k": 6,
+          "seed": 47526,
+          "crates": 56,
+          "columnsSha256": "ccb6edfe6e5ed79220e11e1ee80475ca774f31f5430840499ab55a56d73d65d6",
+          "greedy": [true, 304, 56],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+          "winRate": 0.125
+        },
+        {
+          "k": 7,
+          "seed": 55445,
+          "crates": 56,
+          "columnsSha256": "f02a048b425958be4f15a8630153bcd8afa044e9f3cdf79ab9d1974f4081ed57",
+          "greedy": [true, 329, 56],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          "winRate": 0
+        },
+        {
+          "k": 8,
+          "seed": 63364,
+          "crates": 49,
+          "columnsSha256": "c7687aa439cb84770eaf831d1fa641f16da8b83d124ed5a50d6ced7ed563a04f",
+          "greedy": [true, 329, 49],
+          "games": [1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1],
+          "winRate": 0.5416666666666666
+        },
+        {
+          "k": 9,
+          "seed": 71283,
+          "crates": 58,
+          "columnsSha256": "bb23490b8bbcb93eb6a7dedd7b14423efe34173e236519d7eeca20389d22fb42",
+          "greedy": [true, 312, 58],
+          "games": [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+          "winRate": 0.16666666666666666
+        },
+        {
+          "k": 10,
+          "seed": 79202,
+          "crates": 48,
+          "columnsSha256": "6a4bede3eed0ab896334662d6f81165135c5a7d7cd0fb9313ddae1fd3cda36bb",
+          "greedy": [true, 333, 48],
+          "games": [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          "winRate": 0.08333333333333333
+        },
+        {
+          "k": 11,
+          "seed": 87121,
+          "crates": 50,
+          "columnsSha256": "8630fe907cd9d5265b34e15f2e232b24d3af5e9526f468a92431f6c3593fda9c",
+          "greedy": [true, 321, 50],
+          "games": [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+          "winRate": 0.16666666666666666
+        },
+        {
+          "k": 12,
+          "seed": 95040,
+          "crates": 56,
+          "columnsSha256": "bf30e4449e6e6467afa1f8d59d6ac3702ed5950e3979da9a14a63024f5578097",
+          "greedy": [true, 288, 56],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          "winRate": 0
+        },
+        {
+          "k": 13,
+          "seed": 102959,
+          "crates": 56,
+          "columnsSha256": "d9312050821a64d66ccf7cccc8322a11736903e9b748beb9c31850f29c5750f2",
+          "greedy": [true, 337, 56],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          "winRate": 0
+        },
+        {
+          "k": 14,
+          "seed": 110878,
+          "crates": 56,
+          "columnsSha256": "2b6f8598ec7c905542de766f7e1b5cc1f7ca38c30d217e687f1425e40cb61ee7",
+          "greedy": [true, 314, 56],
+          "games": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+          "winRate": 0.08333333333333333
+        },
+        {
+          "k": 15,
+          "seed": 118797,
+          "crates": 55,
+          "columnsSha256": "083593422966dfe900ccbf1c395056f72723e9a121e5d263ac9e824d380e4e6e",
+          "greedy": [true, 322, 55],
+          "games": [1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+          "winRate": 0.16666666666666666
+        }
+      ],
+      "chosen": 8,
+      "winRate": 0.5416666666666666
+    },
+    {
+      "levelId": "ringed-planet",
+      "file": "Assets/_CubeHaul/Levels/Content/level-04-ringed-planet.level.json",
+      "options": {
+        "seed": 2,
+        "shuffle": 2,
+        "targetWinRate": 0.48,
+        "edges": "bottom",
+        "columns": 5,
+        "slots": 5,
+        "bigChance": 0.15
+      },
+      "candidates": [
+        {
+          "k": 0,
+          "seed": 2,
+          "crates": 69,
+          "columnsSha256": "86eefb59f92cbe1932adac5f1c70d4c1a7345246ef8077f904dc6daa071bcfd3",
+          "greedy": [true, 583, 69],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          "winRate": 0.041666666666666664
+        },
+        {
+          "k": 1,
+          "seed": 7921,
+          "crates": 72,
+          "columnsSha256": "77b1f7134392245569752eb678e7f6a6de8c1d19a78f46c99cb16544aa5d3cb4",
+          "greedy": [true, 656, 72],
+          "games": [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          "winRate": 0.125
+        },
+        {
+          "k": 2,
+          "seed": 15840,
+          "crates": 59,
+          "columnsSha256": "01a7b094530ad89974af4300b91c1d4822bd3b8cf4e19752bde623207a23b587",
+          "greedy": [true, 517, 59],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1],
+          "winRate": 0.20833333333333334
+        },
+        {
+          "k": 3,
+          "seed": 23759,
+          "crates": 67,
+          "columnsSha256": "e3063aac86a2d29025e85041a7ea764647ebe5575972b8447fa822bd7845c6d1",
+          "greedy": [true, 479, 67],
+          "games": [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0],
+          "winRate": 0.4166666666666667
+        },
+        {
+          "k": 4,
+          "seed": 31678,
+          "crates": 62,
+          "columnsSha256": "a9fc5190a67902d7d8ae2caf318b59f8fba332f4aae899e929f6cd48f351b363",
+          "greedy": [false, 166, 15]
+        },
+        {
+          "k": 5,
+          "seed": 39597,
+          "crates": 67,
+          "columnsSha256": "5482382ad4261499f170b1c26193ed1c71ac330c5ede12aea1e23f32fd9d0b48",
+          "greedy": [false, 175, 22]
+        },
+        {
+          "k": 6,
+          "seed": 47516,
+          "crates": 74,
+          "columnsSha256": "d68c304e307e4efdf1e478148c03c452653f07081bad95c56ed6cf4fd522c9c0",
+          "greedy": [true, 647, 74],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          "winRate": 0
+        },
+        {
+          "k": 7,
+          "seed": 55435,
+          "crates": 71,
+          "columnsSha256": "cbb23754da57677976542f77123bc960b4b99037f0e6cea3b7a491c4abbb099c",
+          "greedy": [true, 580, 71],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          "winRate": 0
+        },
+        {
+          "k": 8,
+          "seed": 63354,
+          "crates": 56,
+          "columnsSha256": "b87e8019aae59cdc6515cdb73df35c23984cde591705e2494ccfee4d8b406958",
+          "greedy": [true, 645, 56],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+          "winRate": 0.041666666666666664
+        },
+        {
+          "k": 9,
+          "seed": 71273,
+          "crates": 66,
+          "columnsSha256": "0467193175b35607f6c082422d61781f39af0f3fd49180df4e15b0b3f0ec12d9",
+          "greedy": [true, 524, 66],
+          "games": [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+          "winRate": 0.16666666666666666
+        },
+        {
+          "k": 10,
+          "seed": 79192,
+          "crates": 66,
+          "columnsSha256": "1f92abe91f2a3cd1d23ff4cb497c5018e2c38684495eda2e5cf7fa5077bd3de8",
+          "greedy": [true, 492, 66],
+          "games": [1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+          "winRate": 0.5
+        }
+      ],
+      "chosen": 10,
+      "winRate": 0.5
+    },
+    {
+      "levelId": "cat",
+      "file": "Assets/_CubeHaul/Levels/Content/level-05-cat.level.json",
+      "options": {
+        "seed": 5,
+        "shuffle": 1.5,
+        "targetWinRate": 0.4,
+        "edges": "bottom",
+        "columns": 5,
+        "slots": 5,
+        "bigChance": 0.15
+      },
+      "candidates": [
+        {
+          "k": 0,
+          "seed": 5,
+          "crates": 72,
+          "columnsSha256": "28cc1f2e8f8ead5c68112ba18ea7d35aa42839e562c0f8138a8ed9cc71eab739",
+          "greedy": [true, 407, 72],
+          "games": [0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1],
+          "winRate": 0.7916666666666666
+        },
+        {
+          "k": 1,
+          "seed": 7924,
+          "crates": 62,
+          "columnsSha256": "fddea54a8e42b0b8c72eb31c4d3beed9a4800c6656957cf5eccebc7a5b19c73d",
+          "greedy": [true, 392, 62],
+          "games": [0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+          "winRate": 0.3333333333333333
+        },
+        {
+          "k": 2,
+          "seed": 15843,
+          "crates": 69,
+          "columnsSha256": "f7c048f07cb19f40097cfec7a4119ba3aec75b62ca0b347771cbd9753e4542c2",
+          "greedy": [true, 417, 69],
+          "games": [0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1],
+          "winRate": 0.5
+        },
+        {
+          "k": 3,
+          "seed": 23762,
+          "crates": 70,
+          "columnsSha256": "f04a6e5d3a1f3eb8859c701a59e75da2136d91b501c47dce2ec7e8da10e1d49b",
+          "greedy": [true, 400, 70],
+          "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0],
+          "winRate": 0.7916666666666666
+        },
+        {
+          "k": 4,
+          "seed": 31681,
+          "crates": 74,
+          "columnsSha256": "5ae78db8b8f50d17d91fb6655c6b369766a3f2ac73ead194f80fc5e5147027b0",
+          "greedy": [false, 36, 7]
+        },
+        {
+          "k": 5,
+          "seed": 39600,
+          "crates": 58,
+          "columnsSha256": "18642e9b8c6a56d77fb2737bb446d7fa08624302f154f6581b5e0104092f66ab",
+          "greedy": [true, 418, 58],
+          "games": [0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1],
+          "winRate": 0.6666666666666666
+        },
+        {
+          "k": 6,
+          "seed": 47519,
+          "crates": 58,
+          "columnsSha256": "ffdd84c3fdf9db3694ed85091a74bad928bc21129d5ad338d54a97ba1d9c9244",
+          "greedy": [true, 429, 58],
+          "games": [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+          "winRate": 0.7083333333333334
+        },
+        {
+          "k": 7,
+          "seed": 55438,
+          "crates": 60,
+          "columnsSha256": "a93dcbbd1ae258deafe75e681dc001d5d2e48ce1b6f32dfa4399c8c351adc278",
+          "greedy": [true, 396, 60],
+          "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+          "winRate": 0.9166666666666666
+        },
+        {
+          "k": 8,
+          "seed": 63357,
+          "crates": 70,
+          "columnsSha256": "b9e04cf4136f1263874068171b97bdb746b1c520727e8484fded302f1a8050e6",
+          "greedy": [true, 448, 70],
+          "games": [0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1],
+          "winRate": 0.6666666666666666
+        },
+        {
+          "k": 9,
+          "seed": 71276,
+          "crates": 64,
+          "columnsSha256": "c956ceb7fdfef8edac3b18086729ff41f0b15c6db372e019e7e31ff2cbf277af",
+          "greedy": [true, 409, 64],
+          "games": [1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0],
+          "winRate": 0.4166666666666667
+        }
+      ],
+      "chosen": 9,
+      "winRate": 0.4166666666666667
+    },
+    {
+      "levelId": "cactus",
+      "file": "Assets/_CubeHaul/Levels/Content/level-06-cactus.level.json",
+      "options": {
+        "seed": 1,
+        "shuffle": 1,
+        "targetWinRate": 0.8,
+        "edges": "bottom",
+        "columns": 5,
+        "slots": 5,
+        "bigChance": 0.15
+      },
+      "candidates": [
+        {
+          "k": 0,
+          "seed": 1,
+          "crates": 72,
+          "columnsSha256": "8f4a47b37b1b2eb524f9ed2b62dd8f088e9393dfda0bf247c5a143e6da3f2dfc",
+          "greedy": [true, 357, 72],
+          "games": [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
+          "winRate": 0.7916666666666666
+        }
+      ],
+      "chosen": 0,
+      "winRate": 0.7916666666666666
+    },
+    {
+      "levelId": "rocket",
+      "file": "Assets/_CubeHaul/Levels/Content/level-07-rocket.level.json",
+      "options": {
+        "seed": 1,
+        "shuffle": 1,
+        "targetWinRate": 0.72,
+        "edges": "bottom",
+        "columns": 5,
+        "slots": 5,
+        "bigChance": 0.15
+      },
+      "candidates": [
+        {
+          "k": 0,
+          "seed": 1,
+          "crates": 72,
+          "columnsSha256": "f633a596d242d03efe2672c7df19995597e3a1578215301bc198541820ef5e3f",
+          "greedy": [true, 465, 72],
+          "games": [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+          "winRate": 0.875
+        },
+        {
+          "k": 1,
+          "seed": 7920,
+          "crates": 65,
+          "columnsSha256": "6ea12d3b67acf4cddc89f424760e72e0a4a5df2aea986c8319e033d321f7bc69",
+          "greedy": [true, 567, 65],
+          "games": [0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+          "winRate": 0.7083333333333334
+        }
+      ],
+      "chosen": 1,
+      "winRate": 0.7083333333333334
+    },
+    {
+      "levelId": "rubber-duck",
+      "file": "Assets/_CubeHaul/Levels/Content/level-08-rubber-duck.level.json",
+      "options": {
+        "seed": 1,
+        "shuffle": 0.2,
+        "targetWinRate": 0.7,
+        "edges": "bottom",
+        "columns": 5,
+        "slots": 5,
+        "bigChance": 0.15
+      },
+      "candidates": [
+        {
+          "k": 0,
+          "seed": 1,
+          "crates": 70,
+          "columnsSha256": "6d4bdd113b88887b66e3903af126d216764420f615ff4ec538a2fbbad4c73d2f",
+          "greedy": [true, 462, 70],
+          "games": [1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1],
+          "winRate": 0.4583333333333333
+        },
+        {
+          "k": 1,
+          "seed": 7920,
+          "crates": 64,
+          "columnsSha256": "98e5ab212fcdb4001667fe2a7dfdff3fd83823ee89fb46cc8c20a60073697c3b",
+          "greedy": [true, 456, 64],
+          "games": [1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+          "winRate": 0.7916666666666666
+        },
+        {
+          "k": 2,
+          "seed": 15839,
+          "crates": 60,
+          "columnsSha256": "6b74fc7cbe7266c082f5b34949841598b87f31fbcbe69f2f355b6b0d0bb17584",
+          "greedy": [true, 494, 60],
+          "games": [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1],
+          "winRate": 0.4583333333333333
+        },
+        {
+          "k": 3,
+          "seed": 23758,
+          "crates": 60,
+          "columnsSha256": "df6975f47b8b9d65d59c087ba9ba62817d17689bcc291f80661f04ebecf6d2eb",
+          "greedy": [true, 453, 60],
+          "games": [0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1],
+          "winRate": 0.7083333333333334
+        }
+      ],
+      "chosen": 3,
+      "winRate": 0.7083333333333334
+    },
+    {
+      "levelId": "ice-cream",
+      "file": "Assets/_CubeHaul/Levels/Content/level-09-ice-cream.level.json",
+      "options": {
+        "seed": 1,
+        "shuffle": 1.5,
+        "targetWinRate": 0.5,
+        "edges": "bottom",
+        "columns": 5,
+        "slots": 5,
+        "bigChance": 0.15
+      },
+      "candidates": [
+        {
+          "k": 0,
+          "seed": 1,
+          "crates": 70,
+          "columnsSha256": "8b3ba1cdc94826c0be050af7acf015e4d0b5ecd857207a0d87d1866922a2da05",
+          "greedy": [true, 405, 70],
+          "games": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0],
+          "winRate": 0.20833333333333334
+        },
+        {
+          "k": 1,
+          "seed": 7920,
+          "crates": 64,
+          "columnsSha256": "de269fbce05e3aa8f3d00d3251c5a91211e59d12109fa83148b9099d3ef0cd7d",
+          "greedy": [true, 377, 64],
+          "games": [1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1],
+          "winRate": 0.8333333333333334
+        },
+        {
+          "k": 2,
+          "seed": 15839,
+          "crates": 58,
+          "columnsSha256": "d21787136b174c9891144fecacad8fac75f621ab3c9ea504b03ae10bf4fb36d3",
+          "greedy": [true, 384, 58],
+          "games": [0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+          "winRate": 0.7916666666666666
+        },
+        {
+          "k": 3,
+          "seed": 23758,
+          "crates": 59,
+          "columnsSha256": "f3a9499c72f941524acaa6648c8b9499a44dcf699585b09d8c825f04d8f467df",
+          "greedy": [true, 724, 59],
+          "games": [1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0],
+          "winRate": 0.25
+        },
+        {
+          "k": 4,
+          "seed": 31677,
+          "crates": 63,
+          "columnsSha256": "15225741b2da4f9f2c84b56176936429485bff144506f546bcc511f006e67b40",
+          "greedy": [true, 396, 63],
+          "games": [0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1],
+          "winRate": 0.625
+        },
+        {
+          "k": 5,
+          "seed": 39596,
+          "crates": 69,
+          "columnsSha256": "89bd8a2b1a736b2916f1fa65bc644ab80a79e1249901bc32d9582b79bd381ff0",
+          "greedy": [true, 387, 69],
+          "games": [0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+          "winRate": 0.3333333333333333
+        },
+        {
+          "k": 6,
+          "seed": 47515,
+          "crates": 67,
+          "columnsSha256": "867d8d92db92ed339f3459c6f579bf2a22e098bc6a3b6a1bc9fac1aadaba5ded",
+          "greedy": [true, 404, 67],
+          "games": [1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+          "winRate": 0.2916666666666667
+        },
+        {
+          "k": 7,
+          "seed": 55434,
+          "crates": 65,
+          "columnsSha256": "8a66ea0e3ba1e80c4c395a6dc20d48e69a204318e4183062d636d77b630b70d7",
+          "greedy": [false, 345, 37]
+        },
+        {
+          "k": 8,
+          "seed": 63353,
+          "crates": 70,
+          "columnsSha256": "ffe387137c8835bef887abbdc2d76f43c13302e491c5a50c2bcbcb4eddd5eee3",
+          "greedy": [false, 185, 20]
+        },
+        {
+          "k": 9,
+          "seed": 71272,
+          "crates": 67,
+          "columnsSha256": "a3849776259f8e04e454ae56044995ffb6b5b63707816568a38acd9e85ffd9d4",
+          "greedy": [true, 413, 67],
+          "games": [0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+          "winRate": 0.3333333333333333
+        },
+        {
+          "k": 10,
+          "seed": 79191,
+          "crates": 65,
+          "columnsSha256": "54f887069e01758b17c15bb22f18991342ee4af62f539f65bcf147676a61a722",
+          "greedy": [true, 461, 65],
+          "games": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+          "winRate": 0.041666666666666664
+        },
+        {
+          "k": 11,
+          "seed": 87110,
+          "crates": 60,
+          "columnsSha256": "8e94bb572cd940c7449ecc3b42780f0ab962053e5925c32e040d33693efbb053",
+          "greedy": [true, 339, 60],
+          "games": [0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1],
+          "winRate": 0.6666666666666666
+        },
+        {
+          "k": 12,
+          "seed": 95029,
+          "crates": 69,
+          "columnsSha256": "c42583bfd764e21eba0dd486b43a132416c15f1aae4bf1aa355fb75d8e2087d5",
+          "greedy": [true, 342, 69],
+          "games": [1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0],
+          "winRate": 0.4166666666666667
+        },
+        {
+          "k": 13,
+          "seed": 102948,
+          "crates": 57,
+          "columnsSha256": "6f3fbd656868f2f12d60ca79d137c971565fd104957466dca36d0477bc43b11b",
+          "greedy": [true, 405, 57],
+          "games": [0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+          "winRate": 0.3333333333333333
+        },
+        {
+          "k": 14,
+          "seed": 110867,
+          "crates": 66,
+          "columnsSha256": "3226c0cfc319bcf1f9810e9c6b05e539cf0a54385ccf21da2a80a06be39edf67",
+          "greedy": [true, 371, 66],
+          "games": [1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+          "winRate": 0.7083333333333334
+        },
+        {
+          "k": 15,
+          "seed": 118786,
+          "crates": 62,
+          "columnsSha256": "b3ff881236c7c61a66cc594aac34c529e231543e0be79ca53ad4d156abd253a6",
+          "greedy": [true, 385, 62],
+          "games": [1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1],
+          "winRate": 0.5
+        }
+      ],
+      "chosen": 15,
+      "winRate": 0.5
+    },
+    {
+      "levelId": "watermelon",
+      "file": "Assets/_CubeHaul/Levels/Content/level-10-watermelon.level.json",
+      "options": {
+        "seed": 1,
+        "shuffle": 1.5,
+        "targetWinRate": 0.35,
+        "edges": "bottom",
+        "columns": 5,
+        "slots": 5,
+        "bigChance": 0.15
+      },
+      "candidates": [
+        {
+          "k": 0,
+          "seed": 1,
+          "crates": 68,
+          "columnsSha256": "4cfdf89b22149d6f690622804ccfbb444ef8c626efd3420939bce75c86610d47",
+          "greedy": [false, 58, 15]
+        },
+        {
+          "k": 1,
+          "seed": 7920,
+          "crates": 62,
+          "columnsSha256": "328b3036a808916eab616c983a7c6fbf689d0fbb4ef4d620dde9a7fab3322c1b",
+          "greedy": [true, 360, 62],
+          "games": [0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0],
+          "winRate": 0.3333333333333333
+        }
+      ],
+      "chosen": 1,
+      "winRate": 0.3333333333333333
+    }
+  ]
+}
