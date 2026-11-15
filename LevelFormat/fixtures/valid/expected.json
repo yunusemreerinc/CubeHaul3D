@@ -1,0 +1,57 @@
+{
+  "block-size-override.json": {
+    "warnings": [
+      {
+        "code": "BLOCK_SIZE_OVERRIDE",
+        "path": "/generation/minBlock"
+      },
+      {
+        "code": "BLOCK_SIZE_OVERRIDE",
+        "path": "/generation/maxBlock"
+      }
+    ]
+  },
+  "difficulty-boundaries.json": {
+    "warnings": []
+  },
+  "duplicate-key-last-wins.json": {
+    "warnings": []
+  },
+  "duplicate-palette-color.json": {
+    "warnings": [
+      {
+        "code": "DUPLICATE_PALETTE_COLOR",
+        "path": "/picture/palette/2"
+      }
+    ]
+  },
+  "empty-column-in-tray.json": {
+    "warnings": []
+  },
+  "generation-only.json": {
+    "warnings": []
+  },
+  "integers-written-as-decimals.json": {
+    "warnings": []
+  },
+  "minimal-static.json": {
+    "warnings": []
+  },
+  "static-and-generation.json": {
+    "warnings": []
+  },
+  "unused-palette-color.json": {
+    "warnings": [
+      {
+        "code": "UNUSED_PALETTE_COLOR",
+        "path": "/picture/palette/2"
+      }
+    ]
+  },
+  "uppercase-hex-and-extensions.json": {
+    "warnings": []
+  },
+  "utf8-bom.json": {
+    "warnings": []
+  }
+}

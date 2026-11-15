@@ -1,0 +1,5 @@
+{
+  "$schema": "../../level-definition.v1.schema.json",
+  "schemaVersion": 1,
+  "levelId": "ring",
+  "themeId": "default

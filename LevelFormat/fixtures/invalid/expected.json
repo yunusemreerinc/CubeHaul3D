@@ -1,0 +1,552 @@
+{
+  "cell-below-empty.json": {
+    "errors": [
+      {
+        "code": "CELL_COLOR",
+        "path": "/picture/cells/8"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "cell-color-outside-palette.json": {
+    "errors": [
+      {
+        "code": "CELL_COLOR",
+        "path": "/picture/cells/4"
+      }
+    ],
+    "schemaRejects": false
+  },
+  "cell-not-integer.json": {
+    "errors": [
+      {
+        "code": "WRONG_TYPE",
+        "path": "/picture/cells/3"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "cell-string.json": {
+    "errors": [
+      {
+        "code": "WRONG_TYPE",
+        "path": "/picture/cells/0"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "cells-length.json": {
+    "errors": [
+      {
+        "code": "CELLS_LENGTH",
+        "path": "/picture/cells"
+      }
+    ],
+    "schemaRejects": false
+  },
+  "cells-not-array.json": {
+    "errors": [
+      {
+        "code": "WRONG_TYPE",
+        "path": "/picture/cells"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "column-count-mismatch.json": {
+    "errors": [
+      {
+        "code": "COLUMN_COUNT_MISMATCH",
+        "path": "/tray/columns"
+      }
+    ],
+    "schemaRejects": false
+  },
+  "crate-color-outside-palette.json": {
+    "errors": [
+      {
+        "code": "CRATE_COLOR",
+        "path": "/tray/columns/1/0/color"
+      }
+    ],
+    "schemaRejects": false
+  },
+  "crate-count-zero.json": {
+    "errors": [
+      {
+        "code": "OUT_OF_RANGE",
+        "path": "/tray/columns/0/0/count"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "crate-duplicate-id.json": {
+    "errors": [
+      {
+        "code": "DUPLICATE_CRATE_ID",
+        "path": "/tray/columns/1/0/id"
+      }
+    ],
+    "schemaRejects": false
+  },
+  "crate-missing-count.json": {
+    "errors": [
+      {
+        "code": "MISSING_FIELD",
+        "path": "/tray/columns/0/0/count"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "crate-unknown-field.json": {
+    "errors": [
+      {
+        "code": "UNKNOWN_FIELD",
+        "path": "/tray/columns/0/0/colour"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "difficulty-greedy-wrong-type.json": {
+    "errors": [
+      {
+        "code": "WRONG_TYPE",
+        "path": "/difficultyMetadata/greedy/solved"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "difficulty-label-mismatch.json": {
+    "errors": [
+      {
+        "code": "DIFFICULTY_LABEL_MISMATCH",
+        "path": "/difficultyMetadata/label"
+      }
+    ],
+    "schemaRejects": false
+  },
+  "difficulty-label-unknown.json": {
+    "errors": [
+      {
+        "code": "INVALID_VALUE",
+        "path": "/difficultyMetadata/label"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "difficulty-without-tray.json": {
+    "errors": [
+      {
+        "code": "DIFFICULTY_WITHOUT_TRAY",
+        "path": "/difficultyMetadata"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "edges-unknown.json": {
+    "errors": [
+      {
+        "code": "INVALID_VALUE",
+        "path": "/edges"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "edges-uppercase.json": {
+    "errors": [
+      {
+        "code": "INVALID_VALUE",
+        "path": "/edges"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "extensions-not-object.json": {
+    "errors": [
+      {
+        "code": "WRONG_TYPE",
+        "path": "/extensions"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "generation-missing-seed.json": {
+    "errors": [
+      {
+        "code": "MISSING_FIELD",
+        "path": "/generation/seed"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "generation-negative-shuffle.json": {
+    "errors": [
+      {
+        "code": "OUT_OF_RANGE",
+        "path": "/generation/shuffle"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "generation-seed-too-big.json": {
+    "errors": [
+      {
+        "code": "OUT_OF_RANGE",
+        "path": "/generation/seed"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "level-id-pattern.json": {
+    "errors": [
+      {
+        "code": "INVALID_VALUE",
+        "path": "/levelId"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "level-id-trailing-newline.json": {
+    "errors": [
+      {
+        "code": "INVALID_VALUE",
+        "path": "/levelId"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "many-errors-at-once.json": {
+    "errors": [
+      {
+        "code": "INVALID_VALUE",
+        "path": "/levelId"
+      },
+      {
+        "code": "OUT_OF_RANGE",
+        "path": "/slotCount"
+      },
+      {
+        "code": "CELL_COLOR",
+        "path": "/picture/cells/4"
+      },
+      {
+        "code": "OUT_OF_RANGE",
+        "path": "/tray/columns/0/0/count"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "missing-required-fields.json": {
+    "errors": [
+      {
+        "code": "MISSING_FIELD",
+        "path": "/levelId"
+      },
+      {
+        "code": "MISSING_FIELD",
+        "path": "/name"
+      },
+      {
+        "code": "MISSING_FIELD",
+        "path": "/edges"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "name-blank.json": {
+    "errors": [
+      {
+        "code": "INVALID_VALUE",
+        "path": "/name"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "no-tray-or-generation.json": {
+    "errors": [
+      {
+        "code": "NO_TRAY_OR_GENERATION",
+        "path": ""
+      }
+    ],
+    "schemaRejects": true
+  },
+  "palette-bad-color.json": {
+    "errors": [
+      {
+        "code": "INVALID_VALUE",
+        "path": "/picture/palette/1"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "palette-empty.json": {
+    "errors": [
+      {
+        "code": "OUT_OF_RANGE",
+        "path": "/picture/palette"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "picture-empty.json": {
+    "errors": [
+      {
+        "code": "EMPTY_PICTURE",
+        "path": "/picture/cells"
+      }
+    ],
+    "schemaRejects": false
+  },
+  "picture-missing.json": {
+    "errors": [
+      {
+        "code": "MISSING_FIELD",
+        "path": "/picture"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "picture-unknown-field.json": {
+    "errors": [
+      {
+        "code": "UNKNOWN_FIELD",
+        "path": "/picture/depth"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "picture-width-too-big.json": {
+    "errors": [
+      {
+        "code": "OUT_OF_RANGE",
+        "path": "/picture/width"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "root-is-array.json": {
+    "errors": [
+      {
+        "code": "WRONG_TYPE",
+        "path": ""
+      }
+    ],
+    "schemaRejects": true
+  },
+  "schema-version-0.json": {
+    "errors": [
+      {
+        "code": "UNSUPPORTED_SCHEMA_VERSION",
+        "path": "/schemaVersion"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "schema-version-2.json": {
+    "errors": [
+      {
+        "code": "UNSUPPORTED_SCHEMA_VERSION",
+        "path": "/schemaVersion"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "schema-version-missing.json": {
+    "errors": [
+      {
+        "code": "MISSING_FIELD",
+        "path": "/schemaVersion"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "schema-version-string.json": {
+    "errors": [
+      {
+        "code": "WRONG_TYPE",
+        "path": "/schemaVersion"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "slot-count-fraction.json": {
+    "errors": [
+      {
+        "code": "WRONG_TYPE",
+        "path": "/slotCount"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "slot-count-infinite.json": {
+    "errors": [
+      {
+        "code": "WRONG_TYPE",
+        "path": "/slotCount"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "slot-count-too-big.json": {
+    "errors": [
+      {
+        "code": "OUT_OF_RANGE",
+        "path": "/slotCount"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "slot-count-zero.json": {
+    "errors": [
+      {
+        "code": "OUT_OF_RANGE",
+        "path": "/slotCount"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "syntax-comment.json": {
+    "errors": [
+      {
+        "code": "JSON_SYNTAX",
+        "path": ""
+      }
+    ],
+    "schemaRejects": null
+  },
+  "syntax-nan.json": {
+    "errors": [
+      {
+        "code": "JSON_SYNTAX",
+        "path": ""
+      }
+    ],
+    "schemaRejects": null
+  },
+  "syntax-single-quotes.json": {
+    "errors": [
+      {
+        "code": "JSON_SYNTAX",
+        "path": ""
+      }
+    ],
+    "schemaRejects": null
+  },
+  "syntax-trailing-comma.json": {
+    "errors": [
+      {
+        "code": "JSON_SYNTAX",
+        "path": ""
+      }
+    ],
+    "schemaRejects": null
+  },
+  "syntax-truncated.json": {
+    "errors": [
+      {
+        "code": "JSON_SYNTAX",
+        "path": ""
+      }
+    ],
+    "schemaRejects": null
+  },
+  "syntax-two-documents.json": {
+    "errors": [
+      {
+        "code": "JSON_SYNTAX",
+        "path": ""
+      }
+    ],
+    "schemaRejects": null
+  },
+  "theme-id-null.json": {
+    "errors": [
+      {
+        "code": "WRONG_TYPE",
+        "path": "/themeId"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "tray-color-missing.json": {
+    "errors": [
+      {
+        "code": "TRAY_TOTAL_MISMATCH",
+        "path": "/picture/palette/0"
+      },
+      {
+        "code": "TRAY_TOTAL_MISMATCH",
+        "path": "/picture/palette/1"
+      }
+    ],
+    "schemaRejects": false
+  },
+  "tray-column-not-array.json": {
+    "errors": [
+      {
+        "code": "WRONG_TYPE",
+        "path": "/tray/columns/0"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "tray-empty.json": {
+    "errors": [
+      {
+        "code": "TRAY_EMPTY",
+        "path": "/tray/columns"
+      }
+    ],
+    "schemaRejects": false
+  },
+  "tray-flat-columns.json": {
+    "errors": [
+      {
+        "code": "WRONG_TYPE",
+        "path": "/tray/columns/0"
+      },
+      {
+        "code": "WRONG_TYPE",
+        "path": "/tray/columns/1"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "tray-no-columns.json": {
+    "errors": [
+      {
+        "code": "OUT_OF_RANGE",
+        "path": "/tray/columns"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "tray-total-mismatch.json": {
+    "errors": [
+      {
+        "code": "TRAY_TOTAL_MISMATCH",
+        "path": "/picture/palette/0"
+      }
+    ],
+    "schemaRejects": false
+  },
+  "unknown-field-pointer-escaping.json": {
+    "errors": [
+      {
+        "code": "UNKNOWN_FIELD",
+        "path": "/a~1b~0c"
+      }
+    ],
+    "schemaRejects": true
+  },
+  "unknown-root-field.json": {
+    "errors": [
+      {
+        "code": "UNKNOWN_FIELD",
+        "path": "/author"
+      }
+    ],
+    "schemaRejects": true
+  }
+}

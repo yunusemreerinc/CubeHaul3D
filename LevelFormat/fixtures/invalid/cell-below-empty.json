@@ -1,0 +1,46 @@
+{
+  "$schema": "../../level-definition.v1.schema.json",
+  "schemaVersion": 1,
+  "levelId": "ring",
+  "themeId": "default",
+  "name": "Ring",
+  "picture": {
+    "width": 3,
+    "height": 3,
+    "palette": [
+      "#ff0000",
+      "#0000ff"
+    ],
+    "cells": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      -2
+    ]
+  },
+  "edges": "all",
+  "slotCount": 5,
+  "tray": {
+    "columns": [
+      [
+        {
+          "id": 0,
+          "color": 0,
+          "count": 8
+        }
+      ],
+      [
+        {
+          "id": 1,
+          "color": 1,
+          "count": 1
+        }
+      ]
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "../level-definition.v1.schema.json",
+  "schemaVersion": 1,
+  "levelId": "heart",
+  "themeId": "default",
+  "name": "Little Heart",
+  "picture": {
+    "width": 7,
+    "height": 6,
+    "palette": ["#e8424f", "#ffffff"],
+    "cells": [
+      -1, 0, 0,-1, 0, 0,-1,
+       0, 0, 1, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0,
+      -1, 0, 0, 0, 0, 0,-1,
+      -1,-1, 0, 0, 0,-1,-1,
+      -1,-1,-1, 0,-1,-1,-1
+    ]
+  },
+  "edges": "bottom",
+  "slotCount": 5,
+  "generation": {
+    "seed": 7,
+    "shuffle": 0.5,
+    "targetWinRate": 0.8
+  }
+}
