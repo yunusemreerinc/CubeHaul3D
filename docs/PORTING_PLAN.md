@@ -5,7 +5,7 @@
 | **Kaynak** | [yunusemreerinc/cube-hunt](https://github.com/yunusemreerinc/cube-hunt), `main` @ `559dfd90977b1e15367bd7de25aec9fbae4b52f6` (15.11.2026) |
 | **Hedef** | CubeHaul3D — Unity 6.3 LTS (6000.3.x), Universal 3D (URP) şablonu, C# |
 | **Platformlar** | Android, iOS (dikey ekran, dokunmatik) |
-| **Bu belgenin kapsamı** | Analiz, katman ayrımı, C# mimari tasarımı, test planı, JSON bölüm formatı, riskler |
+| **Bu belgenin kapsamı** | Görev 01 — kaynak kod analizi ve taşıma haritası: referans TS sınıfları, claim/eat zamanlaması, çağrı sırası, animasyon/UI envanteri, katman ayrımı, TS → C# dosya/sınıf eşlemesi, bağımlılık diyagramları, 25 invariant, test planı, JSON bölüm formatı, riskler |
 | **Kapsam dışı (bu aşamada)** | C# kodu, Unity projesi, 3D sahne. TypeScript projesine dokunulmaz. |
 
 Planın tamamı, kaynak koddaki davranışın **bire bir korunması** ilkesine dayanır: C# çekirdeği aynı tohumla (seed)
@@ -18,20 +18,21 @@ tıkanmalıdır. 3D görselleştirme bu çekirdeğin üzerine, kuralları etkile
 |---|---|---|
 | Proje adı | **CubeHaul3D** (depo adıyla aynı) | Unity projesi depo kökünde; asmdef/namespace önekleri `CubeHaul.*`; JSON `format` değerleri `cubehaul.*` |
 | Kamera | **Ortografik** | Tüm küpler ekranda aynı boyda; okunabilirlik riski (R-17) azalır; derinlik hissi ışık ve eğik açıyla verilir (§3.5) |
-| "Your image" | **İlk sürümde yok** | Galeri eklentisi, izinler ve çalışma zamanında bölüm üretimi v1 kapsamından çıktı (§2.3, §7) |
+| "Your image" | **İlk sürümde yok** | Galeri eklentisi, izinler ve çalışma zamanında bölüm üretimi v1 kapsamından çıktı (§2.3, §8) |
 
 ---
 
 ## İçindekiler
 
-1. [Kaynak projenin analizi](#1-kaynak-projenin-analizi)
+1. [Kaynak projenin analizi](#1-kaynak-projenin-analizi) — bağımlılıklar §1.4, referans sınıflar §1.5, claim/eat zamanlaması §1.6, yaşam döngüleri §1.7, çağrı sırası §1.8, animasyon/UI §1.9
 2. [Katmanların ayrılması: mantık, bölüm üretimi, görselleştirme](#2-katmanların-ayrılması)
-3. [Unity C# sınıf mimarisi](#3-unity-c-sınıf-mimarisi)
-4. [Davranışı korumak için test planı](#4-test-planı)
-5. [Bölüm verisi için JSON formatı](#5-bölüm-verisi-için-json-formatı)
-6. [Riskler ve önlemler](#6-riskler-ve-önlemler)
-7. [Önerilen iş sırası](#7-önerilen-iş-sırası)
-8. [Açık sorular](#8-açık-sorular)
+3. [Unity C# sınıf mimarisi](#3-unity-c-sınıf-mimarisi) — eşleme tablosu §3.7, C# bağımlılık diyagramı §3.8
+4. [Korunması gereken invariantlar](#4-korunması-gereken-invariantlar)
+5. [Davranışı korumak için test planı](#5-test-planı)
+6. [Bölüm verisi için JSON formatı](#6-bölüm-verisi-için-json-formatı)
+7. [Riskler ve önlemler](#7-riskler-ve-önlemler)
+8. [Önerilen iş sırası](#8-önerilen-iş-sırası)
+9. [Açık sorular](#9-açık-sorular)
 
 Kararlar için başlıktaki [Alınan kararlar](#alınan-kararlar) tablosuna bakın.
 
@@ -143,8 +144,301 @@ Kaynak commit'te Node 22 üzerinde ölçüldü (`buildLevel` çıktısı). Bunla
 
 Gözlemler:
 
-- En büyük ızgara 46×46 = 2116 küp. 3D'de bu kadar küpün mobilde tek tek `GameObject` olarak çizilmesi pahalıdır (§6, R-11).
-- Masaüstü V8'de bir bölümün üretimi 36–482 ms. IL2CPP ile orta seviye bir telefonda bunun birkaç katı beklenmeli. Yerleşik bölümler önceden üretilip JSON'a gömülecek (§5). "Your image" v1'de olmadığından ilk sürümde çalışma zamanında hiç bölüm üretilmez.
+- En büyük ızgara 46×46 = 2116 küp. 3D'de bu kadar küpün mobilde tek tek `GameObject` olarak çizilmesi pahalıdır (§7, R-11).
+- Masaüstü V8'de bir bölümün üretimi 36–482 ms. IL2CPP ile orta seviye bir telefonda bunun birkaç katı beklenmeli. Yerleşik bölümler önceden üretilip JSON'a gömülecek (§6). "Your image" v1'de olmadığından ilk sürümde çalışma zamanında hiç bölüm üretilmez.
+
+### 1.4 TypeScript modül bağımlılıkları
+
+`import` satırlarından çıkarıldı. Kesikli oklar yalnızca tür (`import type`) bağımlılığıdır.
+
+```mermaid
+flowchart LR
+  subgraph core["src/core — kurallar"]
+    types["types.ts"]
+    board["board.ts"]
+    game["game.ts"]
+  end
+  subgraph levels["src/levels — üretim"]
+    rng["rng.ts"]
+    solver["solver.ts"]
+    generator["generator.ts"]
+    art["art.ts"]
+    image["image.ts"]
+    worker["worker.ts"]
+  end
+  subgraph view["src/view — çizim"]
+    roads["roads.ts"]
+    draw["draw.ts"]
+  end
+  main["main.ts (App)"]
+  board --> types
+  game --> board
+  game --> types
+  solver --> game
+  solver --> rng
+  solver -.-> types
+  generator --> board
+  generator --> types
+  generator --> rng
+  generator --> solver
+  art --> types
+  art -.-> generator
+  image --> types
+  worker --> art
+  worker --> generator
+  worker -.-> types
+  roads -.-> board
+  main --> game
+  main --> types
+  main --> art
+  main --> generator
+  main --> image
+  main --> draw
+  main --> roads
+  main ==>|"Web Worker (inline)"| worker
+```
+
+Gözlemler: `core` hiçbir şeye bağlı değil (yalnızca kendi içinde); `draw.ts` hiçbir modülü içe aktarmıyor (saf Canvas
+yardımcıları); `roads.ts` `Board`'u yalnızca tür olarak kullanıyor (`width`, `height`, `openSides`, `neighbors`,
+`isOpen`). Döngüsel bağımlılık yok. Taşımada bu yön korunur (§3.8).
+
+### 1.5 Referans sınıflar: iç durum ve algoritmalar
+
+#### `Board` (`src/core/board.ts`)
+
+| Alan | Tür | Başlangıç | Kim değiştirir | Anlam |
+|---|---|---|---|---|
+| `cells` | `Int16Array` | resmin kopyası | `eat`: renk → `EMPTY` | Tahtadaki küpler |
+| `open` | `Uint8Array` (özel) | 0 | `flood`: 0 → 1 | Açık kenara bağlı boş hücre (yalnızca artar) |
+| `claimed` | `Uint8Array` (özel) | 0 | `claim` 0→1, `eat` 1→0 | Kamyon gönderilmiş ama alınmamış küp |
+| `pending` | `number` | 0 | `claim` ++, `eat` (claimed) −− | Yoldaki kamyon sayısı |
+| `reachable` | `Set<number>[]` (özel, renk başına) | kurucuda açıktakiler | `flood` ekler; `claim`/`eat` siler | Şu an kamyon gönderilebilecek küpler |
+| `remainingByColor`, `remaining` | `number[]`, `number` | küp sayıları | `eat` −− | Kalan küpler (claimed dahil) |
+| `depth` | `Int32Array` (özel) | `1 << 30` | `updateDepths` (yalnızca azalır) | Açık hücreye yoldan girişten sonra kaç hücre içeride |
+| `road` | `Float32Array` (özel) | `+∞` | `updateDepths` | O girişe kadar rampadan yol mesafesi (hücre) |
+| `wayDepth`, `wayRoad` | `number` (özel) | `+∞` | `wayIn` | Sıcak yolda tahsis yapmamak için geçici sonuç |
+
+Algoritmalar (birebir korunacak):
+
+1. **Kurucu.** (a) Her boş, henüz açık olmayan ve açık kenarda duran hücreden `flood`; (b) her küp için
+   `remaining++`, `remainingByColor[c]++`, açıkta (`isExposed`) ise `reachable[c]`'ye ekle.
+2. **`flood(i)`** (yığınlı DFS): `i`'yi açar; komşu küp ise ve claimed değilse `reachable`'a ekler; komşu boş ve
+   kapalıysa açar ve yığına iter. Sonunda açılan tüm hücrelerle `updateDepths(opened)`.
+3. **`updateDepths(opened)`**: her yeni açık hücre için önce açık kenarlarından `(0, roadTo)`, sonra açık
+   komşularından `(depth+1, road)` adaylarının en iyisi (`better`: önce derinlik, eşitlikte yol, **katı** `<`);
+   ardından bu hücrelerden kuyruklu gevşetme (BFS) — yalnızca iyileşen komşular yeniden kuyruğa girer.
+4. **`wayIn(i)`** (küp için): adaylar sırasıyla alt kenar, yan kenarlar (`edges ≠ bottom`), üst kenar
+   (`edges = all`), sonra sol, sağ, üst, alt açık komşular; seçim `better` ile (sözlük sırası, ilk bulunan kazanır).
+5. **`pickTarget(c)`**: `reachable[c]` üzerinde; satır = `h−1−y` (0 = alt). Önce en küçük satır, sonra en küçük
+   **sürüş = wayDepth + wayRoad (toplam)**, eşitlikte en küçük indeks. Dikkat: `wayIn` yolu *sözlük sırasıyla*
+   seçer ama `pickTarget` küpleri *toplamla* karşılaştırır; bu iki ölçüt kasıtlıdır ve aynen taşınmalıdır (I-08).
+6. **`claim(i)`**: `reachable`'da değilse istisna; `reachable`'dan sil, `claimed = 1`, `pending++`.
+7. **`eat(i)`**: boşsa istisna; claimed ise bayrağı sil ve `pending−−`, değilse `reachable`'da olmalı (yoksa istisna);
+   hücreyi boşalt, sayaçları düşür, `flood(i)`.
+8. **`opensUp(c)`**: `pending = 0` ise false. Tüm claimed hücrelerden başlayarak kapalı boş hücreler üzerinden yayılır;
+   claimed olmayan `c` renkli bir komşu bulursa true. Her çağrıda `cells.length` boyunda dizi ayırır (R-11).
+
+#### `Game` (`src/core/game.ts`)
+
+| Alan | Anlam |
+|---|---|
+| `level` | Kurucuda `cloneLevel` ile alınan derin kopya (kasalar kopyalanır, resim paylaşılır) |
+| `board` | `new Board(level.picture, level.edges)` |
+| `columns` | `level.columns` (kopya üzerinde); `[c][0]` öndeki kasa; `tap` `shift()` ile çıkarır |
+| `slots` | `(Block \| null)[]`, uzunluk `slotCount`; `addSlot` `push(null)` |
+| `status` | `"playing" \| "won" \| "stuck"`; her `tap`/`tick`/`collect`/`step` sonunda `updateStatus` |
+
+`updateStatus`: `remaining = 0` → `won`; değilse `isStuck()` → `stuck`. `stuck`'tan çıkış yalnızca `addSlot`.
+
+#### `RoadMap` (`src/view/roads.ts`)
+
+Ekran (tasarım pikseli) koordinatlarında çalışır. `routeFrom(t, entry)`: hedef küpten başlayıp **açık** hücreler
+üzerinde BFS; ziyaret edilen her hücrenin açık kenarları için maliyet = `dist·cs + kenardan yola uzaklık +
+roadDistance(entry, yol noktası)`; en ucuz (katı `<`, ilk bulunan) seçilir. Yol: `entry` → `roadPath` (kısa yöndeki
+köşeler, 0.5 px eşikli) → yol noktası → BFS ağacı boyunca hücre merkezleri; küp kenardaysa `beside` (kenarın bir
+hücre dışı). `along` yol halkası üzerindeki konumu sol üst köşeden saat yönünde ölçer (0.5 px eşik).
+
+#### Üretim hattı (`generator.ts`, `solver.ts`, `rng.ts`)
+
+- `mulberry32(seed)`: 32-bit durum; `a += 0x6D2B79F5`; iki `Math.imul` karıştırma; çıktı `uint32 / 2^32`.
+- `peelLayers(picture, edges)`: geçici `Board`; her turda tüm renklerin `reachableCells` anlık görüntüsünü katman `l`
+  ile işaretleyip yer; `remaining = 0` olana kadar.
+- `generateLevel`: §1.2 B-22/B-23. RNG çağrı **sırası**: renk sırasıyla `splitCount` içindeki çağrılar → her kasa
+  için bir gürültü çağrısı → her dağıtım satırı için `shuffled` (5 sütunda 4 çağrı). Sıra değişirse tüm tepsi değişir.
+- `buildLevel`: aday döngüsü → `solveGreedy` → `randomWinRate`; seçim katı `<` (eşitlikte önceki aday kalır).
+- `solveGreedy`: döngü {boş slotları `chooseTap(force=false)` ile doldur → `step()` → hiçbir şey gönderilmediyse
+  `chooseTap(force=true)` ile bir dokunuş}; puan = `reach / (1 + aynı renkli slot) + (force ? kalan·1e-3 : 0)`,
+  katı `>` (eşitlikte küçük kolon). `maxTicks = 200 000`.
+- `randomWinRate(level, 24, seed)`: oyun `k` için `mulberry32(seed + k·101)`; boş slot oldukça dolu kolonlardan
+  `floor(rng·n)` ile seç, sonra `step()`.
+
+### 1.6 Claim / eat zamanlaması
+
+İki çalışma kipi vardır ve ikisi de korunmalıdır:
+
+| Kip | Kim kullanır | Sıra |
+|---|---|---|
+| **Anında** (`Game.step`) | Çözücü, rastgele oyuncu, birim testleri | `tick()` claim eder → aynı çağrıda tüm hücreler `eat` |
+| **Gecikmeli** (`tick` + `collect`) | Tarayıcıdaki oyun | `tick(ready)` claim eder; küp kamyon varana kadar tahtada kalır; varışta `collect` → `eat` |
+
+Gecikmeli kipte bir küpün zaman çizelgesi (hız = 1x, birimler tasarım pikseli):
+
+```
+t₀            Game.tick(ready)  → claim: count−−, pending++, küp reachable'dan çıkar ama yolu kapatmaya devam eder
+              App.sendTruck     → 3 şerit için RoadMap.routeFrom, en ucuz şerit; kamyon şerit kuyruğuna
+t₀ + q        şerit serbest     → q: şerit kuyruğu bekleme (her şerit 30·carScale/200 s ≈ 0.075–0.15 s aralıkla)
+t₀ + q + D/v  varış (pickUp)    → shown[cell] = EMPTY, Game.collect(cell) → Board.eat → flood → yeni reachable
+              + 0.42 s          → yükleme (küp kasaya uçar; LAND_AT = 0.78'de kasaya iner)
+              + D/v             → aynı yoldan geri, rampaya iner, kaybolur
+```
+
+`v = 200·speed` px/s; `D = |TUNNEL.y + 0.2·TUNNEL.h − ring.y1| + rota uzunluğu`. Aynı slotun sonraki kamyonu en erken
+`0.15 s / speed` sonra çıkar ve yalnızca o anda ulaşılabilir bir küp varsa. Sonuçları:
+
+- Claim ile collect arasında küp hâlâ engeldir; bu yüzden `slotBlocked` `opensUp`'a bakar (yanlış "bloke" göstermemek için).
+- `pending > 0` iken oyun tıkanmış sayılmaz; yoldaki kamyon sayısının üst sınırı yoktur (15 kamyon testi).
+- Kazanma son `collect`'te ilan edilir; panel kamyonlar dönüp 0.4 s geçince açılır.
+- Kare içinde `tick` sürüşten **önce** çalışır: bir karede açılan küp en erken bir sonraki karenin `tick`'inde claim
+  edilir (I-18). C# sabit adım döngüsü bu sırayı korur.
+
+### 1.7 Kasa, slot ve kamyon yaşam döngüleri
+
+```mermaid
+stateDiagram-v2
+  direction LR
+  state "Tepside" as Tray
+  state "Uçuyor (slot dolu, kamyon yok)" as Flying
+  state "Aktif" as Active
+  state "Bloke (yalnızca görünüm)" as Blocked
+  state "Ayrılıyor (0.5 s)" as Leaving
+  [*] --> Tray
+  Tray --> Flying : Game.tap — ön kasa, ilk boş slot
+  Flying --> Active : 1/3.8 s (gerçek zaman)
+  Active --> Active : tick → kamyon, count−−, 0.15 s bekle
+  Active --> Blocked : reachable = 0 ve opensUp = false
+  Blocked --> Active : renk yeniden ulaşılabilir
+  Active --> Leaving : count = 0 → slot null
+  Leaving --> [*]
+```
+
+```mermaid
+stateDiagram-v2
+  direction LR
+  state "Rampa kuyruğunda" as Queued
+  [*] --> Queued : sendTruck
+  Queued --> out : şerit aralığı doldu
+  out --> load : rota sonu → pickUp / Game.collect
+  load --> home : 0.42 s (sim)
+  home --> gone : rampaya ulaştı
+  gone --> [*]
+```
+
+Tepsi: her kolon bir liste, yalnızca `[0]` dokunulabilir; ekranda 3 sıra görünür (önde tam, arkada solgun ve dar).
+Bir kolon boşalınca kalan kolonlar ortada toplanır (yalnızca görünüm).
+
+### 1.8 Çağrı sırası
+
+**Açılış**
+
+```
+App.constructor
+├─ builtInLevels()                              10 × Sketch → Picture (+ ayarlar)
+├─ resize()
+├─ startLevel()
+│  ├─ builtLevel(i) → buildLevel(picture, spec)          (önbellekte yoksa, ana iş parçacığında)
+│  │  └─ k = 0..15
+│  │     ├─ generateLevel(seed + k·7919)
+│  │     │  ├─ mulberry32(seed)
+│  │     │  ├─ peelLayers → new Board (flood → updateDepths) → [reachableCells → eat]*
+│  │     │  ├─ renk başına: kararlı sort(katman) → splitCount
+│  │     │  ├─ gürültü → kararlı sort(zaman)
+│  │     │  └─ 5'li satırlar: shuffled → kararlı sort(kolon uzunluğu) → dağıt
+│  │     ├─ solveGreedy → new Game → [chooseTap → tap]* → step()* …
+│  │     └─ randomWinRate(level, 24, seed) → 24 × (new Game, tap/step)
+│  ├─ new Game(level) → cloneLevel → new Board
+│  ├─ cellSize / alan orijini / ring → new RoadMap(board, fx, fy, cs, ring, entry)
+│  └─ görünüm durumu sıfırla (cars, ramp, flyers, timers, colX, levelSeq++, slotBoostUsed = false)
+├─ prebuildLevels() → Worker.postMessage(i)              (komşu bölümlerden başlayarak)
+└─ requestAnimationFrame(frame)
+```
+
+**Kare** — `frame(now)`: `dt = min(0.05, Δt)` → `update(dt)` → `draw()`.
+
+`update(dt)` sırası (C#'ta `GameSession.Advance` + görünüm `Update` bu sırayı korur):
+
+1. `time += dt`, `shake` azalt
+2. `sdt = dt·speed`; her slot için `slotTimer −= sdt`; `slotBump` azalt
+3. `status = playing` ise `game.tick(ready)` (`ready = slotTimer ≤ 0 ∧ slot uçmuyor`) → her `Dispatch` için
+   `sendTruck` → `slotTimer = 0.15`, `slotBump = 1`, slot boşaldıysa `leave()`
+4. Rampa şeritleri: `rampTimer −= sdt`; süresi dolan şerit kuyruğundan bir kamyon `cars`'a
+5. Kamyonlar: `load` → yöne dön, `wait −= sdt`, `LAND_AT`'ta toz, bitince `home` yolu; diğerleri →
+   `drive(c, 200·sdt)` (varışta `pickUp` → `game.collect` → `board.eat`) → yöne dön
+6. `gone` kamyonları sil
+7. Parçacıklar, buton basma, uçan kasalar (`t += dt·3.8`, bitince `land`), ayrılan kasalar, `slotLand`, `trayRise`,
+   kolon kayması — hepsi gerçek `dt`
+8. Durum `playing` değil ve kamyon/kuyruk yoksa `overlayDelay += dt`
+
+`draw()` sırası: buton listesini sıfırla → statik katman (anahtar değiştiyse) → küp katmanı (kirli hücreler) →
+ekrana bas → canlı geçiş: üst çubuk, slotlar (her slot için `slotBlocked` → `opensUp`), tepsi, uçan kasalar,
+alt çubuk → kamyonlar → havadaki küpler → parçacıklar → panel. Butonlar çizim sırasında kaydedilir; dokunuşta son
+kaydedilen (en üstteki) kazanır.
+
+**Dokunuş** — `pointerdown` → `onPointer` → butonları sondan başa tara → `onClick` → `tapColumn(col)` →
+(boş slot yoksa `shake = 0.35`, çık) → `startCounts.set(id, count)` → `game.tap(col)` → `updateStatus` →
+`flyers.push`, `trayRise[col] = 0`.
+
+**Kamyon gönderme** — `Game.tick` → slot `s` için `ready(s)` → `board.pickTarget(color)` (→ her aday için `wayIn`)
+→ `board.claim(cell)` → `count−−` → `count = 0` ise `slots[s] = null` → döngü sonunda `updateStatus`.
+
+**Toplama** — `App.drive` → rota bitti → `pickUp` → `shown[cell] = EMPTY`, `cubeDirty.push` → `game.collect(cell)`
+→ `board.eat` → `flood` → `updateDepths` → `updateStatus`.
+
+**Güçlendirme** — `+1 Slot` → `App.addSlot` (kullanılmadıysa ve < 6) → `game.addSlot` (`stuck → playing`) →
+`overlayDelay = 0`.
+
+### 1.9 Animasyon ve UI envanteri
+
+**Animasyonlar** (hepsi görünüm katmanına gider; "sim" zaman tabanlı olanlar hız düğmesiyle hızlanır):
+
+| Animasyon | Tetikleyici | Süre / parametre | Zaman | TS | Unity karşılığı |
+|---|---|---|---|---|---|
+| Kasa uçuşu (tepsi → slot, 26 px yay, tepede şişme) | `tap` | `1/3.8 s` | gerçek | `Flyer`, `drawFlyers` | `CrateFlight` |
+| Slota iniş (zıplama, parıltı, 8 kıvılcım) | uçuş biter | 0.45 s | gerçek | `land`, `slotLand` | `SlotView` + `FxService` |
+| Sayı "pop"u | kamyon çıkar | `slotBump` 1→0, 6/s | gerçek | `slotBump` | `SlotView` |
+| İlerleme çubuğu | kamyon çıkar | kalan / başlangıç | — | `startCounts` | `SlotView` |
+| Bloke çizgileri + etiket | `slotBlocked` | sürekli | — | `holdStripes`, `pill` | `SlotView` (şerit shader'ı) |
+| Kasanın ayrılması (halka, şişme, dönerek küçülme, 14 konfeti) | son kamyon | 0.5 s | gerçek | `leave`, `drawLeaving` | `SlotView` + `FxService` |
+| Tepsi yükselme dalgası + parlama | `tap` | 0.32 s + 0.06 s·sıra, `easeOutBack`; parlama 0.4 s | gerçek | `trayRise`, `sheen` | `TrayView` |
+| Kolonların kayması | kolon boşalır | `1 − e^(−12·dt)` | gerçek | `colX` | `TrayView` |
+| Tepsi sallanması | dolu slotta dokunuş | 0.35 s | gerçek | `shake` | `TrayView` |
+| Rampadan çıkış/iniş (büyüme, solma) | kamyon | 28 px boyunca | sim | `RAMP_FADE` | `TruckView` |
+| Dönüş yumuşatma | sürüş / yükleme | 14 rad/s (yükte 10) | sim | `turnToward` | `TruckView` |
+| Sağ şeritten gitme | yol üstünde | `5.8·carScale·laneShare` | — | `carPose`, `laneShare` | `TruckView` |
+| Küp yükleme (sallanma, yay, kasaya iniş, yay sıkışması, toz) | varış | 0.42 s; `LIFT_END 0.22`, `LAND_AT 0.78` | sim | `drawLoading`, `landPuff` | `TruckCargoAnimator` |
+| Küp kalkış tozu | varış | 0.25–0.4 s | gerçek | `pickUp` | `FxService` |
+| Buton basma (çökme, ışık, dalga) + 8 ms titreşim | dokunuş | 0.28 s | gerçek | `press`, `pressGlow` | `PressFeedback`, `HapticsService` |
+| Sonuç paneli | durum + kamyonlar bitti | 0.4 s gecikme | gerçek | `drawOverlay`, `panel` | `EndPanelView` |
+
+Parçacıklar `Math.random` kullanır; oyun mantığına etkisi yoktur ve C#'ta deterministik olması gerekmez.
+
+**UI öğeleri** (420×900 tasarım koordinatları):
+
+| Öğe | Konum / boyut | İçerik | Unity karşılığı |
+|---|---|---|---|
+| Üst çubuk | y ≈ 14–55 | Yeniden başlat (30,32 r17), önceki (70,32 r15), sonraki (300,32 r15), başlık `i/10 · Ad` (185,24), zorluk çipi (185,38), hız düğmesi (326,14 82×38) | `HudView`, `SpeedButton` (uGUI) |
+| Tahta kartı | (16,64) 388×388 | Kart, yol halkası (asfalt 23 px, kenar çizgileri, kesikli orta çizgi), tuğla duvar (9.5), küpler (`cs − max(1, 0.1·cs)`), alınan küp yerinde soket | `BoardView`, `RoadView`, `WallView` (3D) |
+| Rampa | merkez (210,496) 112×36 | Giriş yolu, 3 şerit (−34/0/+34), portal ışıkları | `RampView` (3D) |
+| Slot dok | y 540, h 66, genişlik ≤ 68, aralık 10, en fazla 6 | Boş yuva, kasa, sayı, ilerleme çubuğu, bloke çizgileri | `SlotView` (3D veya UI) |
+| Tepsi | y 636, 5 kolon 68×52, aralık 10×8, görünür 3 sıra | Alfa 1 / 0.55 / 0.32, içe çekme 0 / 5 / 9, yazı 25 / 19 / 19 | `TrayView`, `CrateView` |
+| Alt çubuk | y 840, 176×54 düğmeler | "+1 Slot" (rozet 1/0); "Your image" (v1'de yok) | `BottomBarView` |
+| Panel | 320×220 | "Picture complete!" / "Out of moves", düğmeler | `EndPanelView` |
+
+**`draw.ts` yardımcıları → Unity varlıkları:** `car` → kamyon modeli/prefab'ı (renk materyal özelliğiyle);
+`cubeSprite` → yuvarlatılmış küp mesh'i + tek materyal; `socketSprite` → soket mesh'i/decal; `pod` → kasa prefab'ı;
+`countLabel`, `labelWidth`, `BODY_FONT` → TextMeshPro yazı tipi + konturlu materyal; `roundIconButton`, `roundButton`,
+`icon`, `iconChip`, `badge`, `speedArrows(Width)` → UI sprite'ları ve prefab'lar; `shelf`, `lane`, `dock`, `well`,
+`pill`, `holdStripes` → UI/3D dekorlar ve şerit shader'ı; `brickWall` → duvar mesh'i + doku; `shade`, `luminance` →
+`ColorUtil`; `stamp` ve katman önbellekleri → gerek yok (URP batching/instancing).
 
 ---
 
@@ -218,7 +512,7 @@ Bağımlılıklar yalnızca yukarıdan aşağıya akar. Görünüm (View), kural
 | `rng.ts`, `generator.ts`, `solver.ts` | `Levels` (saf) | Bire bir port, bit düzeyinde aynı sonuç |
 | `image.ts › quantize` | `Levels.ImageQuantizer` (saf) | Girdi: `byte[] rgba, width, height`. Saf ve küçük olduğu için v1'de de taşınır ve test edilir (mevcut testi korur, özelliği sonra eklemeyi kolaylaştırır); oyunda kullanılmaz |
 | `image.ts › pictureFromFile` | **v1'de yok.** İleride: App `ImagePickerService` | Unity `Texture2D` + GPU küçültme; sonuç tarayıcıdan birebir olmayabilir (R-20) |
-| `art.ts › Sketch` + resimler | **Taşınmaz** — bir kerelik dışa aktarılır | Resimler JSON'a "pişirilir" (§5). `Math.sin/sqrt/pow` eşik farkları C#'ta pikselleri değiştirebilir (R-04) |
+| `art.ts › Sketch` + resimler | **Taşınmaz** — bir kerelik dışa aktarılır | Resimler JSON'a "pişirilir" (§6). `Math.sin/sqrt/pow` eşik farkları C#'ta pikselleri değiştirebilir (R-04) |
 | `art.ts › builtInLevels` ayarları | JSON `generation` bölümü | |
 | `worker.ts` | v1: yok. İleride: App `LevelBuildService` | `Task.Run` + ana iş parçacığına dönüş |
 
@@ -234,7 +528,8 @@ okur; `Tools/` ve belgeler etkilenmez). `Library/`, `Temp/`, `Logs/`, `UserSetti
 
 ```
 CubeHaul3D/                         (bu depo = Unity 6.3 LTS projesi, URP)
-├─ PORTING_PLAN.md
+├─ docs/
+│  └─ PORTING_PLAN.md               Bu belge
 ├─ Tools/
 │  └─ ts-export/                    Node betiği: kaynak TS'yi pinli commit'ten okur, JSON + golden fixture üretir
 │                                   (TS projesini değiştirmez; ayrı klon/alt modül üzerinden içe aktarır)
@@ -493,14 +788,189 @@ sequenceDiagram
   (sürüm sayacı ile önbellek).
 - Küp çizimi tek materyal + instancing; 2116 küp ve ~100 kamyonla hedef: orta seviye Android'de 60 fps.
 
+### 3.7 TypeScript → C# dosya/sınıf eşleme tablosu
+
+C# yolları `Assets/CubeHaul/Scripts/` altına görelidir. "—" = taşınmaz.
+
+**Kurallar (`src/core`) → `CubeHaul.Core`**
+
+| TS dosyası | TS sembolü | C# dosyası | C# türü / üyesi | Not |
+|---|---|---|---|---|
+| `core/types.ts` | `ColorId` | — | `int` | |
+| | `OpenEdges` | `Core/OpenEdges.cs` | `enum OpenEdges { All, Sides, Bottom }` | JSON'da metin |
+| | `EMPTY` | `Core/Cells.cs` | `Cells.Empty = -1` | |
+| | `Picture` | `Core/Picture.cs` | `sealed class Picture` | `short[] Cells`, `string[] PaletteHex` |
+| | `Block` | `Core/Crate.cs` | `sealed class Crate` | `Count` değişken |
+| | `Level`, `cloneLevel` | `Core/Level.cs` | `sealed class Level`, `Level.Clone()` | |
+| `core/board.ts` | `Side` | `Core/OpenEdges.cs` | `enum Side` | |
+| | `Board` | `Core/Board.cs` | `sealed class Board` | Tüm genel ve özel üyeler aynı adla (§3.2); `better` → `private static bool Better(...)` |
+| `core/game.ts` | `Status` | `Core/GameStatus.cs` | `enum GameStatus` | |
+| | `Dispatch` | `Core/Dispatch.cs` | `readonly struct Dispatch` | |
+| | `Game` | `Core/Game.cs` | `sealed class Game` | `Tick` çıktı listesi alır |
+
+**Üretim (`src/levels`) → `CubeHaul.Levels`, `CubeHaul.Data`, araçlar**
+
+| TS dosyası | TS sembolü | C# dosyası | C# türü / üyesi | Not |
+|---|---|---|---|---|
+| `levels/rng.ts` | `mulberry32` | `Levels/Mulberry32.cs` | `sealed class Mulberry32 { double Next(); }` | `uint`, `unchecked` |
+| (JS çalışma zamanı) | `Array.sort`, `Math.round`, `Math.imul` | `Levels/StableSort.cs`, `Levels/JsMath.cs` | `StableSort.Sort`, `JsMath.Round`, `JsMath.Imul` | R-01, R-02, R-03 |
+| `levels/generator.ts` | `GenOptions`, `BuildOptions`, `CrateSizes` | `Levels/GenOptions.cs` | `struct GenOptions`, `struct BuildOptions`, `struct CrateSizes` | |
+| | `peelLayers` | `Levels/PeelLayers.cs` | `PeelLayers.Compute` | |
+| | `shuffled`, `splitCount`, `generateLevel`, `buildLevel` | `Levels/LevelGenerator.cs` | `Shuffled`, `SplitCount`, `Generate`, `Build` | |
+| | `BuiltLevel` | `Levels/BuiltLevel.cs` | `readonly struct BuiltLevel` | |
+| `levels/solver.ts` | `SolveResult`, `solveGreedy`, `chooseTap` | `Levels/GreedySolver.cs` | `GreedySolver.Solve`, `ChooseTap` | |
+| | `randomWinRate` | `Levels/RandomPlayer.cs` | `RandomPlayer.WinRate` | |
+| `levels/image.ts` | `quantize` | `Levels/ImageQuantizer.cs` | `ImageQuantizer.Quantize` | v1'de oyunda kullanılmaz |
+| | `pictureFromFile` | — | — | v1'de yok |
+| `levels/art.ts` | `Sketch`, 10 resim fonksiyonu | — → `Tools/ts-export` | — | Çıktı: `Content/Levels/*.json` (R-04) |
+| | `LevelSpec` | `Levels/LevelSpec.cs` | `sealed class LevelSpec` | JSON'dan |
+| | `builtInLevels` | `App/LevelRepository.cs` | `LevelRepository.LoadBuiltIn()` | JSON → `LevelSpec` + `Level` |
+| (yeni) | JSON şeması | `Data/LevelFileDto.cs`, `Data/CatalogDto.cs`, `Data/LevelMapper.cs`, `Data/LevelValidator.cs` | DTO'lar, eşleyici, doğrulayıcı | §6 |
+| `levels/worker.ts` | `BuildRequest`, `BuiltMessage`, `onmessage` | — | — | v1'de çalışma zamanı üretimi yok |
+| `main.ts` | zorluk eşikleri | `Levels/DifficultyLabel.cs` | `DifficultyLabel.From(double)` | B-25 |
+
+**Rota ve zamanlama (`src/view/roads.ts`, `main.ts`'nin kural kısmı) → `CubeHaul.Simulation`**
+
+| TS kaynağı | TS sembolü | C# dosyası | C# türü / üyesi |
+|---|---|---|---|
+| `view/roads.ts` | `Pt`, `Ring` | `Simulation/Pt.cs`, `Simulation/Ring.cs` | `readonly struct Pt`, `readonly struct Ring` |
+| | `RoadMap` (`center`, `beside`, `roadPoint`, `along`, `roadDistance`, `roadPath`, `route`, `routeFrom`) | `Simulation/RoadMap.cs` | `sealed class RoadMap` (aynı adlar) |
+| `main.ts` | `CAR_SPEED`, `CONVOY_GAP`, `POP_INTERVAL`, `LOAD_TIME`, `FLY_SPEED`, `RAMP_LANES`, `BOARD`, `FIELD_INSET`, `ROAD_GAP`, `TUNNEL`, `MAX_SLOTS` | `Simulation/SimConstants.cs` | `static class SimConstants` |
+| | `cellSize`, `cellCenter`, `ring` hesabı, `carScale` | `Simulation/FieldLayout.cs` | `sealed class FieldLayout` |
+| | `slotTimer`, `ready`, uçuş kapısı | `Simulation/DispatchScheduler.cs` | `sealed class DispatchScheduler` |
+| | `Car` (`x, y, sx, sy, path, step, route, cube, cell, state, cargo, wait`) | `Simulation/Truck.cs` | `sealed class Truck`, `enum TruckState` |
+| | `sendTruck`, `ramp`, `rampTimer`, `drive`, `pickUp` (kural kısmı) | `Simulation/TruckFleet.cs` | `sealed class TruckFleet` |
+| | `addSlot`, `slotBoostUsed` | `Simulation/BoosterRules.cs` | `sealed class BoosterRules` |
+| | `levelIndex`, `goToLevel`, `startLevel` | `Simulation/LevelProgression.cs`, `Simulation/GameSession.cs` | `LevelProgression`, `GameSession.Start/Restart` |
+| | `update()` (kural kısmı), `speed`, `overlayDelay` | `Simulation/GameSession.cs` | `GameSession.Advance`, `Speed`, `EndPanelReady` |
+| | (yeni) olaylar | `Simulation/SessionEvents.cs` | `SessionEvent` türleri (§3.4) |
+
+**Görünüm ve uygulama (`main.ts`'nin geri kalanı, `view/draw.ts`) → `CubeHaul.App`, `CubeHaul.View`**
+
+| TS sembolü | C# dosyası | C# türü |
+|---|---|---|
+| `App.constructor`, `requestAnimationFrame` döngüsü | `App/GameBootstrap.cs`, `App/GameController.cs` | `MonoBehaviour` |
+| — (bölüm dosyaları) | `App/LevelLibrary.cs` | `ScriptableObject` |
+| `resize`, `scale`, `dpr` | `View/CameraRig.cs` | ortografik kamera + safe area |
+| tasarım px → dünya | `View/WorldMapper.cs` | `static class WorldMapper` |
+| `drawBoard`, `drawCubes`, `shown`, `sprite`, `cubeSprite`, `socketSprite` | `View/BoardView.cs`, `View/CubeInstancer.cs` | instanced küpler + soketler |
+| `drawBoard` (yol), `drawWalls`, `brickWall` | `View/RoadView.cs`, `View/WallView.cs` | mesh üretimi |
+| `drawTunnel` | `View/RampView.cs` | |
+| `car`, `carPose`, `laneShare`, `turnToward`, rampa solması | `View/TruckView.cs`, `View/TruckPool.cs` | |
+| `drawLoading`, `bedPoint`, `landPuff` | `View/TruckCargoAnimator.cs` | |
+| `drawSlots`, `land`, `leave`, `drawLeaving`, `holdStripes`, `pill`, `dock`, `well` | `View/SlotView.cs` | |
+| `drawFlyers`, `Flyer` | `View/CrateFlight.cs` | |
+| `drawTray`, `drawTrayStacks`, `trayRise`, `colX`, `shake`, `slotRect`, `trayLeft`, `columnTargetX`, `blockRect`, `shelf`, `lane`, `pod` | `View/TrayView.cs`, `View/CrateView.cs`, `View/TrayLayout.cs` | |
+| `drawTopBar`, `drawSpeedButton`, `roundIconButton`, `icon`, `speedArrows`, `countLabel` | `View/HudView.cs`, `View/SpeedButton.cs` | uGUI + TextMeshPro |
+| `drawBottomBar`, `actionButton`, `badge`, `iconChip` | `View/BottomBarView.cs` | |
+| `drawOverlay`, `panel`, `wrap` | `View/EndPanelView.cs` | |
+| `onPointer`, `buttons`, `tapColumn` (giriş kısmı) | `View/InputRouter.cs` | Input System |
+| `press`, `pressOf`, `pressGlow`, `navigator.vibrate` | `View/PressFeedback.cs`, `View/HapticsService.cs` | |
+| `Particle`, `particles` | `View/FxService.cs` | havuzlu `ParticleSystem` |
+| `easeOutBack`, `sheen`, `atDepth`, `shade`, `luminance`, `luminanceFill` | `View/Easing.cs`, `View/ColorUtil.cs` | |
+| `paintLayer`, `stamp`, `staticLayer`, `cubeLayer`, `trayLayer` | — | Canvas önbelleği; URP'de gerekmez |
+| `prebuildLevels`, `buildCustom`, `onFile`, `message` | — | v1'de yok |
+
+**Testler**
+
+| TS testi | C# test dosyası (`Assets/Tests/EditMode/`) |
+|---|---|
+| `tests/core.test.ts › Board`, `sealed gaps` | `BoardTests.cs` |
+| `› Board edges` | `BoardEdgeTests.cs` |
+| `› Game` | `GameTests.cs` |
+| `› claimed cubes` | `ClaimTests.cs` |
+| `› cubes next to the road first` | `TargetingTests.cs` |
+| `› levels` | `BuiltInLevelTests.cs`, `GeneratorTests.cs` |
+| `› quantize` | `ImageQuantizerTests.cs` |
+| `tests/roads.test.ts` | `RoadMapTests.cs`, `RoadMapLevelTests.cs` |
+| (yeni) §4 invariantları | `InvariantChecker.cs` (test yardımcısı), `InvariantFuzzTests.cs` |
+| (yeni) golden | `GoldenRngTests.cs`, `GoldenGeneratorTests.cs`, `GoldenReplayTests.cs`, `GoldenRouteTests.cs` |
+
+### 3.8 C# bağımlılık diyagramı
+
+Oklar "bağlıdır" anlamındadır. Saf derlemeler (üst sıra) `UnityEngine`'e bağlanamaz (`noEngineReferences`).
+`App`, `View`'ı tanımaz: görünümler `GameController`'dan `GameSession`'ı alıp olaylarına abone olur.
+
+```mermaid
+flowchart BT
+  Core["CubeHaul.Core<br/>Board · Game · Level · Picture · Crate"]
+  Levels["CubeHaul.Levels<br/>Mulberry32 · LevelGenerator · GreedySolver · RandomPlayer · ImageQuantizer"]
+  Data["CubeHaul.Data<br/>LevelFileDto · LevelMapper · LevelValidator"]
+  Sim["CubeHaul.Simulation<br/>FieldLayout · RoadMap · DispatchScheduler · TruckFleet · GameSession"]
+  App["CubeHaul.App<br/>GameBootstrap · LevelRepository · LevelLibrary · GameController"]
+  View["CubeHaul.View<br/>BoardView · TruckView · TrayView · SlotView · HudView · CameraRig · InputRouter"]
+  Unity[["UnityEngine · URP · Input System · TextMeshPro"]]
+  TE["CubeHaul.Tests.EditMode"]
+  TP["CubeHaul.Tests.PlayMode"]
+  Levels --> Core
+  Data --> Core
+  Sim --> Core
+  Sim --> Levels
+  App --> Data
+  App --> Levels
+  App --> Sim
+  App --> Unity
+  View --> Sim
+  View --> App
+  View --> Unity
+  TE --> Sim
+  TE --> Data
+  TE --> App
+  TP --> View
+```
+
+TS ile karşılaştırma: TS'de `main.ts` her şeye bağlı tek bir düğümdü; C#'ta bu düğüm `Simulation` (kural etkili kısım),
+`App` (yaşam döngüsü) ve `View` (çizim) olarak üçe bölünür. `core → levels` yönü (TS'de `generator → board`, `solver → game`)
+aynen `Levels → Core` olarak kalır.
+
 ---
 
-## 4. Test planı
+## 4. Korunması gereken invariantlar
+
+Aşağıdaki koşullar oyunun **her** durumunda doğru olmalıdır. C# portunda bunları denetleyen bir test yardımcısı
+(`InvariantChecker`) yazılacak ve hem birim testlerinde hem rastgele işlem taramalarında her adımdan sonra çağrılacak.
+
+**Doğrulama sütunu:** "✔ tarama" = kaynak TS koduna karşı ampirik olarak doğrulandı: 10 yerleşik bölüm × 6 oyun,
+rastgele `tap` / rastgele `ready` maskeli `tick` / rastgele sırada gecikmeli `collect` / tıkanınca `addSlot`;
+yaklaşık **1 017 000 işlem**, her işlemden sonra tüm koşullar kontrol edildi, **0 ihlal**. "Test" = mevcut TS testi
+bunu kapsıyor. "Kod" = kaynak kod okunarak çıkarıldı, C#'ta yeni test yazılacak.
+
+| # | Invariant | Kaynak | Doğrulama |
+|---|---|---|---|
+| I-01 | **Renk korunumu:** her renk için Σ(tepsi + slot kasa sayıları) + (claim edilmiş, alınmamış küpler) = tahtada kalan küpler. Başlangıçta tepsi toplamı resimdeki küp sayısına eşittir. | `Game.tick`, `Board.claim/eat`, `generateLevel` | ✔ tarama, test |
+| I-02 | **Sayaçlar:** `remaining` = boş olmayan hücre sayısı; `remainingOf(c)` = `c` renkli hücre sayısı; `pending` = claimed bayrağı sayısı. | `Board` | ✔ tarama |
+| I-03 | Claimed hücre boş değildir ve hiçbir `reachable` kümesinde değildir. | `Board.claim`, `flood` | ✔ tarama |
+| I-04 | **Açık hücreler:** `open[i] = 1` ⇔ hücre boş **ve** boş hücreler üzerinden açık bir kenara bağlı. Kapalı boşluklar ancak bu bağlantı oluşunca açılır. | `Board.flood` | ✔ tarama, test |
+| I-05 | **Monotonluk:** hücreler yalnızca renk → `EMPTY` değişir; `open` yalnızca 0 → 1; `depth`/`road` yalnızca azalır. Hiçbir işlem bir küpü geri koymaz ya da bir yolu kapatmaz. | `Board` | Kod (I-04 taramasıyla dolaylı) |
+| I-06 | **Ulaşılabilirlik kesinliği:** `reachable[c]` = { `c` renkli, claimed olmayan, açık kenarda duran ya da açık komşusu olan küpler } — ne eksik ne fazla. | `Board.flood`, kurucu | ✔ tarama |
+| I-07 | **Hedef seçimi:** `pickTarget(c) = −1` ⇔ `reachable[c]` boş; değilse sonuç `reachable[c]`'nin elemanıdır ve (satır, sürüş, indeks) sırasında en küçüğüdür; sonuç kümenin gezinme sırasından bağımsızdır. | `Board.pickTarget` | ✔ tarama (üyelik), test (sıra) |
+| I-08 | **İki ölçüt:** `wayIn` giriş yolunu (derinlik, yol) **sözlük sırasıyla** seçer; `pickTarget` küpleri **toplam** `derinlik + yol` ile karşılaştırır. İkisi birleştirilmemeli ya da "düzeltilmemeli". | `Board.wayIn`, `pickTarget` | Kod, test (TargetingTests) |
+| I-09 | Her açık hücrenin `depth`/`road` değeri, açık kenarlardan açık hücreler üzerinden sıfırdan hesaplanan en iyi (derinlik, yol) çiftine eşittir (artımlı güncelleme = tam hesaplama). | `Board.updateDepths` | Kod → yeni test |
+| I-10 | `claim` yalnızca ulaşılabilir küpte, `eat` yalnızca claimed ya da ulaşılabilir küpte geçerlidir; aksi hâlde istisna. | `Board.claim/eat` | Test |
+| I-11 | **Slotlar:** dolu slotta `count ≥ 1`; `count` 0'a indiği `tick`'te slot boşalır; slot sayısı yalnızca `addSlot` ile artar, hiç azalmaz. | `Game.tick/addSlot` | ✔ tarama |
+| I-12 | **Tepsi:** yalnızca kolonun öndeki kasası alınır ve **en küçük indeksli** boş slota gider; diğer kasaların sırası değişmez; kasa `id`'leri benzersizdir ve oyun boyunca korunur. | `Game.tap` | ✔ tarama |
+| I-13 | **Tick:** slot başına en fazla bir dispatch; dispatch'ler artan slot sırasında; `ready(s) = false` olan slot atlanır; aynı tick'teki hücreler birbirinden farklıdır. | `Game.tick` | ✔ tarama, test |
+| I-14 | **Durum:** `won` ⇔ `remaining = 0`; `won` son durumdur; `stuck` ⇒ boş slot yok ∧ `pending = 0` ∧ hiçbir slot yiyemiyor; `stuck → playing` yalnızca `addSlot` ile; `playing` dışında `tap`/`tick` etkisizdir. | `Game.updateStatus/isStuck` | ✔ tarama, test |
+| I-15 | Yolda kamyon varken (`pending > 0`) oyun tıkanmış sayılmaz. | `Game.isStuck` | ✔ tarama, test |
+| I-16 | `slotBlocked(s)` ⇔ slot dolu ∧ rengin ulaşılabilir küpü yok ∧ `opensUp = false`; `pending = 0` ise `opensUp = false`. | `Game.slotBlocked`, `Board.opensUp` | Test |
+| I-17 | Her dispatch **tam bir kez** `collect` edilir; küp `collect` anına kadar tahtada görünür kalır, `collect` anında kalkar. | `App.pickUp` | Kod → G-08, G-11 |
+| I-18 | **Kare içi sıra:** zamanlayıcılar → `tick` → rampa → sürüş/`collect`. Bir adımda açılan küp en erken bir sonraki adımın `tick`'inde claim edilir. | `App.update` | Kod → G-11 |
+| I-19 | **Zaman tabanları:** slot aralığı, rampa aralığı, sürüş ve yükleme simülasyon zamanında (hızla çarpılır); kasa uçuşu, UI animasyonları, parçacıklar ve panel gecikmesi gerçek zamanda. | `App.update` | Kod → yeni test |
+| I-20 | **Determinizm:** aynı (resim, seçenekler) → aynı tepsi; aynı işlem dizisi → aynı dispatch dizisi. Kurallarda tek rastgelelik kaynağı `mulberry32`; `Math.random` yalnızca efektlerde. | `generator.ts`, `solver.ts` | ✔ tarama, test |
+| I-21 | `mulberry32` çıktısı `[0, 1)` aralığında ve `2⁻³²`'nin katıdır; RNG çağrı sırası (bölüm 1.5) değişmez. | `rng.ts` | ✔ tarama (aralık, 10⁶ değer); kat ve sıra: kod |
+| I-22 | **Tepsi biçimi:** kolon sayısı = `columns`; kolon uzunlukları en fazla 1 farklı; her kasada `count ≥ 1`. | `generateLevel` | ✔ tarama |
+| I-23 | `buildLevel`'in seçtiği her yerleşik bölüm açgözlü çözücüyle güçlendirme olmadan kazanılır. | `buildLevel` | Test |
+| I-24 | **Rotalar:** ilk nokta şerit girişi; tarla içindeki her ara nokta açık hücre; son nokta küp merkezinden tam bir hücre uzaklıkta. | `RoadMap.routeFrom` | Test |
+| I-25 | **Güçlendirme:** "+1 Slot" bölüm başına bir kez, toplam ≤ 6 slot, kazanılmış oyunda kullanılamaz; bölüm (yeniden) başlayınca sıfırlanır. | `App.addSlot`, `startLevel` | Kod → yeni test |
+
+---
+
+## 5. Test planı
 
 Unity Test Framework (NUnit). Saf katmanlar **EditMode**, sahne ve akış **PlayMode** testleriyle sınanır. CI'da
 Unity batch mode (`-runTests -testPlatform EditMode/PlayMode`) çalıştırılır.
 
-### 4.1 Mevcut 43 testin birebir taşınması (EditMode)
+### 5.1 Mevcut 43 testin birebir taşınması (EditMode)
 
 | TS testi | C# test sınıfı | Davranış |
 |---|---|---|
@@ -522,7 +992,7 @@ Unity batch mode (`-runTests -testPlatform EditMode/PlayMode`) çalıştırılı
 Kural: test adları ve beklenen değerler TS ile aynı kalır; bir C# testi TS testinden farklı bir değer bekliyorsa bu
 bir **hata** sayılır, testin "düzeltilmesi" değil.
 
-### 4.2 Diferansiyel (golden) testler — TS ↔ C# eşdeğerliği
+### 5.2 Diferansiyel (golden) testler — TS ↔ C# eşdeğerliği
 
 `Tools/ts-export`, kaynak TS kodunu pinli commit'ten içe aktarıp `Assets/Tests/Fixtures/Golden/` altına JSON yazar.
 C# testleri aynı girdileri çalıştırıp çıktıyı **tam eşitlikle** karşılaştırır.
@@ -543,8 +1013,12 @@ C# testleri aynı girdileri çalıştırıp çıktıyı **tam eşitlikle** karş
 G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç yüz adım oynatılarak üretilir
 (gecikmeli `collect` dahil); böylece `tick`/`collect` ayrımı ve `opensUp` gibi nadir durumlar da kapsanır.
 
-### 4.3 Yeni birim testleri (EditMode)
+### 5.3 Yeni birim testleri (EditMode)
 
+- **Invariant taraması:** §4'teki koşulları denetleyen `InvariantChecker`; her yerleşik bölümde tohumlu rastgele
+  `tap`/`tick(ready maskesi)`/gecikmeli `collect`/`addSlot` dizileri, her işlemden sonra kontrol (TS'de yapılan
+  1 milyon işlemlik taramanın C# eşi; CI'da daha kısa sürümü).
+- **Artımlı = tam hesaplama:** her `eat` sonrası `depth`/`road` dizileri sıfırdan BFS ile hesaplananla aynı (I-09).
 - **Oturum kuralları:** "+1 Slot" bölüm başına bir kez, en fazla 6, kazanınca kapalı (B-30); hız döngüsü (B-31);
   bölüm gezintisi döngüsel (B-37); dolu slotta dokunuş reddedilir ve olay yayılır (B-38).
 - **Zamanlama:** `DispatchScheduler` — iniş kapısı hızdan bağımsız (B-32), slot aralığı 0.15 s × hız (B-33);
@@ -557,10 +1031,10 @@ G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç
 - **Zorluk etiketi:** sınır değerleri 0.9 / 0.65 / 0.45.
 - **Performans (EditMode, gösterge niteliğinde):** `LevelGenerator.Build` en büyük bölümde < 2 s (editör), `Board.PickTarget` döngüsü tahsis yapmıyor (`GC.GetAllocatedBytesForCurrentThread`).
 
-### 4.4 JSON veri testleri (EditMode)
+### 5.4 JSON veri testleri (EditMode)
 
 - Her katalog girdisinin dosyası var, `id` benzersiz, sıra §1.3 ile aynı.
-- Şema doğrulaması (§5.4): `rows` sayısı = `height`, her satır uzunluğu = `width`, palet anahtarları benzersiz ve
+- Şema doğrulaması (§6.4): `rows` sayısı = `height`, her satır uzunluğu = `width`, palet anahtarları benzersiz ve
   tek karakter, `.` palet anahtarı değil, renkler `#rrggbb`, `edges` geçerli, kolon sayısı = `generation.columns`.
 - **Toplam eşitliği:** her renk için kasa sayıları toplamı = resimdeki küp sayısı (B-26); kasa `id`'leri benzersiz.
 - **Çözülebilirlik:** her yerleşik bölüm `GreedySolver` ile kazanılıyor; `difficulty.winRate` yeniden hesaplanınca aynı.
@@ -569,7 +1043,7 @@ G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç
 - **Yeniden üretim:** C# `LevelGenerator.Build(generation)` sonucu JSON'daki `tray` ile aynı (bu test geçtiği sürece
   bölüm dosyaları C# ile de güvenle yeniden pişirilebilir).
 
-### 4.5 PlayMode ve cihaz testleri
+### 5.5 PlayMode ve cihaz testleri
 
 - **PlayMode:** sahne yüklenir; kamera ortografik; alt çubukta "Your image" düğmesi yok; bölüm 1 açılır; kolona dokunma → kasa slota uçar → kamyon çıkar; tüm küpler alınınca
   panel açılır ve "Next level" 2. bölüme geçer; tıkanma senaryosunda "+1 Slot" oyunu sürdürür; "Retry" bölümü sıfırlar;
@@ -581,9 +1055,9 @@ G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç
 
 ---
 
-## 5. Bölüm verisi için JSON formatı
+## 6. Bölüm verisi için JSON formatı
 
-### 5.1 Tasarım ilkeleri
+### 6.1 Tasarım ilkeleri
 
 1. **`JsonUtility` ile doğrudan okunabilir:** iç içe dizi yok (`[[...]]` yerine `[{ "crates": [...] }]`), `null` yok,
    sözlük yok, kök nesne. Enum'lar metin olarak tutulur ve elle ayrıştırılır (`JsonUtility` enum'ları sayı olarak yazar).
@@ -593,7 +1067,7 @@ G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç
    `generation` ise yeniden üretim ve doğrulama içindir.
 4. **Sürümlü:** `schemaVersion` alanı; okuyucu bilmediği büyük sürümü reddeder.
 
-### 5.2 Dosyalar
+### 6.2 Dosyalar
 
 ```
 Assets/CubeHaul/Content/Levels/
@@ -617,7 +1091,7 @@ Assets/CubeHaul/Content/Levels/
 }
 ```
 
-### 5.3 Bölüm dosyası
+### 6.3 Bölüm dosyası
 
 Tam ve geçerli bir örnek (testlerdeki 3×3 "ring" bölümü; yerleşik bölümler aynı yapıda, yalnızca daha büyük):
 
@@ -675,7 +1149,7 @@ Tam ve geçerli bir örnek (testlerdeki 3×3 "ring" bölümü; yerleşik bölüm
 }
 ```
 
-### 5.4 Alan başvurusu ve doğrulama kuralları
+### 6.4 Alan başvurusu ve doğrulama kuralları
 
 | Alan | Tür | Zorunlu | Anlam / kural |
 |---|---|---|---|
@@ -706,22 +1180,27 @@ tüm sayılar JSON sayısı (metin değil), ondalık ayırıcı nokta.
 **Özel resim ("Your image", v1 sonrası) bölümleri** aynı biçimi kullanır: `palette` anahtarları `0–9a–z`, `tray` ve `difficulty`
 çalışma zamanında `LevelBuildService` tarafından doldurulur. Böylece ileride kaydetme/paylaşma da aynı formatla yapılır.
 
-### 5.5 Dosyaların üretimi
+### 6.5 Dosyaların üretimi
 
 `Tools/ts-export` betiği kaynak TS'yi değiştirmeden içe aktarır ve:
 1. `builtInLevels()` → her resmi `rows`'a çevirir (palet anahtarı = `art.ts`'deki harf, sıra = `Object.keys` sırası),
 2. `buildLevel()` → `tray` ve `difficulty.winRate`,
 3. `solveGreedy()` → `provenance`,
-4. §4.2'deki golden fixture'ları yazar.
+4. §5.2'deki golden fixture'ları yazar.
 
 C# üretici G-05/G-06'yı geçtikten sonra, aynı dosyaları Unity içinden bir Editör aracıyla (`Tools > CubeHaul > Rebake Levels`)
 yeniden pişirmek mümkün olur; o noktadan sonra TS'ye bağımlılık kalkar.
 
 ---
 
-## 6. Riskler ve önlemler
+## 7. Riskler ve önlemler
 
 Olasılık/Etki: **Y**üksek, **O**rta, **D**üşük.
+
+**Kritik riskler (olasılık ve etki yüksek):** R-01 kararsız sıralama, R-02 `Math.round` farkı, R-07 zamanlamaya
+bağlı oynanış, R-14 Türkçe yerel ayar. Ayrıca sessizce davranış değiştirebilecek iki tuzak: R-27 iki farklı mesafe
+ölçütü ve R-28 kare içi çağrı sırası. Bunların her biri için golden ya da invariant testi bulunur ve ilgili kod
+portlanmadan önce yazılır.
 
 | # | Risk | Ol. | Etki | Önlem |
 |---|---|:-:|:-:|---|
@@ -737,7 +1216,7 @@ Olasılık/Etki: **Y**üksek, **O**rta, **D**üşük.
 | R-10 | **Piksel cinsinden epsilon'lar.** `RoadMap.along` ve `roadPath` 0.5 px eşik kullanıyor; birimler dünya metresine çevrilirse rota yanlış kenarı seçer. | O | O | `RoadMap` tasarım pikselinde kalır; dünyaya yalnızca `WorldMapper` çevirir |
 | R-11 | **Mobil performans/GC.** `opensUp` her çağrıda tahta boyunda dizi ayırıyor ve her karede her slot için çağrılıyor; `Tick` dizi döndürüyor; 2116 ayrı `GameObject`/materyal çizim çağrısı. | Y | O | Tampon yeniden kullanımı, sürüm sayaçlı önbellek; instancing tek materyal; nesne havuzları; Profiler bütçesi |
 | R-12 | **Üretim süresi.** Masaüstünde 36–482 ms; IL2CPP + düşük segment telefonda saniyeler sürebilir; ana iş parçacığında donma. | O | O | Yerleşik bölümler pişirilmiş; özel resim `Task.Run` + "Building level…" göstergesi + iptal |
-| R-13 | **`JsonUtility` kısıtları.** İç içe dizi, `null`, sözlük, metin enum desteklenmez; opsiyonel alanlar varsayılana düşer. | Y | O | Şema buna göre tasarlandı (§5.1); `minBlock = 0` = otomatik; doğrulayıcı |
+| R-13 | **`JsonUtility` kısıtları.** İç içe dizi, `null`, sözlük, metin enum desteklenmez; opsiyonel alanlar varsayılana düşer. | Y | O | Şema buna göre tasarlandı (§6.1); `minBlock = 0` = otomatik; doğrulayıcı |
 | R-14 | **Türkçe yerel ayar (tr-TR).** `"SIDES".ToLower()` → `"sıdes"`; `double.Parse("0.2")` ondalık virgül bekler; `ToString()` virgüllü yazar. Hedef kitlede yaygın. | Y | Y | Her yerde `ToLowerInvariant`, `StringComparison.Ordinal`, `CultureInfo.InvariantCulture`; enum'lar için `switch` ile ordinal ayrıştırma; testler tr-TR altında da |
 | R-15 | **IL2CPP kod ayıklama / AOT.** Yansımaya dayalı JSON (Newtonsoft) ve jenerikler iOS'ta çalışma zamanında kırılabilir. | O | O | `JsonUtility` + `[Serializable]` DTO'lar; Newtonsoft gerekirse `link.xml`; cihazda IL2CPP derlemesiyle test |
 | R-16 | **Renk uzayı.** URP projeleri Linear renk uzayında; `#rrggbb` sRGB'dir. Instancing dizilerine (`SetVectorArray`) ham değer verilirse renkler soluk/yanlış görünür; ışık/gölge benzer renkleri birbirine yaklaştırabilir (oyun renk ayırt etmeye dayanıyor). | O | Y | `ColorUtility.TryParseHtmlString` + gerektiğinde `.linear`; unlit/az gölgeli küp materyali; renk körlüğü simülasyonuyla kontrol |
@@ -750,22 +1229,24 @@ Olasılık/Etki: **Y**üksek, **O**rta, **D**üşük.
 | R-23 | **Kaynak projenin kayması.** TS geliştirilmeye devam ederse port eski davranışı kopyalar. | O | O | Kaynak commit `559dfd9` sabitlendi; değişiklikler golden yeniden üretimiyle fark olarak görülür |
 | R-24 | **Fontlar ve lisans.** TS sistem fontlarını (SF Pro Rounded, Nunito…) kullanıyor; SF Pro Android'e gömülemez. | O | D | OFL lisanslı yuvarlak font (ör. Nunito) + TextMeshPro; Türkçe karakter kapsamı |
 | R-25 | **Sürüm ve mağaza gereksinimleri.** Unity 6.3 LTS paket sürümleri, Android hedef API seviyesi (Google Play'in güncel şartı), ARM64 + IL2CPP zorunluluğu, iOS asgari sürümü. | O | O | `manifest.json`'da sabit sürümler; CI'da iki platform derlemesi; mağaza şartları yayın öncesi yeniden kontrol |
-| R-26 | **Paket kimliği.** Ad `CubeHaul3D` olarak kesinleşti; uygulama paket kimliği (`com.<şirket>.cubehaul3d`) mağazaya çıktıktan sonra değiştirilemez. | D | O | Paket kimliği ilk Unity commit'inden önce kesinleşmeli (§8) |
+| R-27 | **İki mesafe ölçütünün "düzeltilmesi".** `wayIn` yolu (derinlik, yol) sözlük sırasıyla seçer, `pickTarget` küpleri toplamla karşılaştırır (I-08). Tutarsız görünür; portlarken birleştirmek hedef sırasını değiştirir. | O | Y | Kodda açıklama + `TargetingTests` + G-08 izleri |
+| R-28 | **Kare içi çağrı sırası.** `tick` → rampa → sürüş/`collect` sırası değişirse (ör. sürüşün önce çalışması) küpler bir adım erken claim edilir, oyun akışı değişir (I-18). | O | Y | `GameSession.Advance` sırası sabit; G-11 tarayıcı simülasyonu eşdeğerlik testi |
+| R-26 | **Paket kimliği.** Ad `CubeHaul3D` olarak kesinleşti; uygulama paket kimliği (`com.<şirket>.cubehaul3d`) mağazaya çıktıktan sonra değiştirilemez. | D | O | Paket kimliği ilk Unity commit'inden önce kesinleşmeli (§9) |
 
 ---
 
-## 7. Önerilen iş sırası
+## 8. Önerilen iş sırası
 
 Her aşama bir öncekinin testleri yeşilken başlar.
 
 | Aşama | İçerik | Bitti sayılır |
 |---|---|---|
 | **0 — Bu belge** | Analiz, mimari, test planı, JSON şeması, riskler | Bu belgenin onayı |
-| **1 — Dışa aktarma aracı** | `Tools/ts-export`: 10 bölüm JSON'u + golden fixture'lar (TS'ye dokunmadan) | JSON'lar §5.4 doğrulamasından geçer |
+| **1 — Dışa aktarma aracı** | `Tools/ts-export`: 10 bölüm JSON'u + golden fixture'lar (TS'ye dokunmadan) | JSON'lar §6.4 doğrulamasından geçer |
 | **2 — Unity iskeleti** | Unity 6.3 LTS URP projesi, asmdef'ler, Test Framework, CI'da EditMode koşusu | Boş test paketi CI'da yeşil |
-| **3 — Core portu** | `Board`, `Game` + §4.1 kural testleri | 17 tahta/oyun testi yeşil, G-08 yeşil |
+| **3 — Core portu** | `Board`, `Game` + §5.1 kural testleri | 17 tahta/oyun testi yeşil, G-08 yeşil |
 | **4 — Levels portu** | RNG, üretici, çözücü, quantize | G-01…G-07, G-10 yeşil; §1.3 tablosu birebir |
-| **5 — Data** | DTO, eşleyici, doğrulayıcı, `LevelRepository` | §4.4 yeşil (tr-TR dahil) |
+| **5 — Data** | DTO, eşleyici, doğrulayıcı, `LevelRepository` | §5.4 yeşil (tr-TR dahil) |
 | **6 — Simulation** | `FieldLayout`, `RoadMap`, `DispatchScheduler`, `TruckFleet`, `GameSession` | 13 rota testi, G-09, G-11, zamanlama testleri yeşil |
 | **7 — 3D gri kutu** | Basit küp/kamyon/tepsi görünümleri, giriş, ortografik kamera ve açı ayarı, paneller | PlayMode akış testleri yeşil; cihazda oynanabilir |
 | **8 — Görsel cila** | Modeller, materyaller, efektler, UI, haptik | Cihaz matrisi performans bütçesi |
@@ -773,7 +1254,7 @@ Her aşama bir öncekinin testleri yeşilken başlar.
 
 ---
 
-## 8. Açık sorular
+## 9. Açık sorular
 
 Yanıtlananlar: proje adı (CubeHaul3D), kamera (ortografik), "Your image" (v1'de yok) — bkz. [Alınan kararlar](#alınan-kararlar).
 
