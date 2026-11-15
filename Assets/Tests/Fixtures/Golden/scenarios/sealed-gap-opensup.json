@@ -1,0 +1,391 @@
+{
+  "format": "cubehaul.golden.scenario",
+  "version": 1,
+  "source": {
+    "repo": "https://github.com/yunusemreerinc/cube-hunt",
+    "commit": "559dfd90977b1e15367bd7de25aec9fbae4b52f6"
+  },
+  "description": "Blue under a sealed gap under red under green: slotBlocked follows opensUp while a truck is out.",
+  "name": "sealed-gap-opensup",
+  "detail": true,
+  "level": {
+    "schemaVersion": 1,
+    "levelId": "sealed-gap",
+    "themeId": "default",
+    "name": "sealed-gap",
+    "picture": {
+      "width": 1,
+      "height": 4,
+      "palette": ["#0000ff", "#ff0000", "#00ff00"],
+      "cells": [2, 1, -1, 0]
+    },
+    "edges": "bottom",
+    "slotCount": 3,
+    "tray": {
+      "columns": [
+        [
+          {
+            "id": 0,
+            "color": 1,
+            "count": 1
+          }
+        ],
+        [
+          {
+            "id": 1,
+            "color": 0,
+            "count": 1
+          }
+        ],
+        [
+          {
+            "id": 2,
+            "color": 2,
+            "count": 1
+          }
+        ]
+      ]
+    }
+  },
+  "steps": [
+    {
+      "op": "start",
+      "state": {
+        "status": "playing",
+        "remaining": 3,
+        "pending": 0,
+        "trayCount": 3,
+        "columns": [
+          [0],
+          [1],
+          [2]
+        ],
+        "slots": [null, null, null],
+        "claimed": [],
+        "emptied": [],
+        "reachableCount": [1, 0, 0],
+        "pickTarget": [3, -1, -1],
+        "reachable": [
+          [3],
+          [],
+          []
+        ],
+        "reachableHash": "9bf2665a",
+        "slotCanEat": [false, false, false],
+        "slotBlocked": [false, false, false],
+        "isStuck": false,
+        "boardHash": "9c6052b2"
+      }
+    },
+    {
+      "op": "tap",
+      "col": 0,
+      "result": 0,
+      "state": {
+        "status": "playing",
+        "remaining": 3,
+        "pending": 0,
+        "trayCount": 2,
+        "columns": [
+          [],
+          [1],
+          [2]
+        ],
+        "slots": [
+          [0, 1, 1],
+          null,
+          null
+        ],
+        "claimed": [],
+        "emptied": [],
+        "reachableCount": [1, 0, 0],
+        "pickTarget": [3, -1, -1],
+        "reachable": [
+          [3],
+          [],
+          []
+        ],
+        "reachableHash": "9bf2665a",
+        "slotCanEat": [false, false, false],
+        "slotBlocked": [true, false, false],
+        "isStuck": false,
+        "boardHash": "9c6052b2"
+      }
+    },
+    {
+      "op": "tap",
+      "col": 2,
+      "result": 1,
+      "state": {
+        "status": "playing",
+        "remaining": 3,
+        "pending": 0,
+        "trayCount": 1,
+        "columns": [
+          [],
+          [1],
+          []
+        ],
+        "slots": [
+          [0, 1, 1],
+          [2, 2, 1],
+          null
+        ],
+        "claimed": [],
+        "emptied": [],
+        "reachableCount": [1, 0, 0],
+        "pickTarget": [3, -1, -1],
+        "reachable": [
+          [3],
+          [],
+          []
+        ],
+        "reachableHash": "9bf2665a",
+        "slotCanEat": [false, false, false],
+        "slotBlocked": [true, true, false],
+        "isStuck": false,
+        "boardHash": "9c6052b2"
+      }
+    },
+    {
+      "op": "tap",
+      "col": 1,
+      "result": 2,
+      "state": {
+        "status": "playing",
+        "remaining": 3,
+        "pending": 0,
+        "trayCount": 0,
+        "columns": [
+          [],
+          [],
+          []
+        ],
+        "slots": [
+          [0, 1, 1],
+          [2, 2, 1],
+          [1, 0, 1]
+        ],
+        "claimed": [],
+        "emptied": [],
+        "reachableCount": [1, 0, 0],
+        "pickTarget": [3, -1, -1],
+        "reachable": [
+          [3],
+          [],
+          []
+        ],
+        "reachableHash": "9bf2665a",
+        "slotCanEat": [false, false, true],
+        "slotBlocked": [true, true, false],
+        "isStuck": false,
+        "boardHash": "9c6052b2"
+      }
+    },
+    {
+      "op": "tick",
+      "ready": null,
+      "result": [
+        [2, 3, 0]
+      ],
+      "state": {
+        "status": "playing",
+        "remaining": 3,
+        "pending": 1,
+        "trayCount": 0,
+        "columns": [
+          [],
+          [],
+          []
+        ],
+        "slots": [
+          [0, 1, 1],
+          [2, 2, 1],
+          null
+        ],
+        "claimed": [3],
+        "emptied": [],
+        "reachableCount": [0, 0, 0],
+        "pickTarget": [-1, -1, -1],
+        "reachable": [
+          [],
+          [],
+          []
+        ],
+        "reachableHash": "ef9d49c9",
+        "slotCanEat": [false, false, false],
+        "slotBlocked": [false, true, false],
+        "isStuck": false,
+        "boardHash": "ec8c91c3"
+      }
+    },
+    {
+      "op": "collect",
+      "cell": 3,
+      "state": {
+        "status": "playing",
+        "remaining": 2,
+        "pending": 0,
+        "trayCount": 0,
+        "columns": [
+          [],
+          [],
+          []
+        ],
+        "slots": [
+          [0, 1, 1],
+          [2, 2, 1],
+          null
+        ],
+        "claimed": [],
+        "emptied": [3],
+        "reachableCount": [0, 1, 0],
+        "pickTarget": [-1, 1, -1],
+        "reachable": [
+          [],
+          [1],
+          []
+        ],
+        "reachableHash": "ae6a4ba8",
+        "slotCanEat": [true, false, false],
+        "slotBlocked": [false, true, false],
+        "isStuck": false,
+        "boardHash": "2eb3295e"
+      }
+    },
+    {
+      "op": "tick",
+      "ready": null,
+      "result": [
+        [0, 1, 1]
+      ],
+      "state": {
+        "status": "playing",
+        "remaining": 2,
+        "pending": 1,
+        "trayCount": 0,
+        "columns": [
+          [],
+          [],
+          []
+        ],
+        "slots": [
+          null,
+          [2, 2, 1],
+          null
+        ],
+        "claimed": [1],
+        "emptied": [],
+        "reachableCount": [0, 0, 0],
+        "pickTarget": [-1, -1, -1],
+        "reachable": [
+          [],
+          [],
+          []
+        ],
+        "reachableHash": "ef9d49c9",
+        "slotCanEat": [false, false, false],
+        "slotBlocked": [false, false, false],
+        "isStuck": false,
+        "boardHash": "023f998f"
+      }
+    },
+    {
+      "op": "collect",
+      "cell": 1,
+      "state": {
+        "status": "playing",
+        "remaining": 1,
+        "pending": 0,
+        "trayCount": 0,
+        "columns": [
+          [],
+          [],
+          []
+        ],
+        "slots": [
+          null,
+          [2, 2, 1],
+          null
+        ],
+        "claimed": [],
+        "emptied": [1],
+        "reachableCount": [0, 0, 1],
+        "pickTarget": [-1, -1, 0],
+        "reachable": [
+          [],
+          [],
+          [0]
+        ],
+        "reachableHash": "ca809f99",
+        "slotCanEat": [false, true, false],
+        "slotBlocked": [false, false, false],
+        "isStuck": false,
+        "boardHash": "19c92bba"
+      }
+    },
+    {
+      "op": "tick",
+      "ready": null,
+      "result": [
+        [1, 0, 2]
+      ],
+      "state": {
+        "status": "playing",
+        "remaining": 1,
+        "pending": 1,
+        "trayCount": 0,
+        "columns": [
+          [],
+          [],
+          []
+        ],
+        "slots": [null, null, null],
+        "claimed": [0],
+        "emptied": [],
+        "reachableCount": [0, 0, 0],
+        "pickTarget": [-1, -1, -1],
+        "reachable": [
+          [],
+          [],
+          []
+        ],
+        "reachableHash": "ef9d49c9",
+        "slotCanEat": [false, false, false],
+        "slotBlocked": [false, false, false],
+        "isStuck": false,
+        "boardHash": "4e24adfb"
+      }
+    },
+    {
+      "op": "collect",
+      "cell": 0,
+      "state": {
+        "status": "won",
+        "remaining": 0,
+        "pending": 0,
+        "trayCount": 0,
+        "columns": [
+          [],
+          [],
+          []
+        ],
+        "slots": [null, null, null],
+        "claimed": [],
+        "emptied": [0],
+        "reachableCount": [0, 0, 0],
+        "pickTarget": [-1, -1, -1],
+        "reachable": [
+          [],
+          [],
+          []
+        ],
+        "reachableHash": "ef9d49c9",
+        "slotCanEat": [false, false, false],
+        "slotBlocked": [false, false, false],
+        "isStuck": false,
+        "boardHash": "94129e55"
+      }
+    }
+  ]
+}

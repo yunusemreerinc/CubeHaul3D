@@ -1,0 +1,621 @@
+{
+  "format": "cubehaul.golden.generate",
+  "version": 1,
+  "source": {
+    "repo": "https://github.com/yunusemreerinc/cube-hunt",
+    "commit": "559dfd90977b1e15367bd7de25aec9fbae4b52f6"
+  },
+  "description": "generateLevel(picture, { ...spec, seed, shuffle }) for each built-in level: one tray per run, no solver. columnsSha256 = sha256(JSON.stringify(columns)) with keys id, color, count and no spaces.",
+  "levels": [
+    {
+      "levelId": "strawberry",
+      "runs": [
+        {
+          "seed": 1,
+          "shuffle": 0,
+          "crates": 47,
+          "columnLengths": [10, 9, 10, 9, 9],
+          "fronts": [
+            [3, 0, 12],
+            [2, 0, 8],
+            [0, 0, 6],
+            [4, 0, 14],
+            [1, 0, 14]
+          ],
+          "columnsSha256": "5c4cf4b914a57ba7f8a77a53cb1f709f55d572679300c0cd382c4124072099be"
+        },
+        {
+          "seed": 1,
+          "shuffle": 1.5,
+          "crates": 47,
+          "columnLengths": [10, 9, 10, 9, 9],
+          "fronts": [
+            [1, 0, 14],
+            [11, 0, 28],
+            [37, 1, 7],
+            [5, 0, 10],
+            [38, 1, 7]
+          ],
+          "columnsSha256": "defddc61398af8a8aa7c8214b8902fcbfc90315e96c8e495e626b150f7d0b2d2"
+        },
+        {
+          "seed": 77,
+          "shuffle": 0,
+          "crates": 42,
+          "columnLengths": [8, 8, 8, 9, 9],
+          "fronts": [
+            [2, 0, 32],
+            [0, 0, 6],
+            [32, 1, 10],
+            [33, 1, 10],
+            [1, 0, 10]
+          ],
+          "columnsSha256": "79341841abd3ec083109f53374cb7edd1358505e940c24bf3cbbb8941cfd2a1f"
+        },
+        {
+          "seed": 77,
+          "shuffle": 1.5,
+          "crates": 42,
+          "columnLengths": [8, 8, 8, 9, 9],
+          "fronts": [
+            [33, 1, 10],
+            [2, 0, 32],
+            [1, 0, 10],
+            [9, 0, 10],
+            [0, 0, 6]
+          ],
+          "columnsSha256": "d9158aed0f5b22d9446b2bce6222875e1e4590413c04ec8007bc0e6ede129f39"
+        }
+      ]
+    },
+    {
+      "levelId": "mushroom",
+      "runs": [
+        {
+          "seed": 1,
+          "shuffle": 0,
+          "crates": 69,
+          "columnLengths": [14, 14, 14, 13, 14],
+          "fronts": [
+            [36, 1, 19],
+            [37, 1, 11],
+            [35, 1, 20],
+            [33, 1, 13],
+            [34, 1, 17]
+          ],
+          "columnsSha256": "b2b710e0e19246f01523e8bf96a2d718a3455820537c7c0bc2c8c40ac8e878da"
+        },
+        {
+          "seed": 1,
+          "shuffle": 1.5,
+          "crates": 69,
+          "columnLengths": [14, 14, 14, 13, 14],
+          "fronts": [
+            [35, 1, 20],
+            [61, 4, 9],
+            [62, 5, 20],
+            [34, 1, 17],
+            [38, 1, 11]
+          ],
+          "columnsSha256": "e4ed616dffc060a0f095873ef2fee6a5e441a4ba0a05fc3e4cf87507b72a668a"
+        },
+        {
+          "seed": 77,
+          "shuffle": 0,
+          "crates": 60,
+          "columnLengths": [12, 12, 12, 12, 12],
+          "fronts": [
+            [27, 1, 19],
+            [26, 1, 15],
+            [28, 1, 15],
+            [29, 1, 18],
+            [25, 1, 22]
+          ],
+          "columnsSha256": "681748cb3fc6dd1e6d2b5ad5342bf7c2d56eef88e5ce0ac6e5de6e13f45dbc3d"
+        },
+        {
+          "seed": 77,
+          "shuffle": 1.5,
+          "crates": 60,
+          "columnLengths": [12, 12, 12, 12, 12],
+          "fronts": [
+            [1, 0, 16],
+            [31, 1, 15],
+            [28, 1, 15],
+            [0, 0, 9],
+            [26, 1, 15]
+          ],
+          "columnsSha256": "395e28263a4cd0639426a381a17c6112e875d6dee00435e7b3b043022039db6a"
+        }
+      ]
+    },
+    {
+      "levelId": "sunset",
+      "runs": [
+        {
+          "seed": 1,
+          "shuffle": 0,
+          "crates": 56,
+          "columnLengths": [11, 11, 11, 12, 11],
+          "fronts": [
+            [32, 4, 23],
+            [53, 5, 42],
+            [34, 4, 23],
+            [52, 5, 10],
+            [33, 4, 23]
+          ],
+          "columnsSha256": "4dc4f47068864c7152e69a6cc29b5e778dfbf4d288030f6dc7c58bd951374e62"
+        },
+        {
+          "seed": 1,
+          "shuffle": 1.5,
+          "crates": 56,
+          "columnLengths": [11, 11, 11, 12, 11],
+          "fronts": [
+            [44, 4, 17],
+            [41, 4, 11],
+            [37, 4, 17],
+            [34, 4, 23],
+            [43, 4, 14]
+          ],
+          "columnsSha256": "56cf79837bf6dfcd50ff21fcf855b9383e6c4535274e24847f8d3cb008ea1bc6"
+        },
+        {
+          "seed": 77,
+          "shuffle": 0,
+          "crates": 58,
+          "columnLengths": [12, 11, 12, 12, 11],
+          "fronts": [
+            [37, 4, 17],
+            [40, 4, 18],
+            [38, 4, 17],
+            [54, 5, 42],
+            [39, 4, 16]
+          ],
+          "columnsSha256": "8eb4a7c407eeadb1d5b0175c357434ac2225418216378b5028b987b51b28cb7a"
+        },
+        {
+          "seed": 77,
+          "shuffle": 1.5,
+          "crates": 58,
+          "columnLengths": [12, 11, 12, 12, 11],
+          "fronts": [
+            [44, 4, 15],
+            [40, 4, 18],
+            [46, 4, 9],
+            [30, 3, 15],
+            [17, 2, 18]
+          ],
+          "columnsSha256": "adfbbe7af47d85d67c110ac61ed18d8001c887ee2bccd55c39e54edf73ee6e1d"
+        }
+      ]
+    },
+    {
+      "levelId": "ringed-planet",
+      "runs": [
+        {
+          "seed": 1,
+          "shuffle": 0,
+          "crates": 72,
+          "columnLengths": [15, 14, 14, 14, 15],
+          "fronts": [
+            [1, 0, 38],
+            [3, 0, 32],
+            [4, 0, 38],
+            [0, 0, 14],
+            [2, 0, 21]
+          ],
+          "columnsSha256": "49677378990bfe875f5cc798ce4a5eadb30d5288739459fef9cd79a1b4900801"
+        },
+        {
+          "seed": 1,
+          "shuffle": 1.5,
+          "crates": 72,
+          "columnLengths": [15, 14, 14, 14, 15],
+          "fronts": [
+            [11, 0, 72],
+            [5, 0, 26],
+            [2, 0, 21],
+            [12, 0, 33],
+            [9, 0, 33]
+          ],
+          "columnsSha256": "8c47ee7b556941c27c451786f1788a700daf2165756cf81cfbfb3c54ece7c9fb"
+        },
+        {
+          "seed": 77,
+          "shuffle": 0,
+          "crates": 65,
+          "columnLengths": [13, 13, 13, 13, 13],
+          "fronts": [
+            [2, 0, 78],
+            [1, 0, 26],
+            [43, 1, 12],
+            [0, 0, 15],
+            [3, 0, 33]
+          ],
+          "columnsSha256": "47d04c0c2b87f3c9204ee683664df9cb1af367859dbf6de1e6f7691f0ff3bf55"
+        },
+        {
+          "seed": 77,
+          "shuffle": 1.5,
+          "crates": 65,
+          "columnLengths": [13, 13, 13, 13, 13],
+          "fronts": [
+            [10, 0, 15],
+            [16, 0, 20],
+            [5, 0, 28],
+            [3, 0, 33],
+            [2, 0, 78]
+          ],
+          "columnsSha256": "b875703de6075fc0b100141b030c7b1d6aa721aaf1aecd86b4ce6d27dec29adb"
+        }
+      ]
+    },
+    {
+      "levelId": "cat",
+      "runs": [
+        {
+          "seed": 1,
+          "shuffle": 0,
+          "crates": 69,
+          "columnLengths": [14, 14, 14, 13, 14],
+          "fronts": [
+            [3, 0, 28],
+            [4, 0, 34],
+            [2, 0, 18],
+            [0, 0, 12],
+            [1, 0, 34]
+          ],
+          "columnsSha256": "4e61063061305ffac03b1452d3dbf2dfab0fff969e8f9ff6d6cf6a0e495aeaf7"
+        },
+        {
+          "seed": 1,
+          "shuffle": 1.5,
+          "crates": 69,
+          "columnLengths": [14, 14, 14, 13, 14],
+          "fronts": [
+            [62, 4, 14],
+            [35, 1, 28],
+            [38, 1, 15],
+            [65, 5, 30],
+            [61, 4, 28]
+          ],
+          "columnsSha256": "3042c3e925206361c39f3d653f31a5018820ba15261864e40c283290c5b87822"
+        },
+        {
+          "seed": 77,
+          "shuffle": 0,
+          "crates": 64,
+          "columnLengths": [13, 13, 13, 12, 13],
+          "fronts": [
+            [1, 0, 23],
+            [2, 0, 77],
+            [4, 0, 62],
+            [3, 0, 30],
+            [0, 0, 12]
+          ],
+          "columnsSha256": "bd9ea24b3fd6c605b006e8d7adfa65457e2603ab65edc6eed469357e9393c876"
+        },
+        {
+          "seed": 77,
+          "shuffle": 1.5,
+          "crates": 64,
+          "columnLengths": [13, 13, 13, 12, 13],
+          "fronts": [
+            [32, 1, 22],
+            [59, 5, 14],
+            [4, 0, 62],
+            [34, 1, 23],
+            [5, 0, 25]
+          ],
+          "columnsSha256": "ebcd3ef8f6ecca1f437cc2d02d14b466484df2ff638033c533151b31a052f1d2"
+        }
+      ]
+    },
+    {
+      "levelId": "cactus",
+      "runs": [
+        {
+          "seed": 1,
+          "shuffle": 0,
+          "crates": 72,
+          "columnLengths": [15, 14, 14, 14, 15],
+          "fronts": [
+            [1, 0, 31],
+            [64, 5, 29],
+            [2, 0, 16],
+            [0, 0, 11],
+            [63, 5, 12]
+          ],
+          "columnsSha256": "f7d6bc4eb150d69ea0d944aafef8c412a7d6df4dbcb3ce1fa00ff87d811c7f8d"
+        },
+        {
+          "seed": 1,
+          "shuffle": 1.5,
+          "crates": 72,
+          "columnLengths": [15, 14, 14, 14, 15],
+          "fronts": [
+            [67, 5, 65],
+            [69, 5, 17],
+            [2, 0, 16],
+            [64, 5, 29],
+            [40, 1, 17]
+          ],
+          "columnsSha256": "7d527b25cf4b70223d683a6a64637070771c19d2af26571f2274e55b582124eb"
+        },
+        {
+          "seed": 77,
+          "shuffle": 0,
+          "crates": 64,
+          "columnLengths": [13, 13, 13, 12, 13],
+          "fronts": [
+            [1, 0, 21],
+            [55, 5, 11],
+            [2, 0, 76],
+            [56, 5, 20],
+            [0, 0, 11]
+          ],
+          "columnsSha256": "6ff67f708c671c0ad19ff45f234482a205dc1b1d7bd833732b6d49ba4c171cdc"
+        },
+        {
+          "seed": 77,
+          "shuffle": 1.5,
+          "crates": 64,
+          "columnLengths": [13, 13, 13, 12, 13],
+          "fronts": [
+            [56, 5, 20],
+            [59, 5, 13],
+            [4, 0, 58],
+            [34, 1, 21],
+            [5, 0, 23]
+          ],
+          "columnsSha256": "e6bb7a98ba6c038dd51ee61d0a0358bbb0c8f84375c2147da4d78f0fa650423d"
+        }
+      ]
+    },
+    {
+      "levelId": "rocket",
+      "runs": [
+        {
+          "seed": 1,
+          "shuffle": 0,
+          "crates": 72,
+          "columnLengths": [15, 14, 14, 14, 15],
+          "fronts": [
+            [1, 0, 33],
+            [2, 0, 18],
+            [3, 0, 27],
+            [0, 0, 12],
+            [70, 5, 30]
+          ],
+          "columnsSha256": "20df70bb961e3bbee5d6d81d1abe05d518c434ac2d2be6921f230ca840e5feb6"
+        },
+        {
+          "seed": 1,
+          "shuffle": 1.5,
+          "crates": 72,
+          "columnLengths": [15, 14, 14, 14, 15],
+          "fronts": [
+            [11, 0, 66],
+            [5, 0, 22],
+            [2, 0, 18],
+            [12, 0, 29],
+            [9, 0, 28]
+          ],
+          "columnsSha256": "8332b81b5d1f824d5465614f2a878f948def5a502bc71e88909e51e9729e2ff1"
+        },
+        {
+          "seed": 77,
+          "shuffle": 0,
+          "crates": 63,
+          "columnLengths": [12, 12, 13, 13, 13],
+          "fronts": [
+            [0, 0, 12],
+            [61, 5, 15],
+            [1, 0, 22],
+            [2, 0, 76],
+            [3, 0, 29]
+          ],
+          "columnsSha256": "6cf3942a30d87d6ecb6bdb3e741c6b529443c17717794e7fd83238418745063d"
+        },
+        {
+          "seed": 77,
+          "shuffle": 1.5,
+          "crates": 63,
+          "columnLengths": [12, 12, 13, 13, 13],
+          "fronts": [
+            [61, 5, 15],
+            [6, 0, 27],
+            [7, 0, 13],
+            [14, 0, 23],
+            [9, 0, 23]
+          ],
+          "columnsSha256": "6a7b0063b96b4f9619907b3daa615be76ec6a6ed6373711aad1d61b067a6b65e"
+        }
+      ]
+    },
+    {
+      "levelId": "rubber-duck",
+      "runs": [
+        {
+          "seed": 1,
+          "shuffle": 0,
+          "crates": 70,
+          "columnLengths": [14, 14, 14, 14, 14],
+          "fronts": [
+            [63, 5, 14],
+            [61, 5, 80],
+            [58, 4, 32],
+            [62, 5, 28],
+            [59, 4, 16]
+          ],
+          "columnsSha256": "2770c9d9ec001a98ddf68fec99cab40744e00f9f6339ce98a01df6e189b146cd"
+        },
+        {
+          "seed": 1,
+          "shuffle": 1.5,
+          "crates": 70,
+          "columnLengths": [14, 14, 14, 14, 14],
+          "fronts": [
+            [68, 5, 18],
+            [63, 5, 14],
+            [61, 5, 80],
+            [59, 4, 16],
+            [36, 1, 27]
+          ],
+          "columnsSha256": "0417ad37bccd55107406cb0d5305ce8ab1885461b3bc59df5cace768d6fd6669"
+        },
+        {
+          "seed": 77,
+          "shuffle": 0,
+          "crates": 65,
+          "columnLengths": [13, 13, 13, 13, 13],
+          "fronts": [
+            [56, 5, 22],
+            [55, 5, 12],
+            [52, 4, 30],
+            [54, 5, 58],
+            [51, 4, 18]
+          ],
+          "columnsSha256": "ae548b2e15a78e7e23651306c5ba699fd9b311226e477f228d292568e5b3301d"
+        },
+        {
+          "seed": 77,
+          "shuffle": 1.5,
+          "crates": 65,
+          "columnLengths": [13, 13, 13, 13, 13],
+          "fronts": [
+            [30, 1, 29],
+            [54, 5, 58],
+            [52, 4, 30],
+            [57, 5, 73],
+            [3, 0, 30]
+          ],
+          "columnsSha256": "9b5f5f03004865c0e1d22c7997791397c72e608d2f2aff5fa28796ebe4683b24"
+        }
+      ]
+    },
+    {
+      "levelId": "ice-cream",
+      "runs": [
+        {
+          "seed": 1,
+          "shuffle": 0,
+          "crates": 70,
+          "columnLengths": [14, 14, 14, 14, 14],
+          "fronts": [
+            [43, 1, 28],
+            [0, 0, 11],
+            [2, 0, 16],
+            [3, 0, 25],
+            [1, 0, 30]
+          ],
+          "columnsSha256": "0c191e986090aa6ab1b7dba6a14bbd2acbc7f3b6543fbe86a9605d4ab3a38d6f"
+        },
+        {
+          "seed": 1,
+          "shuffle": 1.5,
+          "crates": 70,
+          "columnLengths": [14, 14, 14, 14, 14],
+          "fronts": [
+            [52, 2, 21],
+            [46, 1, 13],
+            [1, 0, 30],
+            [17, 0, 30],
+            [18, 0, 26]
+          ],
+          "columnsSha256": "8b3ba1cdc94826c0be050af7acf015e4d0b5ecd857207a0d87d1866922a2da05"
+        },
+        {
+          "seed": 77,
+          "shuffle": 0,
+          "crates": 63,
+          "columnLengths": [12, 13, 13, 13, 12],
+          "fronts": [
+            [41, 2, 63],
+            [0, 0, 11],
+            [37, 1, 23],
+            [2, 0, 75],
+            [1, 0, 20]
+          ],
+          "columnsSha256": "e688d70ed4f8ecc1980cb21079a1c931621b213100a54dfa94f9855c2ea74970"
+        },
+        {
+          "seed": 77,
+          "shuffle": 1.5,
+          "crates": 63,
+          "columnLengths": [12, 13, 13, 13, 12],
+          "fronts": [
+            [16, 0, 16],
+            [9, 0, 21],
+            [8, 0, 54],
+            [38, 1, 20],
+            [1, 0, 20]
+          ],
+          "columnsSha256": "8d13f66c41764312668d1c66f8b10c5d88d07b6c7323d76a29c870fdbcd15537"
+        }
+      ]
+    },
+    {
+      "levelId": "watermelon",
+      "runs": [
+        {
+          "seed": 1,
+          "shuffle": 0,
+          "crates": 68,
+          "columnLengths": [14, 14, 13, 13, 14],
+          "fronts": [
+            [2, 0, 16],
+            [3, 0, 24],
+            [0, 0, 11],
+            [4, 0, 29],
+            [1, 0, 29]
+          ],
+          "columnsSha256": "229f5c46f0158516e25447e251c15370a8c2b429196a8a1a8e82570cd94199f1"
+        },
+        {
+          "seed": 1,
+          "shuffle": 1.5,
+          "crates": 68,
+          "columnLengths": [14, 14, 13, 13, 14],
+          "fronts": [
+            [17, 0, 29],
+            [38, 1, 14],
+            [18, 0, 25],
+            [1, 0, 29],
+            [46, 2, 27]
+          ],
+          "columnsSha256": "4cfdf89b22149d6f690622804ccfbb444ef8c626efd3420939bce75c86610d47"
+        },
+        {
+          "seed": 77,
+          "shuffle": 0,
+          "crates": 61,
+          "columnLengths": [12, 13, 12, 12, 12],
+          "fronts": [
+            [2, 0, 75],
+            [3, 0, 25],
+            [0, 0, 11],
+            [4, 0, 55],
+            [1, 0, 20]
+          ],
+          "columnsSha256": "7e4d354d30cd3a6e2aa91dcc6349c9571d1347d7550a2466ef1b482c8b1a9630"
+        },
+        {
+          "seed": 77,
+          "shuffle": 1.5,
+          "crates": 61,
+          "columnLengths": [12, 13, 12, 12, 12],
+          "fronts": [
+            [16, 0, 15],
+            [11, 0, 15],
+            [9, 0, 20],
+            [8, 0, 52],
+            [1, 0, 20]
+          ],
+          "columnsSha256": "370947739ddaa08f5a50f6a32db93c52967ae91c92d5522763158e2d20a7dc6e"
+        }
+      ]
+    }
+  ]
+}

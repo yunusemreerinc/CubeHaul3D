@@ -1,0 +1,131 @@
+{
+  "format": "cubehaul.golden.manifest",
+  "version": 1,
+  "source": {
+    "repo": "https://github.com/yunusemreerinc/cube-hunt",
+    "commit": "559dfd90977b1e15367bd7de25aec9fbae4b52f6"
+  },
+  "description": "Every golden file with its sha256 and size in bytes (UTF-8, LF line endings). Regenerate with `npm run export:golden` in Tools/ts-reference.",
+  "files": [
+    {
+      "path": "Assets/CubeHaul/Content/Levels/level-01-strawberry.level.json",
+      "bytes": 5573,
+      "sha256": "87155a070bdbecd879732a79cb654de9ee0094a9ac4ab944c41b556acfb27006"
+    },
+    {
+      "path": "Assets/CubeHaul/Content/Levels/level-02-mushroom.level.json",
+      "bytes": 7791,
+      "sha256": "e8276b2fcf87eea1c123eb9fe5e3f56fc50e1f12477dd6e8fa093332d0bab202"
+    },
+    {
+      "path": "Assets/CubeHaul/Content/Levels/level-03-sunset.level.json",
+      "bytes": 7226,
+      "sha256": "6ea5200d616db7ec97edfb6a31c32f8e7d8c06ee9e89a3cea608ed7fbdcf2848"
+    },
+    {
+      "path": "Assets/CubeHaul/Content/Levels/level-04-ringed-planet.level.json",
+      "bytes": 10553,
+      "sha256": "0a777287aaa8f59d3d95c3f530c692ccee43d90630daf336e3faa3d2874b8f7b"
+    },
+    {
+      "path": "Assets/CubeHaul/Content/Levels/level-05-cat.level.json",
+      "bytes": 9635,
+      "sha256": "2de2c948e6d497a652ffb7e554007ecd31d6d70699766daf4c56f7fab2d7ae3a"
+    },
+    {
+      "path": "Assets/CubeHaul/Content/Levels/level-06-cactus.level.json",
+      "bytes": 9627,
+      "sha256": "c86274777665bf6e1d8648983ffea1aa1dfa6c354991a7e47cb2762c6fa5d2d8"
+    },
+    {
+      "path": "Assets/CubeHaul/Content/Levels/level-07-rocket.level.json",
+      "bytes": 9543,
+      "sha256": "95ea7a19991b14fa5304ea10d633914087068ba9b054343b905b260701c3b7ff"
+    },
+    {
+      "path": "Assets/CubeHaul/Content/Levels/level-08-rubber-duck.level.json",
+      "bytes": 9463,
+      "sha256": "7361aa71b2cae977f9f2720bb885e80003a5af7104937bced0c33e23b308976a"
+    },
+    {
+      "path": "Assets/CubeHaul/Content/Levels/level-09-ice-cream.level.json",
+      "bytes": 8988,
+      "sha256": "af0bc431b6c999081119fd1bbd2e6fe314ef12b176ba38023cbb7dd1f86d4508"
+    },
+    {
+      "path": "Assets/CubeHaul/Content/Levels/level-10-watermelon.level.json",
+      "bytes": 8772,
+      "sha256": "8832259d9f95493a684b3439e01615313a7cd8a2820d0131557c1c84df6726d3"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/build.json",
+      "bytes": 29072,
+      "sha256": "f885d4cdcaaae60e3e8b0b8e8e9674c24663f72cadc41935a443ee7a43d1628a"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/generate.json",
+      "bytes": 16702,
+      "sha256": "c9e34f51e7e526684be468a99c60a10bd93ea37419e5861a6e11bc632872e0af"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/peel-layers.json",
+      "bytes": 61343,
+      "sha256": "674d7689046d44df52e0497dbe34cdee62fe0ae525d51878b5a94858d83efed2"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/rng.json",
+      "bytes": 18686,
+      "sha256": "7ac6b74e8d4f08803addbbebb76d80c369d52acc2d4e3e568b682d013714bbd2"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/scenarios/all-edges-top-row.json",
+      "bytes": 7019,
+      "sha256": "611ceea3ae42d525d7abefb1d713f91f6181f8aed61049213a4518f98fef58e2"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/scenarios/cat-random-delayed.json",
+      "bytes": 681982,
+      "sha256": "050c907d3e038ba6586a1dfe4e84e3ce4113722425f67aa49dd7042e5c7fce89"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/scenarios/claim-blocks-until-collect.json",
+      "bytes": 7345,
+      "sha256": "b02b66984b5bc394b9b05661a07a64b1dd594d0463722dd1437016a7b3a4926a"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/scenarios/mushroom-random-delayed.json",
+      "bytes": 620418,
+      "sha256": "18df896ba05ed0f43de2a8e39ce3c7a48f7a4414abfb141ffe5b1d698a558c83"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/scenarios/ready-mask-middle-out.json",
+      "bytes": 16069,
+      "sha256": "7410b1ad9eaffbf3e3e8fe9978ec75bea3bf939157e5fa4f209e7033c8d51aba"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/scenarios/ring-step.json",
+      "bytes": 9246,
+      "sha256": "fd37aed62512f70e0c101c14345845268820e01aef6512b811a7695c1e824aeb"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/scenarios/sealed-gap-opensup.json",
+      "bytes": 8240,
+      "sha256": "a8df6be49a88c5674fb4389c3df47884ff8e81dc116f74ce235c89e5a04ed2cc"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/scenarios/sides-edges-wall.json",
+      "bytes": 11356,
+      "sha256": "cade563c1acad7e5caa197975c6ed8f1ab4fa5dce9f3bd2bcdec0a0175bdc8c1"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/scenarios/strawberry-step.json",
+      "bytes": 151472,
+      "sha256": "3158f269f0ce7434f2f3f7b2b53ab2079df4f1adcbf58f3629f68d53342d9c3e"
+    },
+    {
+      "path": "Assets/Tests/Fixtures/Golden/scenarios/stuck-addslot-won.json",
+      "bytes": 6486,
+      "sha256": "c498fc422d4458daf36cc30a914dd932bd48a5067b589fc4225547e0df938e56"
+    }
+  ]
+}
