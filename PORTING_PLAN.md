@@ -1,9 +1,9 @@
-# CubeHunt3D — Taşıma Planı (TypeScript → Unity 6.3 LTS / C#)
+# CubeHaul3D — Taşıma Planı (TypeScript → Unity 6.3 LTS / C#)
 
 | | |
 |---|---|
 | **Kaynak** | [yunusemreerinc/cube-hunt](https://github.com/yunusemreerinc/cube-hunt), `main` @ `559dfd90977b1e15367bd7de25aec9fbae4b52f6` (15.11.2026) |
-| **Hedef** | CubeHunt3D — Unity 6.3 LTS (6000.3.x), Universal 3D (URP) şablonu, C# |
+| **Hedef** | CubeHaul3D — Unity 6.3 LTS (6000.3.x), Universal 3D (URP) şablonu, C# |
 | **Platformlar** | Android, iOS (dikey ekran, dokunmatik) |
 | **Bu belgenin kapsamı** | Analiz, katman ayrımı, C# mimari tasarımı, test planı, JSON bölüm formatı, riskler |
 | **Kapsam dışı (bu aşamada)** | C# kodu, Unity projesi, 3D sahne. TypeScript projesine dokunulmaz. |
@@ -11,6 +11,14 @@
 Planın tamamı, kaynak koddaki davranışın **bire bir korunması** ilkesine dayanır: C# çekirdeği aynı tohumla (seed)
 aynı tepsiyi üretmeli, aynı hamle dizisinde aynı kamyonları aynı küplere göndermeli ve aynı anda kazanmalı ya da
 tıkanmalıdır. 3D görselleştirme bu çekirdeğin üzerine, kuralları etkilemeyecek şekilde oturur.
+
+### Alınan kararlar
+
+| Konu | Karar | Etkisi |
+|---|---|---|
+| Proje adı | **CubeHaul3D** (depo adıyla aynı) | Unity projesi depo kökünde; asmdef/namespace önekleri `CubeHaul.*`; JSON `format` değerleri `cubehaul.*` |
+| Kamera | **Ortografik** | Tüm küpler ekranda aynı boyda; okunabilirlik riski (R-17) azalır; derinlik hissi ışık ve eğik açıyla verilir (§3.5) |
+| "Your image" | **İlk sürümde yok** | Galeri eklentisi, izinler ve çalışma zamanında bölüm üretimi v1 kapsamından çıktı (§2.3, §7) |
 
 ---
 
@@ -24,6 +32,8 @@ tıkanmalıdır. 3D görselleştirme bu çekirdeğin üzerine, kuralları etkile
 6. [Riskler ve önlemler](#6-riskler-ve-önlemler)
 7. [Önerilen iş sırası](#7-önerilen-iş-sırası)
 8. [Açık sorular](#8-açık-sorular)
+
+Kararlar için başlıktaki [Alınan kararlar](#alınan-kararlar) tablosuna bakın.
 
 ---
 
@@ -104,7 +114,7 @@ Testlerde bu kimliklere (B-xx) atıf yapılır.
 - **B-36** Sonuç paneli: durum `playing` değilse **ve** sahada/rampada kamyon kalmadıysa 0.4 s sonra açılır. Kazanınca "Next level" (sonuncuda "Back to level 1"), tıkanınca "+1 Slot" (kullanılabiliyorsa) ve "Retry".
 - **B-37** Bölüm gezintisi: önceki/sonraki döngüseldir (10 → 1). İlerleme kaydı yok, uygulama 1. bölümden başlar (web'de `?level=N`).
 - **B-38** Dolu slot varken kasaya dokunmak tepsiyi sallar (0.35 s), hamle yapmaz.
-- **B-39** "Your image": resim uzun kenarı 40 küp olacak şekilde küçültülür (en az 4), en fazla 6 renk, alfa < 128 saydam; bölüm ayarı `seed 1234, shuffle 0.7, edges bottom, targetWinRate 0.6`.
+- **B-39** *(v1 kapsamı dışında, ileride eklenecek)* "Your image": resim uzun kenarı 40 küp olacak şekilde küçültülür (en az 4), en fazla 6 renk, alfa < 128 saydam; bölüm ayarı `seed 1234, shuffle 0.7, edges bottom, targetWinRate 0.6`.
 
 ### 1.3 Yerleşik bölümler (ölçülen değerler)
 
@@ -134,7 +144,7 @@ Kaynak commit'te Node 22 üzerinde ölçüldü (`buildLevel` çıktısı). Bunla
 Gözlemler:
 
 - En büyük ızgara 46×46 = 2116 küp. 3D'de bu kadar küpün mobilde tek tek `GameObject` olarak çizilmesi pahalıdır (§6, R-11).
-- Masaüstü V8'de bir bölümün üretimi 36–482 ms. IL2CPP ile orta seviye bir telefonda bunun birkaç katı beklenmeli. Yerleşik bölümler önceden üretilip JSON'a gömülecek (§5); çalışma zamanında üretim yalnızca "Your image" için gerekir.
+- Masaüstü V8'de bir bölümün üretimi 36–482 ms. IL2CPP ile orta seviye bir telefonda bunun birkaç katı beklenmeli. Yerleşik bölümler önceden üretilip JSON'a gömülecek (§5). "Your image" v1'de olmadığından ilk sürümde çalışma zamanında hiç bölüm üretilmez.
 
 ---
 
@@ -190,8 +200,8 @@ Bağımlılıklar yalnızca yukarıdan aşağıya akar. Görünüm (View), kural
 | `staticLayer`, `cubeLayer`, `trayLayer`, `stamp`, `sprites` | Canvas önbellekleme | Yok | Kaldırılır (URP batching / instancing) |
 | `onPointer`, `buttons`, `tapColumn` | Giriş | Yok | View: `InputRouter` |
 | `resize`, `dpr`, `scale` | Ekran ölçekleme | Yok | View: `CameraRig`, Canvas Scaler, Safe Area |
-| `prebuildLevels`, `buildCustom`, Worker | Arka plan üretim | Yok | App: `LevelBuildService` (thread) |
-| `onFile`, `pictureFromFile` | Dosya seçme, küçültme | Yok (sonucu bölümü belirler) | App: `ImagePickerService` + `Levels.ImageQuantizer` |
+| `prebuildLevels`, `buildCustom`, Worker | Arka plan üretim | Yok | v1: gerek yok (bölümler pişirilmiş). İleride: App `LevelBuildService` (thread) |
+| `onFile`, `pictureFromFile` | Dosya seçme, küçültme | Yok (sonucu bölümü belirler) | **v1'de yok.** İleride: App `ImagePickerService` + `Levels.ImageQuantizer` |
 | `navigator.vibrate(8)` | Dokunma geri bildirimi | Yok | View: `HapticsService` |
 
 > **Neden zamanlama simülasyon katmanında?** Tarayıcıda oyunun gidişatı yalnızca `tap` sırasına değil, kamyonların
@@ -206,11 +216,11 @@ Bağımlılıklar yalnızca yukarıdan aşağıya akar. Görünüm (View), kural
 | Parça | Hedef | Not |
 |---|---|---|
 | `rng.ts`, `generator.ts`, `solver.ts` | `Levels` (saf) | Bire bir port, bit düzeyinde aynı sonuç |
-| `image.ts › quantize` | `Levels.ImageQuantizer` (saf) | Girdi: `byte[] rgba, width, height` |
-| `image.ts › pictureFromFile` | App: `ImagePickerService` | Unity `Texture2D` + GPU küçültme; sonuç tarayıcıdan birebir olmayabilir (R-20) |
+| `image.ts › quantize` | `Levels.ImageQuantizer` (saf) | Girdi: `byte[] rgba, width, height`. Saf ve küçük olduğu için v1'de de taşınır ve test edilir (mevcut testi korur, özelliği sonra eklemeyi kolaylaştırır); oyunda kullanılmaz |
+| `image.ts › pictureFromFile` | **v1'de yok.** İleride: App `ImagePickerService` | Unity `Texture2D` + GPU küçültme; sonuç tarayıcıdan birebir olmayabilir (R-20) |
 | `art.ts › Sketch` + resimler | **Taşınmaz** — bir kerelik dışa aktarılır | Resimler JSON'a "pişirilir" (§5). `Math.sin/sqrt/pow` eşik farkları C#'ta pikselleri değiştirebilir (R-04) |
 | `art.ts › builtInLevels` ayarları | JSON `generation` bölümü | |
-| `worker.ts` | App: `LevelBuildService` | `Task.Run` + ana iş parçacığına dönüş |
+| `worker.ts` | v1: yok. İleride: App `LevelBuildService` | `Task.Run` + ana iş parçacığına dönüş |
 
 ---
 
@@ -218,39 +228,40 @@ Bağımlılıklar yalnızca yukarıdan aşağıya akar. Görünüm (View), kural
 
 ### 3.1 Depo ve klasör düzeni
 
-> Not: Bu depo `CubeHaul3D` adında, hedef proje adı ise `CubeHunt3D`. Öneri: Unity projesi bu deponun içinde
-> `CubeHunt3D/` klasöründe yaşasın; depo adı ayrıca netleştirilmeli (§8).
+Unity projesi doğrudan depo kökünde durur (Unity yalnızca `Assets/`, `Packages/`, `ProjectSettings/` klasörlerini
+okur; `Tools/` ve belgeler etkilenmez). `Library/`, `Temp/`, `Logs/`, `UserSettings/`, `Build/` ve `Tools/**/node_modules`
+`.gitignore`'a girer.
 
 ```
-CubeHaul3D/                         (bu depo)
+CubeHaul3D/                         (bu depo = Unity 6.3 LTS projesi, URP)
 ├─ PORTING_PLAN.md
 ├─ Tools/
 │  └─ ts-export/                    Node betiği: kaynak TS'yi pinli commit'ten okur, JSON + golden fixture üretir
 │                                   (TS projesini değiştirmez; ayrı klon/alt modül üzerinden içe aktarır)
-└─ CubeHunt3D/                      Unity 6.3 LTS projesi (URP)
-   ├─ Packages/manifest.json        URP, Input System, Test Framework, (TextMeshPro/UGUI), sabit sürümler
-   └─ Assets/
-      ├─ CubeHunt/
-      │  ├─ Scripts/
-      │  │  ├─ Core/          CubeHunt.Core.asmdef         noEngineReferences: true
-      │  │  ├─ Levels/        CubeHunt.Levels.asmdef       noEngineReferences: true  → Core
-      │  │  ├─ Data/          CubeHunt.Data.asmdef         noEngineReferences: true  → Core
-      │  │  ├─ Simulation/    CubeHunt.Simulation.asmdef   noEngineReferences: true  → Core, Levels
-      │  │  ├─ App/           CubeHunt.App.asmdef          → Core, Levels, Data, Simulation, UnityEngine
-      │  │  └─ View/          CubeHunt.View.asmdef         → Simulation, App, UnityEngine, URP, Input System
-      │  ├─ Content/Levels/   catalog.json, level_01_strawberry.json, …
-      │  ├─ Art/              Modeller, materyaller, shader'lar
-      │  └─ Scenes/           Boot.unity, Game.unity
-      └─ Tests/
-         ├─ EditMode/         CubeHunt.Tests.EditMode.asmdef  (NUnit; saf katmanlar + JSON)
-         ├─ PlayMode/         CubeHunt.Tests.PlayMode.asmdef  (sahne, giriş, akış)
-         └─ Fixtures/Golden/  TS'den dışa aktarılan referans çıktılar
+├─ Packages/manifest.json           URP, Input System, Test Framework, uGUI/TextMeshPro, sabit sürümler
+├─ ProjectSettings/
+└─ Assets/
+   ├─ CubeHaul/
+   │  ├─ Scripts/
+   │  │  ├─ Core/          CubeHaul.Core.asmdef         noEngineReferences: true
+   │  │  ├─ Levels/        CubeHaul.Levels.asmdef       noEngineReferences: true  → Core
+   │  │  ├─ Data/          CubeHaul.Data.asmdef         noEngineReferences: true  → Core
+   │  │  ├─ Simulation/    CubeHaul.Simulation.asmdef   noEngineReferences: true  → Core, Levels
+   │  │  ├─ App/           CubeHaul.App.asmdef          → Core, Levels, Data, Simulation, UnityEngine
+   │  │  └─ View/          CubeHaul.View.asmdef         → Simulation, App, UnityEngine, URP, Input System
+   │  ├─ Content/Levels/   catalog.json, level_01_strawberry.json, …
+   │  ├─ Art/              Modeller, materyaller, shader'lar
+   │  └─ Scenes/           Boot.unity, Game.unity
+   └─ Tests/
+      ├─ EditMode/         CubeHaul.Tests.EditMode.asmdef  (NUnit; saf katmanlar + JSON)
+      ├─ PlayMode/         CubeHaul.Tests.PlayMode.asmdef  (sahne, giriş, akış)
+      └─ Fixtures/Golden/  TS'den dışa aktarılan referans çıktılar
 ```
 
 `noEngineReferences: true` saf katmanların yanlışlıkla `UnityEngine` kullanmasını derleyici düzeyinde engeller.
 Böylece bu katmanlar istenirse Unity dışında, `dotnet test` ile de çalıştırılabilir.
 
-### 3.2 Core — oyun kuralları (`CubeHunt.Core`)
+### 3.2 Core — oyun kuralları (`CubeHaul.Core`)
 
 | C# türü | TS karşılığı | Tasarım notu |
 |---|---|---|
@@ -304,7 +315,7 @@ bool IsStuck(); int TrayCount()
 Kolonlar `List<Crate>` olarak kalır (önden çıkarma `RemoveAt(0)`; kolonlar en fazla ~15 kasa), çünkü görünüm
 arka sıradaki kasaları da çizer. `Tick` çıktıyı çağıranın listesine yazar, kare başına çöp üretmez.
 
-### 3.3 Levels — bölüm üretimi (`CubeHunt.Levels`)
+### 3.3 Levels — bölüm üretimi (`CubeHaul.Levels`)
 
 | C# türü | TS karşılığı | Not |
 |---|---|---|
@@ -321,7 +332,7 @@ arka sıradaki kasaları da çizer. `Tick` çıktıyı çağıranın listesine y
 | `static class DifficultyLabel` (`From(double winRate)`) | `main.ts` eşikleri | B-25 |
 | `sealed class LevelSpec` | `LevelSpec` | JSON'dan gelir |
 
-### 3.4 Simulation — kurala etki eden zamanlama (`CubeHunt.Simulation`)
+### 3.4 Simulation — kurala etki eden zamanlama (`CubeHaul.Simulation`)
 
 ```mermaid
 classDiagram
@@ -419,18 +430,26 @@ classDiagram
 | `GameBootstrap` | MonoBehaviour | Servisleri kurar, ilk bölümü yükler (geliştirme için komut satırı/Inspector'dan bölüm seçimi, `?level=` karşılığı) |
 | `LevelRepository` | C# servis | `catalog.json` + seviye `TextAsset`'leri → `JsonUtility` → `Data.LevelMapper` → `LevelSpec` + hazır `Level` |
 | `LevelLibrary` | ScriptableObject | Katalog ve seviye `TextAsset` referansları (Android'de `StreamingAssets` okuma karmaşasından kaçınmak için) |
-| `LevelBuildService` | C# servis | Özel resim için `Task.Run(LevelGenerator.Build)`, iptal, sonucu ana iş parçacığına aktarma |
-| `ImagePickerService` | C# + yerel eklenti | Galeriden resim, `Texture2D` → GPU ile küçültme → `byte[] rgba` |
+| ~~`LevelBuildService`~~ | — | *v1 sonrası:* özel resim için `Task.Run(LevelGenerator.Build)`, iptal, ana iş parçacığına aktarma |
+| ~~`ImagePickerService`~~ | — | *v1 sonrası:* galeriden resim, `Texture2D` → GPU ile küçültme → `byte[] rgba` |
 | `GameController` | MonoBehaviour | `Update()` → `session.Advance(Time.unscaledDeltaTime)`; olayları görünümlere dağıtır |
 | `WorldMapper` | C# | Tasarım pikseli (x, y-aşağı) → dünya `(x·s, 0, −y·s)`; tek yerde, test edilebilir |
 | `BoardView` | MonoBehaviour | Küpleri renk başına **GPU instancing** ile çizer (`Graphics.RenderMeshInstanced` ya da BRG); alınan küp yerine "soket" |
 | `RoadView`, `WallView`, `RampView` | MonoBehaviour | Halkaya göre yol mesh'i, kapalı kenarlarda tuğla duvar (bottom: üst+yanlar; sides: yalnızca üst), rampa |
 | `TruckView` + `TruckPool` | MonoBehaviour | Nesne havuzu; pozisyon simülasyondan, yön yumuşatma/şerit kaydırma/yük animasyonu burada |
 | `TrayView`, `CrateView`, `SlotView`, `CrateFlight` | MonoBehaviour | Tepsi kolonları (ön + 2 arka kademe, solma), slotlar, ilerleme çubuğu, "bloke" çizgileri (B-14), uçuş/iniş/ayrılma |
-| `HudView`, `BottomBarView`, `EndPanelView` | uGUI veya UI Toolkit | Üst çubuk (yeniden başlat, önceki/sonraki, başlık, zorluk çipi, hız), "+1 Slot", "Your image", sonuç paneli |
+| `HudView`, `BottomBarView`, `EndPanelView` | uGUI veya UI Toolkit | Üst çubuk (yeniden başlat, önceki/sonraki, başlık, zorluk çipi, hız), "+1 Slot" (v1'de alt çubuktaki tek düğme; "Your image" yeri boş kalmaz, yerleşim yeniden düzenlenir), sonuç paneli |
 | `InputRouter` | MonoBehaviour | Input System; UI üstünde mi kontrolü, 3D kasa seçimi (fizik raycast ya da ekran dikdörtgeni) |
-| `CameraRig` | MonoBehaviour | Tarlayı ve tepsiyi her en-boy oranında sığdırır, `Screen.safeArea` |
+| `CameraRig` | MonoBehaviour | **Ortografik** kamera; `orthographicSize` tarlayı + yolu + rampayı her en-boy oranında sığdıracak şekilde hesaplanır, `Screen.safeArea` dikkate alınır |
 | `FxService`, `HapticsService`, `AudioService` | C#/MonoBehaviour | Parçacıklar (havuzlu), titreşim (iOS `UIImpactFeedbackGenerator`, Android kısa titreşim), ses (ileride) |
+
+**Kamera (karar: ortografik).** Projeksiyon ortografik olduğundan tüm küpler ekranda aynı boyda görünür; uzak satırlar
+küçülmez. Kamera rampa tarafından, eğik bir açıyla (başlangıç önerisi X ekseninde ~55°, gri kutu aşamasında
+ayarlanır) bakar; 90° (tam tepeden) de aynı kodla desteklenir. Derinlik hissi perspektiften değil, küplerin yan
+yüzleri, yumuşak gölge ve ambient occlusion ile verilir. Ortografik kameranın yan faydaları: ekrandan dünyaya
+dönüşüm doğrusaldır (dokunma testleri ve UI hizalaması basit), `orthographicSize` tek bir sayıyla bölüm boyutuna
+göre ayarlanır, kare-başı kamera hareketi gerekmez. Eğik açıda tarla dikey olarak `cos(açı)` kadar kısalır; bu
+`CameraRig`'in sığdırma hesabına dahil edilir.
 
 **Koordinat eşlemesi.** Izgara satırı `y = 0` en üstte, `y = height−1` rampaya en yakın satır. 3D'de kamera rampa
 tarafından bakar; tasarım düzlemi XZ düzlemine `X = x·s`, `Z = −y·s` ile yatırılır. Böylece alt satır kameraya en
@@ -534,7 +553,7 @@ G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç
   dizisi ve aynı sonuç (sabit adım doğrulaması).
 - **Tarayıcı simülasyonuyla eşdeğerlik:** TS `App.update` mantığını saf bir betikle (görünümsüz) çalıştırıp sabit
   `dt` ile `CubeCollected` sırasını dışa aktar; C# `GameSession` aynı sırayı üretmeli (G-11).
-- **`WorldMapper`:** alt satır kameraya en yakın, x ekseni aynalanmamış.
+- **`WorldMapper` / `CameraRig`:** alt satır kameraya en yakın, x ekseni aynalanmamış; en büyük bölüm (46×46) ve en uç en-boy oranlarında (16:9 – 21:9) tarla + yol + rampa ortografik görüş alanına sığıyor.
 - **Zorluk etiketi:** sınır değerleri 0.9 / 0.65 / 0.45.
 - **Performans (EditMode, gösterge niteliğinde):** `LevelGenerator.Build` en büyük bölümde < 2 s (editör), `Board.PickTarget` döngüsü tahsis yapmıyor (`GC.GetAllocatedBytesForCurrentThread`).
 
@@ -552,7 +571,7 @@ G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç
 
 ### 4.5 PlayMode ve cihaz testleri
 
-- **PlayMode:** sahne yüklenir; bölüm 1 açılır; kolona dokunma → kasa slota uçar → kamyon çıkar; tüm küpler alınınca
+- **PlayMode:** sahne yüklenir; kamera ortografik; alt çubukta "Your image" düğmesi yok; bölüm 1 açılır; kolona dokunma → kasa slota uçar → kamyon çıkar; tüm küpler alınınca
   panel açılır ve "Next level" 2. bölüme geçer; tıkanma senaryosunda "+1 Slot" oyunu sürdürür; "Retry" bölümü sıfırlar;
   hız düğmesi kamyon hızını ölçülebilir şekilde katlar.
 - **Görsel regresyon (opsiyonel):** sabit kamera ve sabit simülasyon zamanında ekran görüntüsü karşılaştırması.
@@ -577,7 +596,7 @@ G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç
 ### 5.2 Dosyalar
 
 ```
-Assets/CubeHunt/Content/Levels/
+Assets/CubeHaul/Content/Levels/
   catalog.json
   level_01_strawberry.json
   level_02_mushroom.json
@@ -589,7 +608,7 @@ Assets/CubeHunt/Content/Levels/
 
 ```json
 {
-  "format": "cubehunt.catalog",
+  "format": "cubehaul.catalog",
   "schemaVersion": 1,
   "levels": [
     { "id": "strawberry", "file": "level_01_strawberry" },
@@ -604,7 +623,7 @@ Tam ve geçerli bir örnek (testlerdeki 3×3 "ring" bölümü; yerleşik bölüm
 
 ```json
 {
-  "format": "cubehunt.level",
+  "format": "cubehaul.level",
   "schemaVersion": 1,
   "id": "ring",
   "name": "Ring",
@@ -660,7 +679,7 @@ Tam ve geçerli bir örnek (testlerdeki 3×3 "ring" bölümü; yerleşik bölüm
 
 | Alan | Tür | Zorunlu | Anlam / kural |
 |---|---|---|---|
-| `format` | string | evet | `"cubehunt.level"` |
+| `format` | string | evet | `"cubehaul.level"` |
 | `schemaVersion` | int | evet | Şu an `1` |
 | `id` | string | evet | `[a-z0-9_]+`, katalogda benzersiz |
 | `name` | string | evet | Görünen ad (TS `Picture.name`) |
@@ -684,7 +703,7 @@ Tam ve geçerli bir örnek (testlerdeki 3×3 "ring" bölümü; yerleşik bölüm
 Ek kurallar: her renk için `Σ count` = o rengin küp sayısı; palette kullanılmayan renk olmamalı (uyarı);
 tüm sayılar JSON sayısı (metin değil), ondalık ayırıcı nokta.
 
-**Özel resim ("Your image") bölümleri** aynı biçimi kullanır: `palette` anahtarları `0–9a–z`, `tray` ve `difficulty`
+**Özel resim ("Your image", v1 sonrası) bölümleri** aynı biçimi kullanır: `palette` anahtarları `0–9a–z`, `tray` ve `difficulty`
 çalışma zamanında `LevelBuildService` tarafından doldurulur. Böylece ileride kaydetme/paylaşma da aynı formatla yapılır.
 
 ### 5.5 Dosyaların üretimi
@@ -695,7 +714,7 @@ tüm sayılar JSON sayısı (metin değil), ondalık ayırıcı nokta.
 3. `solveGreedy()` → `provenance`,
 4. §4.2'deki golden fixture'ları yazar.
 
-C# üretici G-05/G-06'yı geçtikten sonra, aynı dosyaları Unity içinden bir Editör aracıyla (`Tools > CubeHunt > Rebake Levels`)
+C# üretici G-05/G-06'yı geçtikten sonra, aynı dosyaları Unity içinden bir Editör aracıyla (`Tools > CubeHaul > Rebake Levels`)
 yeniden pişirmek mümkün olur; o noktadan sonra TS'ye bağımlılık kalkar.
 
 ---
@@ -722,16 +741,16 @@ Olasılık/Etki: **Y**üksek, **O**rta, **D**üşük.
 | R-14 | **Türkçe yerel ayar (tr-TR).** `"SIDES".ToLower()` → `"sıdes"`; `double.Parse("0.2")` ondalık virgül bekler; `ToString()` virgüllü yazar. Hedef kitlede yaygın. | Y | Y | Her yerde `ToLowerInvariant`, `StringComparison.Ordinal`, `CultureInfo.InvariantCulture`; enum'lar için `switch` ile ordinal ayrıştırma; testler tr-TR altında da |
 | R-15 | **IL2CPP kod ayıklama / AOT.** Yansımaya dayalı JSON (Newtonsoft) ve jenerikler iOS'ta çalışma zamanında kırılabilir. | O | O | `JsonUtility` + `[Serializable]` DTO'lar; Newtonsoft gerekirse `link.xml`; cihazda IL2CPP derlemesiyle test |
 | R-16 | **Renk uzayı.** URP projeleri Linear renk uzayında; `#rrggbb` sRGB'dir. Instancing dizilerine (`SetVectorArray`) ham değer verilirse renkler soluk/yanlış görünür; ışık/gölge benzer renkleri birbirine yaklaştırabilir (oyun renk ayırt etmeye dayanıyor). | O | Y | `ColorUtility.TryParseHtmlString` + gerektiğinde `.linear`; unlit/az gölgeli küp materyali; renk körlüğü simülasyonuyla kontrol |
-| R-17 | **3D okunabilirlik.** 46×46 tarlada küpler telefonda küçük; perspektif kamera uzak satırları daha da küçültür; kamyonlar küplerin arkasında kalabilir. | Y | Y | Yüksek açılı ya da ortografik kamera; prototipte erken kullanıcı testi; küp boyu ≥ ~7 dp hedefi |
+| R-17 | **3D okunabilirlik.** 46×46 tarlada küpler telefonda küçük; kamyonlar küplerin arkasında kalabilir; ortografik kamerada derinlik algısı zayıflar. | O | Y | **Ortografik kamera seçildi** (uzak satırlar küçülmez); eğik açı + gölge/AO ile derinlik; kamyonlar küplerden yüksekte okunur boyutta; küp boyu ≥ ~7 dp hedefi; gri kutu aşamasında erken kullanıcı testi |
 | R-18 | **Ekran oranları ve güvenli alan.** TS sabit 420×900 tasarım; telefonlar 16:9 – 21:9, çentik/Dynamic Island. | Y | O | `CameraRig` + Canvas Scaler + `Screen.safeArea`; cihaz matrisi |
 | R-19 | **Giriş.** Canvas'ta "son çizilen buton kazanır"; Unity'de UI ile 3D dokunuşlar çakışabilir, çoklu dokunuş. | O | D | Input System + EventSystem; UI üstündeyken 3D girişini yok say; kasa dokunma alanı ≥ 48 dp |
-| R-20 | **"Your image" platform farkları.** Tarayıcının `drawImage` küçültmesi Unity'de birebir yok → farklı palet/bölüm; galeri erişimi yerel eklenti ve izin metni (iOS `NSPhotoLibraryUsageDescription`) gerektirir; büyük resimlerde bellek. | Y | D | Saf `ImageQuantizer` birebir test edilir (G-10); küçültme toleranslı test; yerel eklenti seçimi ayrı iş kalemi; bu özellik ilk sürümden ertelenebilir |
+| R-20 | **"Your image" platform farkları** *(v1 dışı; özellik eklendiğinde geçerli)*. Tarayıcının `drawImage` küçültmesi Unity'de birebir yok → farklı palet/bölüm; galeri erişimi yerel eklenti ve izin metni (iOS `NSPhotoLibraryUsageDescription`) gerektirir; büyük resimlerde bellek. | Y | D | Saf `ImageQuantizer` birebir test edilir (G-10); küçültme toleranslı test; yerel eklenti seçimi ayrı iş kalemi; **ilk sürümden çıkarıldı** |
 | R-21 | **Haptik.** `navigator.vibrate(8)` karşılığı yok; Android `Handheld.Vibrate` uzun ve kaba. | O | D | Küçük yerel eklenti ya da hazır paket; ayarlardan kapatılabilir |
 | R-22 | **Gizli davranışların kaybı.** Kural gibi görünmeyen ama oyunu etkileyen ayrıntılar: son kasanın `min`'den küçük olabilmesi (B-22), +1 Slot kuralları (B-30), uçuşun hızdan bağımsızlığı (B-32), panelin kamyonlar dönünce açılması (B-36), dolu slotta sallanma (B-38). | O | O | §1.2 katalog + her madde için test |
 | R-23 | **Kaynak projenin kayması.** TS geliştirilmeye devam ederse port eski davranışı kopyalar. | O | O | Kaynak commit `559dfd9` sabitlendi; değişiklikler golden yeniden üretimiyle fark olarak görülür |
 | R-24 | **Fontlar ve lisans.** TS sistem fontlarını (SF Pro Rounded, Nunito…) kullanıyor; SF Pro Android'e gömülemez. | O | D | OFL lisanslı yuvarlak font (ör. Nunito) + TextMeshPro; Türkçe karakter kapsamı |
 | R-25 | **Sürüm ve mağaza gereksinimleri.** Unity 6.3 LTS paket sürümleri, Android hedef API seviyesi (Google Play'in güncel şartı), ARM64 + IL2CPP zorunluluğu, iOS asgari sürümü. | O | O | `manifest.json`'da sabit sürümler; CI'da iki platform derlemesi; mağaza şartları yayın öncesi yeniden kontrol |
-| R-26 | **Proje adı.** Depo `CubeHaul3D`, hedef `CubeHunt3D`. Paket kimliği (`com.<şirket>.cubehunt3d`) sonradan değişmesi zor. | D | O | Ad ve paket kimliği ilk Unity commit'inden önce kesinleşmeli (§8) |
+| R-26 | **Paket kimliği.** Ad `CubeHaul3D` olarak kesinleşti; uygulama paket kimliği (`com.<şirket>.cubehaul3d`) mağazaya çıktıktan sonra değiştirilemez. | D | O | Paket kimliği ilk Unity commit'inden önce kesinleşmeli (§8) |
 
 ---
 
@@ -748,18 +767,19 @@ Her aşama bir öncekinin testleri yeşilken başlar.
 | **4 — Levels portu** | RNG, üretici, çözücü, quantize | G-01…G-07, G-10 yeşil; §1.3 tablosu birebir |
 | **5 — Data** | DTO, eşleyici, doğrulayıcı, `LevelRepository` | §4.4 yeşil (tr-TR dahil) |
 | **6 — Simulation** | `FieldLayout`, `RoadMap`, `DispatchScheduler`, `TruckFleet`, `GameSession` | 13 rota testi, G-09, G-11, zamanlama testleri yeşil |
-| **7 — 3D gri kutu** | Basit küp/kamyon/tepsi görünümleri, giriş, kamera, paneller | PlayMode akış testleri yeşil; cihazda oynanabilir |
+| **7 — 3D gri kutu** | Basit küp/kamyon/tepsi görünümleri, giriş, ortografik kamera ve açı ayarı, paneller | PlayMode akış testleri yeşil; cihazda oynanabilir |
 | **8 — Görsel cila** | Modeller, materyaller, efektler, UI, haptik | Cihaz matrisi performans bütçesi |
-| **9 — "Your image"** | Galeri eklentisi, küçültme, arka plan üretimi | Android/iOS'ta uçtan uca |
+| *v1 sonrası* — "Your image" | Galeri eklentisi, küçültme, arka plan üretimi, `LevelBuildService` | Android/iOS'ta uçtan uca |
 
 ---
 
 ## 8. Açık sorular
 
-1. **Proje/depo adı:** Depo `CubeHaul3D`, hedef `CubeHunt3D`. Unity projesi bu depoda `CubeHunt3D/` klasöründe mi olsun, depo yeniden mi adlandırılacak? Paket kimliği ne olacak?
-2. **Kamera ve görünüm:** Üstten-açılı ortografik mi, hafif perspektifli mi? (Okunabilirlik riski R-17.)
-3. **"Your image" ilk sürümde mi?** Yerel eklenti ve izin gerektiriyor; ertelemek ilk sürümü sadeleştirir.
-4. **İlerleme kaydı:** Web sürümünde yok (B-37). Mobilde açılış bölümü/kilit sistemi istenecek mi? (İstenirse ayrı kural seti olarak eklenir, mevcut davranışın üzerine.)
-5. **UI teknolojisi:** uGUI + TextMeshPro (olgun, yaygın) mi, UI Toolkit mi? Öneri: uGUI.
-6. **Sabit adım hızı:** 60 Hz öneriliyor; 30 fps'e kilitlenen düşük segment cihazlarda da aynı adımla çalışır.
-7. **TS projesinin geleceği:** Aşama 4'ten sonra kaynak doğruluk C#'a mı geçecek, yoksa TS bir süre "referans uygulama" olarak mı kalacak?
+Yanıtlananlar: proje adı (CubeHaul3D), kamera (ortografik), "Your image" (v1'de yok) — bkz. [Alınan kararlar](#alınan-kararlar).
+
+1. **Paket kimliği:** `com.<şirket>.cubehaul3d` için şirket/geliştirici öneki ne olacak?
+2. **Kamera açısı:** Eğik (~55°) mı, tam tepeden mi? Öneri: gri kutu aşamasında ikisini cihazda deneyip seçmek.
+3. **İlerleme kaydı:** Web sürümünde yok (B-37). Mobilde açılış bölümü/kilit sistemi istenecek mi? (İstenirse ayrı kural seti olarak eklenir, mevcut davranışın üzerine.)
+4. **UI teknolojisi:** uGUI + TextMeshPro (olgun, yaygın) mi, UI Toolkit mi? Öneri: uGUI.
+5. **Sabit adım hızı:** 60 Hz öneriliyor; 30 fps'e kilitlenen düşük segment cihazlarda da aynı adımla çalışır.
+6. **TS projesinin geleceği:** Aşama 4'ten sonra kaynak doğruluk C#'a mı geçecek, yoksa TS bir süre "referans uygulama" olarak mı kalacak?
