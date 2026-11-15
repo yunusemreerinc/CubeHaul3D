@@ -21,7 +21,8 @@ export interface PictureDefinition {
   palette: string[];
 }
 
-export interface CrateDefinition {
+/** A tray block (cube-hunt Block); called BlockDefinition in C# too. */
+export interface BlockDefinition {
   id: number;
   /** Palette index. */
   color: number;
@@ -31,7 +32,7 @@ export interface CrateDefinition {
 
 /** The exact tray to play. columns[c][0] is the front (tappable) crate of column c. */
 export interface TrayDefinition {
-  columns: CrateDefinition[][];
+  columns: BlockDefinition[][];
 }
 
 /** How to generate a tray (cube-hunt's BuildOptions). Omitted optional fields use the defaults below. */

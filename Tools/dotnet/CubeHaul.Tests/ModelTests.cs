@@ -1,6 +1,7 @@
 using System.Linq;
 using NUnit.Framework;
 
+using CubeHaul.Domain;
 using CubeHaul.Levels;
 
 namespace CubeHaul.Tests.LevelFormat
@@ -23,7 +24,7 @@ namespace CubeHaul.Tests.LevelFormat
             Assert.That(level.LevelId, Is.EqualTo("strawberry"));
             Assert.That(level.ThemeId, Is.EqualTo("default"));
             Assert.That(level.Name, Is.EqualTo("Strawberry"));
-            Assert.That(level.Edges, Is.EqualTo(EdgeMode.All));
+            Assert.That(level.Edges, Is.EqualTo(OpenEdges.All));
             Assert.That(level.SlotCount, Is.EqualTo(5));
 
             PictureDefinition p = level.Picture;
@@ -35,7 +36,7 @@ namespace CubeHaul.Tests.LevelFormat
             Assert.That(p.CellAt(0, 0), Is.EqualTo(LevelDefinition.Empty));
 
             Assert.That(level.HasStaticTray, Is.True);
-            CrateDefinition[][] cols = level.Tray.Columns;
+            BlockDefinition[][] cols = level.Tray.Columns;
             CollectionAssert.AreEqual(new[] { 9, 9, 9, 9, 9 }, cols.Select(c => c.Length));
             Assert.That(cols.Sum(c => c.Length), Is.EqualTo(45));
             Assert.That(cols.SelectMany(c => c).Sum(k => k.Count), Is.EqualTo(527));
@@ -44,11 +45,12 @@ namespace CubeHaul.Tests.LevelFormat
                 Assert.That(cols.SelectMany(c => c).Where(k => k.Color == color).Sum(k => k.Count), Is.EqualTo(p.Cells.Count(x => x == color)));
 
             GenerationSettings g = level.Generation;
-            Assert.That((g.Seed, g.Shuffle, g.TargetWinRate, g.Columns, g.BigChance, g.Candidates), Is.EqualTo((11, 0.2, 1.0, 5, 0.15, 16)));
+            Assert.That((g.Seed, g.Shuffle, g.EffectiveTargetWinRate, g.EffectiveColumns, g.EffectiveBigChance, g.EffectiveCandidates), Is.EqualTo((11, 0.2, 1.0, 5, 0.15, 16)));
+            Assert.That((g.TargetWinRate, g.Columns, g.BigChance, g.Candidates), Is.EqualTo(((double?)1.0, (int?)5, (double?)0.15, (int?)16)), "all written in the file");
             Assert.That(g.MinBlock, Is.Null);
             Assert.That(g.MaxBlock, Is.Null);
 
-            DifficultyMetadata d = level.Difficulty;
+            DifficultyMetadata d = level.DifficultyMetadata;
             Assert.That((d.WinRate, d.Label, d.RandomGames), Is.EqualTo((1.0, DifficultyLabel.Easy, (int?)24)));
             Assert.That((d.Greedy.Solved, d.Greedy.Ticks, d.Greedy.Taps), Is.EqualTo((true, 114, 45)));
         }
@@ -59,7 +61,7 @@ namespace CubeHaul.Tests.LevelFormat
             LevelDefinition level = Example("ring.static.level.json");
             Assert.That(level.HasStaticTray, Is.True);
             Assert.That(level.Generation, Is.Null);
-            Assert.That(level.Difficulty, Is.Null);
+            Assert.That(level.DifficultyMetadata, Is.Null);
             CollectionAssert.AreEqual(new[] { 0, 0, 0, 0, 1, 0, 0, 0, 0 }, level.Picture.Cells);
         }
 
@@ -69,10 +71,11 @@ namespace CubeHaul.Tests.LevelFormat
             LevelDefinition level = Example("heart.generated.level.json");
             Assert.That(level.HasStaticTray, Is.False);
             Assert.That(level.Tray, Is.Null);
-            Assert.That(level.Edges, Is.EqualTo(EdgeMode.Bottom));
+            Assert.That(level.Edges, Is.EqualTo(OpenEdges.Bottom));
             GenerationSettings g = level.Generation;
-            Assert.That((g.Seed, g.Shuffle, g.TargetWinRate), Is.EqualTo((7, 0.5, 0.8)));
-            Assert.That((g.Columns, g.BigChance, g.Candidates), Is.EqualTo((5, 0.15, 16)));
+            Assert.That((g.Seed, g.Shuffle, g.EffectiveTargetWinRate), Is.EqualTo((7, 0.5, 0.8)));
+            Assert.That((g.EffectiveColumns, g.EffectiveBigChance, g.EffectiveCandidates), Is.EqualTo((5, 0.15, 16)));
+            Assert.That((g.Columns, g.BigChance, g.Candidates), Is.EqualTo(((int?)null, (double?)null, (int?)null)), "not in the file, so not invented");
             Assert.That(level.Picture.Cells.Count(c => c == LevelDefinition.Empty), Is.EqualTo(15));
         }
 
