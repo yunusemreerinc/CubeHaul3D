@@ -215,14 +215,14 @@ doğasıdır ve kabul edilebilir. Karar plana R-29 olarak eklendi.
 
 `Game` kurucusu `updateStatus` çağırmaz; boş resimli bir bölüm ilk `tick`'e kadar `playing` kalır, ilk tick'te
 `won` olur. Yerleşik bölümlerin hiçbiri boş değil; tamamen saydam bir "Your image" resmi bunu tetikleyebilirdi
-(v1'de yok). Test: `game.edge › FINDING: a level with no cubes…`.
+(v1'de yok). Test: `game.edge › FINDING: a level with no cubes…`. Karar: C#'ta aynen korunur.
 
 ### F-3 — `Game.collect` kamyon gönderilmemiş bir küpü de kabul eder (gevşek API, etkisi yok)
 
 `Board.eat` "claimed **ya da** ulaşılabilir" hücre kabul eder (`step()` buna dayanır) ve `Game.collect` doğrudan onu
 çağırır. Gönderilmemiş bir küp toplanırsa tepsi bunu ödemez ve renk toplamları (I-01) bozulur. Görünüm yalnızca
 gönderilmiş hücreleri topladığı için oyunda olmaz. Test: `board.edge › FINDING: Game.collect also accepts…`.
-C#'ta `Collect` için claimed şartı eklenip eklenmeyeceğine karar verilmeli (eklenirse `Step` kendi yolunu kullanmalı).
+Karar: C#'ta aynen korunur (`Collect` claimed şartı aramaz).
 
 ### F-4 — `minBlock` / `maxBlock` elle verilince sınırlar korunmaz (gizli hata, etkisi yok)
 
@@ -231,7 +231,7 @@ verilirse (Mushroom'da 41 > 30) büyük kasa aralığı ters döner ve 31–40'l
 `kalan − min < min` olabilir ve `minBlock`'tan küçük kasalar çıkar (ör. `minBlock: 40` ile 13). Toplamlar yine
 doğrudur. Yerleşik bölümlerin hiçbiri bu seçenekleri kullanmaz; varsayılan boyutlarla 10 resim × 200 tohum ×
 `bigChance 0.5` = **86 426 kasada sınır dışı kasa yok**. Test: `generator › FINDING: minBlock / maxBlock…`.
-C# portu davranışı aynen kopyalamalı (golden eşitliği için), düzeltme ayrı bir karar olarak ele alınmalı.
+Karar: C# portu davranışı aynen kopyalar (golden eşitliği için).
 
 ### Doğrulanan (hata olmayan) dikkat noktaları
 
@@ -249,5 +249,7 @@ C# portu davranışı aynen kopyalamalı (golden eşitliği için), düzeltme ay
 
 1. §3'teki tüm değerler C# EditMode testlerine golden olarak taşınır (PORTING_PLAN §5.2).
 2. `tests/helpers.ts › violations()` → C# `InvariantChecker`; `invariants.test.ts` → `InvariantFuzzTests`.
-3. F-1 için sabit adım + hızda alt adım kararı (R-29); F-2, F-3, F-4 için "aynen koru / düzelt" kararı. Öneri:
-   golden eşitliği bozmamak için ilk portta aynen korunup ayrı bir değişiklikte düzeltilmesi.
+3. F-1: sabit adımlı simülasyon, 2x/3x için kare başına 2/3 adım (R-29).
+4. **Karar (15.11.2026): F-2, F-3 ve F-4 C# portunda aynen korunur.** Davranışları sabitleyen "FINDING" testleri
+   C#'a da taşınır; herhangi bir düzeltme ancak port golden testlerle eşitlendikten sonra, ayrı bir değişiklikte
+   ve bu testler bilinçli olarak güncellenerek yapılır.

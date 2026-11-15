@@ -18,6 +18,7 @@ tıkanmalıdır. 3D görselleştirme bu çekirdeğin üzerine, kuralları etkile
 |---|---|---|
 | Proje adı | **CubeHaul3D** (depo adıyla aynı) | Unity projesi depo kökünde; asmdef/namespace önekleri `CubeHaul.*`; JSON `format` değerleri `cubehaul.*` |
 | Kamera | **Ortografik** | Tüm küpler ekranda aynı boyda; okunabilirlik riski (R-17) azalır; derinlik hissi ışık ve eğik açıyla verilir (§3.5) |
+| TS bulguları F-2, F-3, F-4 ([TS_BASELINE §4](TS_BASELINE.md#4-bulgular)) | **Aynen korunur** | Boş bölümün `playing` başlaması, `Collect`'in claim aramaması ve `minBlock`/`maxBlock` sınırları C#'ta TS ile aynı; düzeltmeler golden eşitlikten sonra, ayrı değişiklikte |
 | "Your image" | **İlk sürümde yok** | Galeri eklentisi, izinler ve çalışma zamanında bölüm üretimi v1 kapsamından çıktı (§2.3, §8) |
 
 ---
