@@ -1,0 +1,5 @@
+# Golden fixtures and level files are compared byte for byte (sha256 in the manifest): keep LF everywhere.
+*.json text eol=lf
+*.md text eol=lf
+*.ts text eol=lf
+*.cs text eol=lf

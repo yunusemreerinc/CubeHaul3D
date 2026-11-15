@@ -539,7 +539,7 @@ CubeHaul3D/                         (bu depo = Unity 6.3 LTS projesi, URP)
 │  ├─ level-format/                 TS okuyucu/doğrulayıcı ve kanonik yazıcı (Görev 03)
 │  ├─ dotnet/                       CubeHaul.Data'yı Unity dışında derleyen ve test eden .NET projeleri
 │  ├─ ts-reference/                 TS referans testleri (Görev 02, docs/TS_BASELINE.md); kaynağı pinli commit'ten okur
-│  └─ ts-export/                    Node betiği: kaynak TS'yi pinli commit'ten okur, JSON + golden fixture üretir
+│  └─ (ts-export)                   Görev 04'te ts-reference'a katıldı: npm run export:golden / check:golden
 │                                   (TS projesini değiştirmez; ayrı klon/alt modül üzerinden içe aktarır)
 ├─ Packages/manifest.json           URP, Input System, Test Framework, uGUI/TextMeshPro, sabit sürümler
 ├─ ProjectSettings/
@@ -552,7 +552,7 @@ CubeHaul3D/                         (bu depo = Unity 6.3 LTS projesi, URP)
    │  │  ├─ Simulation/    CubeHaul.Simulation.asmdef   noEngineReferences: true  → Core, Levels
    │  │  ├─ App/           CubeHaul.App.asmdef          → Core, Levels, Data, Simulation, UnityEngine
    │  │  └─ View/          CubeHaul.View.asmdef         → Simulation, App, UnityEngine, URP, Input System
-   │  ├─ Content/Levels/   catalog.json, level_01_strawberry.json, …
+   │  ├─ Content/Levels/   level-01-strawberry.level.json … level-10-watermelon.level.json (Görev 04)
    │  ├─ Art/              Modeller, materyaller, shader'lar
    │  └─ Scenes/           Boot.unity, Game.unity
    └─ Tests/
@@ -830,7 +830,7 @@ C# yolları `Assets/CubeHaul/Scripts/` altına görelidir. "—" = taşınmaz.
 | | `randomWinRate` | `Levels/RandomPlayer.cs` | `RandomPlayer.WinRate` | |
 | `levels/image.ts` | `quantize` | `Levels/ImageQuantizer.cs` | `ImageQuantizer.Quantize` | v1'de oyunda kullanılmaz |
 | | `pictureFromFile` | — | — | v1'de yok |
-| `levels/art.ts` | `Sketch`, 10 resim fonksiyonu | — → `Tools/ts-export` | — | Çıktı: `Content/Levels/*.json` (R-04) |
+| `levels/art.ts` | `Sketch`, 10 resim fonksiyonu | — → `Tools/ts-reference` (`npm run export:golden`) | — | Çıktı: `Content/Levels/*.level.json` (R-04, Görev 04) |
 | | `LevelSpec` | `Levels/LevelSpec.cs` | `sealed class LevelSpec` | JSON'dan |
 | | `builtInLevels` | `App/LevelRepository.cs` | `LevelRepository.LoadBuiltIn()` | JSON → `LevelSpec` + `Level` |
 | (yeni) | JSON formatı | `Data/LevelDefinition.cs`, `Data/LevelDefinitionReader.cs`, `Data/LevelValidator.cs`, `Data/LevelIssue.cs`, `Data/Json/JsonParser.cs` | Model, okuyucu, doğrulayıcı, JSON ayrıştırıcı (**yazıldı**, Görev 03) | [LEVEL_FORMAT](LEVEL_FORMAT.md) |
@@ -1002,21 +1002,22 @@ bir **hata** sayılır, testin "düzeltilmesi" değil.
 
 ### 5.2 Diferansiyel (golden) testler — TS ↔ C# eşdeğerliği
 
-`Tools/ts-export`, kaynak TS kodunu pinli commit'ten içe aktarıp `Assets/Tests/Fixtures/Golden/` altına JSON yazar.
+`Tools/ts-reference` (`npm run export:golden`), kaynak TS kodunu pinli commit'ten içe aktarıp `Assets/Tests/Fixtures/Golden/` altına JSON yazar.
+Görev 04'te üretilenler ve biçimleri: [GOLDEN_FIXTURES.md](GOLDEN_FIXTURES.md). Aşağıdaki tablo ilk plandır; durum sütunu güncel hâlidir.
 C# testleri aynı girdileri çalıştırıp çıktıyı **tam eşitlikle** karşılaştırır.
 
-| Kimlik | Fixture | Karşılaştırılan |
-|---|---|---|
-| G-01 | `rng.json` | Tohum 0, 1, 11, 1234, 2³¹−1 için ilk 1000 değer (`double` bit eşitliği) |
-| G-02 | `pictures.json` | 10 resmin hücreleri ve paleti = JSON bölüm dosyalarındaki `rows` |
-| G-03 | `peel_layers.json` | Her resim × her kenar türü için `peelLayers` dizisi |
-| G-04 | `split_count.json` | Rastgele (n, boyutlar, tohum) üçlüleri için `splitCount` |
-| G-05 | `generate.json` | Her resim × tohum {1, 5, 11, 1234} × shuffle {0, 0.2, 0.5, 1.5, 2} için `generateLevel` kolonları (shuffle 0 kararlı sıralamayı sınar) |
-| G-06 | `build.json` | 10 yerleşik bölüm için `buildLevel` → kolonlar + `winRate` (= §1.3 tablosu) |
-| G-07 | `solver.json` | Her yerleşik bölüm için `solveGreedy` (solved, ticks, taps) ve `randomWinRate` |
-| G-08 | `replays/*.json` | Hamle izleri: `tap/tick(ready maskesi)/collect/addSlot` dizisi ve her adımdan sonra dispatch'ler, `status`, `pending`, `remaining`, her slot için `SlotBlocked` |
-| G-09 | `routes.json` | Örnek dispatch'ler için `RoadMap.RouteFrom` ara noktaları ve maliyet (tolerans 1e-9) |
-| G-10 | `quantize.json` | Sabit RGBA girdileri (düz renk, gradyan, saydam) için `quantize` sonucu |
+| Kimlik | Fixture | Karşılaştırılan | Durum (Görev 04) |
+|---|---|---|---|
+| G-01 | `rng.json` | Tohum 0, 1, 11, 1234, 2³¹−1 için ilk 1000 değer (`double` bit eşitliği) | ✔ `rng.json` (6 tohum × 256 değer, uint32) |
+| G-02 | `pictures.json` | 10 resmin hücreleri ve paleti = JSON bölüm dosyalarındaki `rows` | ✔ Bölüm dosyalarında (`cells`, `palette`) |
+| G-03 | `peel_layers.json` | Her resim × her kenar türü için `peelLayers` dizisi | ✔ `peel-layers.json` (her bölüm kendi kenar türüyle) |
+| G-04 | `split_count.json` | Rastgele (n, boyutlar, tohum) üçlüleri için `splitCount` | — Henüz yok (C# üretici portunda eklenecek) |
+| G-05 | `generate.json` | Her resim × tohum {1, 5, 11, 1234} × shuffle {0, 0.2, 0.5, 1.5, 2} için `generateLevel` kolonları (shuffle 0 kararlı sıralamayı sınar) | ✔ `generate.json` (tohum {1, 77} × shuffle {0, 1.5}, özet + öndeki kasalar) |
+| G-06 | `build.json` | 10 yerleşik bölüm için `buildLevel` → kolonlar + `winRate` (= §1.3 tablosu) | ✔ `build.json` + bölüm dosyalarındaki `tray` |
+| G-07 | `solver.json` | Her yerleşik bölüm için `solveGreedy` (solved, ticks, taps) ve `randomWinRate` | ✔ `build.json` (aday başına çözücü ve 24 oyunun tek tek sonucu) |
+| G-08 | `replays/*.json` | Hamle izleri: `tap/tick(ready maskesi)/collect/addSlot` dizisi ve her adımdan sonra dispatch'ler, `status`, `pending`, `remaining`, her slot için `SlotBlocked` | ✔ `scenarios/*.json` (10 senaryo, her adımda tam durum) |
+| G-09 | `routes.json` | Örnek dispatch'ler için `RoadMap.RouteFrom` ara noktaları ve maliyet (tolerans 1e-9) | — Henüz yok |
+| G-10 | `quantize.json` | Sabit RGBA girdileri (düz renk, gradyan, saydam) için `quantize` sonucu | — Henüz yok |
 
 G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç yüz adım oynatılarak üretilir
 (gecikmeli `collect` dahil); böylece `tick`/`collect` ayrımı ve `opensUp` gibi nadir durumlar da kapsanır.
@@ -1136,7 +1137,7 @@ Her aşama bir öncekinin testleri yeşilken başlar.
 | Aşama | İçerik | Bitti sayılır |
 |---|---|---|
 | **0 — Bu belge** | Analiz, mimari, test planı, JSON şeması, riskler | Bu belgenin onayı |
-| **1 — Dışa aktarma aracı** | `Tools/ts-export`: 10 bölüm JSON'u + golden fixture'lar (TS'ye dokunmadan) | JSON'lar [LEVEL_FORMAT](LEVEL_FORMAT.md) doğrulamasından geçer |
+| **1 — Dışa aktarma aracı** ✔ | `Tools/ts-reference` `export:golden`: 10 bölüm JSON'u + golden fixture'lar (TS'ye dokunmadan) — Görev 04 | JSON'lar [LEVEL_FORMAT](LEVEL_FORMAT.md) doğrulamasından geçer; `check:golden` temiz |
 | **2 — Unity iskeleti** | Unity 6.3 LTS URP projesi, asmdef'ler, Test Framework, CI'da EditMode koşusu | Boş test paketi CI'da yeşil |
 | **3 — Core portu** | `Board`, `Game` + §5.1 kural testleri | 17 tahta/oyun testi yeşil, G-08 yeşil |
 | **4 — Levels portu** | RNG, üretici, çözücü, quantize | G-01…G-07, G-10 yeşil; §1.3 tablosu birebir |
