@@ -175,7 +175,7 @@ EditMode testleri proje kökünü çalışma dizininden bulur (`ProjectPaths`). 
 4. **Window ▸ General ▸ Test Runner** › **EditMode** › **Run All**: 405 testin hepsi yeşil olmalı (Görev 11 itibarıyla; Board için 48, Game için 73, üretici/çözücü için 114, eşdeğerlik için 41, ekran yerleşimi için 53 test dahil). Eşdeğerlik raporu `Logs/cubehaul-parity-report.txt`'ye yazılır ([PARITY.md](PARITY.md))
    (Görev 05'in 9 testi ve Görev 06'nın veri modeli testleri: `NoDataLossTests`, `RealLevelTests`, `DeepCopyTests`,
    `LevelRepositoryTests`, `ErrorReportTests`, `JsonWriterTests`).
-5. Aynı pencerede **PlayMode** › **Run All**: 24 test yeşil olmalı (Görev 11: `GameSceneLayoutTests` sahneyi 7 ekran boyunda ölçer, [SCENE_LAYOUT §5](SCENE_LAYOUT.md#5-doğrulama)).
+5. Aynı pencerede **PlayMode** › **Run All**: 25 test yeşil olmalı (Görev 11: `GameSceneLayoutTests` sahneyi 7 ekran boyunda ölçer, [SCENE_LAYOUT §5](SCENE_LAYOUT.md#5-doğrulama)).
 6. Menüden **CubeHaul ▸ Validate Level Files**: Console'da "all 10 level files are valid" yazmalı.
 7. **CubeHaul ▸ Setup ▸ Open Game Scene** ile sahneyi açıp Play: Game penceresinde 1080×1920 ve 1170×2532 çözünürlüklerinde tahta üstte, slotlar ortada, tepsi altta, hiçbir şey taşmadan görünmeli. Oluşan sahneyi, `LevelLibrary.asset`'i ve `ProjectSettings/EditorBuildSettings.asset`'i commit edin.
 8. Menüden **CubeHaul ▸ Levels ▸ Verify Baked Trays**: Console'da "10 level files, 0 out of date, 0 without generation settings, 0 unreadable, 0 unverified" yazmalı (birkaç saniye sürer).
