@@ -7,7 +7,7 @@
 import { Game } from "../../vendor/cube-hunt/src/core/game";
 import type { Level, Picture } from "../../vendor/cube-hunt/src/core/types";
 import { builtInLevels } from "../../vendor/cube-hunt/src/levels/art";
-import { buildLevel, generateLevel, peelLayers } from "../../vendor/cube-hunt/src/levels/generator";
+import { buildLevel, generateLevel, peelLayers, type BuildOptions } from "../../vendor/cube-hunt/src/levels/generator";
 import { mulberry32 } from "../../vendor/cube-hunt/src/levels/rng";
 import { randomWinRate, solveGreedy } from "../../vendor/cube-hunt/src/levels/solver";
 import { formatLevelDefinition } from "../../../level-format/src/format";
@@ -163,6 +163,223 @@ function buildFixture() {
         candidates,
         chosen: best.k,
         winRate: built.winRate,
+      };
+    }),
+  };
+}
+
+// ---------------------------------------------------------------- generator cases
+
+interface GenCase {
+  name: string;
+  description: string;
+  /** A level file whose picture to use, or an inline picture. */
+  picture: string | { width: number; height: number; palette: string[]; cells: number[] };
+  edges: LevelDefinition["edges"];
+  slotCount: number;
+  /** LevelDefinition generation settings; candidates is buildLevel's third argument. */
+  generation: NonNullable<LevelDefinition["generation"]>;
+}
+
+const rowsPicture = (rows: string[]) => {
+  const cells = rows.flatMap((r) => [...r].map((ch) => (ch === "." ? -1 : Number(ch))));
+  const colors = Math.max(...cells) + 1;
+  return { width: rows[0].length, height: rows.length, palette: Array.from({ length: colors }, (_, c) => `#0000${String(c).padStart(2, "0")}`), cells };
+};
+
+/** A w x h picture of diagonal color bands, every cell filled: w * h cubes. */
+const bandsPicture = (w: number, h: number, colors: number) =>
+  rowsPicture(Array.from({ length: h }, (_, y) => Array.from({ length: w }, (_, x) => String(Math.floor((x + y) / 4) % colors)).join("")));
+
+const HEART = { ...rowsPicture([".00.00.", "0010000", "0000000", ".00000.", "..000..", "...0..."]), palette: ["#e8424f", "#ffffff"] };
+
+const GEN_CASES: GenCase[] = [
+  {
+    name: "heart-example",
+    description: "LevelFormat/examples/heart.generated.level.json: generation settings only, baked at build time or at runtime",
+    picture: HEART,
+    edges: "bottom",
+    slotCount: 5,
+    generation: { seed: 7, shuffle: 0.5, targetWinRate: 0.8 },
+  },
+  {
+    name: "strawberry-f4-block-bounds",
+    description: "F-4: minBlock 40 and maxBlock 12 given by hand; crate sizes leave the bounds, kept as in TypeScript",
+    picture: levelFile(0),
+    edges: "all",
+    slotCount: 5,
+    generation: { seed: 3, shuffle: 0.5, targetWinRate: 0.9, minBlock: 40, maxBlock: 12, candidates: 4 },
+  },
+  {
+    name: "cat-one-column-no-big",
+    description: "One tray column, bigChance 0: every crate small",
+    picture: levelFile(4),
+    edges: "bottom",
+    slotCount: 5,
+    generation: { seed: 9, shuffle: 1, targetWinRate: 0.5, columns: 1, bigChance: 0, candidates: 3 },
+  },
+  {
+    name: "rocket-ten-columns-all-big",
+    description: "Ten columns (a ragged last row), bigChance 1: big crates whenever there is room",
+    picture: levelFile(6),
+    edges: "sides",
+    slotCount: 6,
+    generation: { seed: 4, shuffle: 0.7, targetWinRate: 0.6, columns: 10, bigChance: 1, candidates: 3 },
+  },
+  {
+    name: "sunset-max-seed",
+    description: "seed 2147483647: seed + 7919k passes 2^31 (int overflow in C#) and mulberry32 takes it modulo 2^32",
+    picture: levelFile(2),
+    edges: "sides",
+    slotCount: 5,
+    generation: { seed: 2147483647, shuffle: 0.4, targetWinRate: 0.3, candidates: 5 },
+  },
+  {
+    name: "mushroom-seed-0-max-shuffle",
+    description: "seed 0, shuffle 100 (the schema maximum): the order is almost all noise",
+    picture: levelFile(1),
+    edges: "bottom",
+    slotCount: 5,
+    generation: { seed: 0, shuffle: 100, targetWinRate: 0.7, candidates: 3 },
+  },
+  {
+    name: "bands-fallback",
+    description: "No candidate wins with greedy play; the shuffle is backed off and fallback k = 3 is the first the solver wins",
+    picture: rowsPicture(["000000", "111111", "222222", "333333", "000000", "111111"]),
+    edges: "bottom",
+    slotCount: 2,
+    generation: { seed: 5, shuffle: 3, columns: 1, minBlock: 2, maxBlock: 4, candidates: 2 },
+  },
+  {
+    name: "stripes-unverified",
+    description: "Neither a candidate nor a fallback wins: buildLevel warns and returns the unshuffled tray, not verified",
+    picture: rowsPicture(["0123", "1230", "2301", "3012", "0123", "1230"]),
+    edges: "bottom",
+    slotCount: 1,
+    generation: { seed: 1, shuffle: 1, columns: 1, minBlock: 2, maxBlock: 4, candidates: 2 },
+  },
+  {
+    name: "round-half-1275-cubes",
+    description: "1275 cubes: total / 150 = 8.5, so minBlock is Math.round(8.5) = 9 (round half up), not 8 (C# Math.Round's default, half to even)",
+    picture: bandsPicture(51, 25, 3),
+    edges: "bottom",
+    slotCount: 5,
+    generation: { seed: 2, shuffle: 0.3, candidates: 1 },
+  },
+  {
+    name: "round-half-1040-cubes",
+    description: "1040 cubes: total / 32 = 32.5 (bigMin 33, not 32) and total / 16 = 65 (maxBlock 65)",
+    picture: bandsPicture(52, 20, 4),
+    edges: "all",
+    slotCount: 5,
+    generation: { seed: 6, shuffle: 0.3, candidates: 1 },
+  },
+  {
+    name: "round-half-1000-cubes",
+    description: "1000 cubes: total / 16 = 62.5, so maxBlock is 63, not 62",
+    picture: bandsPicture(40, 25, 2),
+    edges: "sides",
+    slotCount: 5,
+    generation: { seed: 8, shuffle: 0.3, candidates: 1 },
+  },
+  {
+    name: "single-cube",
+    description: "The smallest picture: one cube, one crate",
+    picture: rowsPicture(["0"]),
+    edges: "bottom",
+    slotCount: 5,
+    generation: { seed: 1, shuffle: 0 },
+  },
+];
+
+type Columns = { id: number; color: number; count: number }[][];
+const crates = (columns: Columns) => columns.map((col) => col.map((k) => [k.id, k.color, k.count]));
+
+/** buildLevel(picture, opts, candidates) with every level it tries, in order; checked against buildLevel itself. */
+export function traceBuild(picture: Picture, opts: BuildOptions, candidates: number) {
+  const target = opts.targetWinRate ?? 1;
+  const tried: Record<string, unknown>[] = [];
+  const attempt = (phase: string, k: number, seed: number, shuffle: number) => {
+    const level = generateLevel(picture, { ...opts, seed, shuffle });
+    const greedy = solveGreedy(level);
+    const entry: Record<string, unknown> = { phase, k, seed, shuffle, columnsSha256: columnsSha256(level.columns), greedy: [greedy.solved, greedy.ticks, greedy.taps] };
+    tried.push(entry);
+    return { level, solved: greedy.solved, entry };
+  };
+  const games = (level: Level) => Array.from({ length: 24 }, (_, g) => randomWinRate(level, 1, opts.seed + g * 101));
+  let best: { level: Level; winRate: number; index: number } | null = null;
+  for (let k = 0; k < candidates; k++) {
+    const a = attempt("candidate", k, opts.seed + k * 7919, opts.shuffle);
+    if (!a.solved) continue;
+    const winRate = randomWinRate(a.level, 24, opts.seed);
+    a.entry.games = games(a.level);
+    a.entry.winRate = winRate;
+    if (!best || Math.abs(winRate - target) < Math.abs(best.winRate - target)) best = { level: a.level, winRate, index: tried.length - 1 };
+    if (Math.abs(winRate - target) < 0.04) break;
+  }
+  let path = "candidate";
+  if (!best) {
+    path = "unverified";
+    for (let k = 1; k <= 8; k++) {
+      const a = attempt("fallback", k, opts.seed + k, opts.shuffle * (1 - k / 8));
+      if (!a.solved) continue;
+      best = { level: a.level, winRate: randomWinRate(a.level, 24, opts.seed), index: tried.length - 1 };
+      path = "fallback";
+      break;
+    }
+  }
+  if (!best) {
+    const a = attempt("unverified", 0, opts.seed, 0);
+    best = { level: a.level, winRate: randomWinRate(a.level, 24, opts.seed), index: tried.length - 1 };
+  }
+  const warn = console.warn;
+  console.warn = () => {};
+  const built = buildLevel(picture, opts, candidates);
+  console.warn = warn;
+  if (columnsSha256(built.level.columns) !== columnsSha256(best.level.columns) || built.winRate !== best.winRate) {
+    throw new Error(`${picture.name}: the trace does not match buildLevel`);
+  }
+  const greedy = solveGreedy(built.level);
+  return {
+    tried,
+    result: {
+      path,
+      tried: best.index,
+      winRate: built.winRate,
+      greedy: [greedy.solved, greedy.ticks, greedy.taps],
+      columns: crates(built.level.columns),
+    },
+  };
+}
+
+function genCasesFixture(levelFiles: Record<string, string>) {
+  return {
+    ...header(
+      "generator-cases",
+      "generateLevel / solveGreedy / randomWinRate / buildLevel on cases the built-in levels do not reach: hand-set options, " +
+        "large seeds, the fallback and unverified paths. tried = every tray buildLevel generates, in order (phase candidate: " +
+        "seed + 7919k; fallback: seed + k, shuffle * (1 - k/8); unverified: shuffle 0); result = what buildLevel returns, " +
+        "result.tried = its index in tried; greedy = [solved, ticks, taps]; games[g] = randomWinRate(level, 1, seed + 101g).",
+    ),
+    cases: GEN_CASES.map((c) => {
+      const pic =
+        typeof c.picture === "string"
+          ? (JSON.parse(levelFiles[c.picture]) as LevelDefinition).picture
+          : c.picture;
+      const picture: Picture = { name: c.name, width: pic.width, height: pic.height, cells: Int16Array.from(pic.cells), palette: [...pic.palette] };
+      const g = c.generation;
+      const opts: BuildOptions = { ...g, edges: c.edges, slots: c.slotCount };
+      delete (opts as { candidates?: number }).candidates;
+      const generated = generateLevel(picture, opts);
+      return {
+        name: c.name,
+        description: c.description,
+        ...(typeof c.picture === "string" ? { pictureFrom: c.picture } : { picture: c.picture }),
+        edges: c.edges,
+        slotCount: c.slotCount,
+        generation: g,
+        generate: { columnsSha256: columnsSha256(generated.columns), columns: crates(generated.columns) },
+        build: traceBuild(picture, opts, g.candidates ?? 16),
       };
     }),
   };
@@ -393,6 +610,7 @@ export function buildGoldenFiles(): Record<string, string> {
   files[`${GOLDEN_DIR}/peel-layers.json`] = toFile(peelFixture());
   files[`${GOLDEN_DIR}/generate.json`] = toFile(generateFixture());
   files[`${GOLDEN_DIR}/build.json`] = toFile(buildFixture());
+  files[`${GOLDEN_DIR}/generator-cases.json`] = toFile(genCasesFixture(files));
   for (const s of SCENARIOS) files[`${GOLDEN_DIR}/scenarios/${s.name}.json`] = toFile(runScenario(s, files));
   const manifest = {
     ...header("manifest", "Every golden file with its sha256 and size in bytes (UTF-8, LF line endings). Regenerate with `npm run export:golden` in Tools/ts-reference."),

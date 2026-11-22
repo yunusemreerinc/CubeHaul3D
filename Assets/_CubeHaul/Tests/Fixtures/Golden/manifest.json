@@ -68,6 +68,11 @@
       "sha256": "c9e34f51e7e526684be468a99c60a10bd93ea37419e5861a6e11bc632872e0af"
     },
     {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/generator-cases.json",
+      "bytes": 66677,
+      "sha256": "66a8f03352fce524f5529f2472e3d61bf7c025ac223b7ff412dee6b5341caa22"
+    },
+    {
       "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/peel-layers.json",
       "bytes": 61343,
       "sha256": "674d7689046d44df52e0497dbe34cdee62fe0ae525d51878b5a94858d83efed2"
