@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Unity** | 6.3 LTS (`6000.3.x`), Universal 3D (URP) |
+| **Unity** | 6.3 LTS — **6000.3.29f1** (ilk açılışta kullanılan sürüm), Universal 3D (URP) |
 | **Proje kökü** | Depo kökü (`Assets/`, `Packages/`, `ProjectSettings/`) |
 | **Kod kökü** | `Assets/_CubeHaul/` |
 | **Platformlar** | Android, iOS |
@@ -114,20 +114,41 @@ Her assembly'de, ileride büyüyecek küçük ama gerçek bir başlangıç tür�
 | Paket | Sürüm | Neden |
 |---|---|---|
 | `com.unity.render-pipelines.universal` | 17.3.0 | URP; Unity 6.3 ile gelen sürüm (çekirdek paket, editörle kilitli) |
-| `com.unity.test-framework` | 1.5.1 | EditMode/PlayMode testleri |
+| `com.unity.test-framework` | 1.6.0 | EditMode/PlayMode testleri (NUnit: `com.unity.ext.nunit` 2.0.5, yerleşik) |
 | `com.unity.ugui` | 2.0.0 | uGUI + TextMeshPro (Unity 6'da tek paket) |
-| `com.unity.inputsystem` | 1.14.0 | Dokunmatik giriş |
-| `com.unity.ide.rider`, `com.unity.ide.visualstudio` | 3.0.31, 2.0.22 | IDE entegrasyonu |
+| `com.unity.inputsystem` | 1.20.1 | Dokunmatik giriş |
+| `com.unity.ide.rider`, `com.unity.ide.visualstudio` | 3.1.0, 2.0.26 | IDE entegrasyonu |
 | `com.unity.modules.*` | 1.0.0 | Yalnızca gerekenler: animation, audio, physics, particlesystem, ui, uielements, androidjni, imageconversion, imgui, jsonserialize, screencapture, umbra, unitywebrequest(+texture), video, accessibility |
 
-Sürüm seçimi hakkında açık not: Unity Editor bu ortamda olmadığı için sürümler projede kurulu editörün paket
-listesinden değil, Unity 6.3'ün dağıttığı sürümler bilgisine göre yazıldı. URP ve uGUI çekirdek paketlerdir ve editör
-sürümüne kilitlidir; farklı bir yama sürümü kuruluysa Unity bunları ilk açılışta kendisi düzeltir. Test Framework ve
-Input System için yazılan sürümler 6.3 ile uyumlu en düşük güvenli sürümlerdir; Package Manager daha yenisini önerirse
-güncellenebilir. İlk açılıştan sonra Unity'nin ürettiği `Packages/packages-lock.json` commit edilmelidir (§5).
+Sürümler: iskelet Unity 6.3 bilgisine göre yazılmıştı; projenin 6000.3.29f1 ile ilk açılışında Unity, Test
+Framework, Input System ve IDE paketlerini kendi uyumlu sürümlerine güncelledi ve `Packages/packages-lock.json`'ı
+üretti (yukarıdaki tablo bu hâlidir). Paket güncellemeleri Package Manager'dan yapılıp `manifest.json` ve
+`packages-lock.json` birlikte commit edilir.
 
-`ProjectSettings/ProjectVersion.txt` yalnızca `m_EditorVersion: 6000.3.0f1` içerir. Unity Hub, sizde kurulu 6.3
-yamasıyla açmayı önerir; açılınca Unity dosyayı kendi sürümüyle yeniden yazar.
+`ProjectSettings/ProjectVersion.txt`: `6000.3.29f1`. Ekipteki herkes aynı yamayı kullanmalı; yama yükseltmesi ayrı
+bir commit olarak yapılır.
+
+### 3.1 Proje ayarları
+
+İlk açılışta Unity'nin ürettiği `ProjectSettings/*.asset` dosyaları depodadır. Bilinçli olarak seçilen ayarlar
+(`UnityProjectTests` ile korunur):
+
+| Ayar | Değer | Neden |
+|---|---|---|
+| Active Input Handling | Input System Package (New) | Dokunmatik giriş yeni Input System ile |
+| Color Space | **Linear** | URP ve doğru renk karışımı (PORTING_PLAN R-16); hedef cihazlar (GLES3/Vulkan/Metal) destekler |
+| Default Orientation | **Portrait** | Oyun dikey (tasarım alanı 420×900) |
+| Render Pipeline | `Art/Rendering/CubeHaul_URP.asset` | Graphics'te varsayılan ve **her** kalite seviyesinde |
+| Asset Serialization / Version Control | Force Text / Visible Meta Files | Git'te okunur diff, kararlı GUID |
+| Line endings for new scripts | Unix (LF) | `.gitattributes` ile aynı |
+| Product Name | CubeHaul3D | |
+
+Render dosyaları `Assets/_CubeHaul/Art/Rendering/` altında: `CubeHaul_URP` (pipeline), `CubeHaul_URP_Renderer`,
+`UniversalRenderPipelineGlobalSettings`, `DefaultVolumeProfile`. Unity bunlara adla değil GUID ile başvurduğundan
+`.meta` dosyalarıyla birlikte taşınabilirler.
+
+Henüz karar bekleyen: **Company Name** (`DefaultCompany`) ve uygulama paket kimliği (`applicationIdentifier` boş;
+`com.<şirket>.cubehaul3d` biçiminde, PORTING_PLAN §9).
 
 ## 4. Testler
 
@@ -135,17 +156,18 @@ yamasıyla açmayı önerir; açılınca Unity dosyayı kendi sürümüyle yenid
 |---|---|---|---|
 | EditMode | `Tests/EditMode` | Saf katmanların Unity'ye başvurmaması ve bağımlılık yönü; 10 bölüm dosyasının oyunun okuyucusuyla yüklenmesi; `SimConstants` değerleri | Unity Test Runner **ve** `dotnet test` (testler yalnızca NUnit ve saf .NET kullanır) |
 | PlayMode | `Tests/PlayMode` | Motorun kare ilerletmesi; `WorldMapper` dönüşümü | Yalnızca Unity |
-| Yapı | `Tools/dotnet/CubeHaul.Tests/UnityProjectTests.cs` | Klasörler, asmdef kuralları, paket sürümlerinin tam sabitlenmesi, editör sürümü, `.meta` dosyaları | `dotnet test` |
+| Yapı | `Tools/dotnet/CubeHaul.Tests/UnityProjectTests.cs` | Klasörler, asmdef kuralları, paket sürümlerinin tam sabitlenmesi, editör sürümü, proje ayarları (§3.1), URP ataması, `.meta` dosyaları | `dotnet test` |
 
 EditMode testleri proje kökünü çalışma dizininden bulur (`ProjectPaths`). Editörde çalışma dizini proje köküdür,
 `dotnet`'te ise derleme klasöründen yukarı çıkılır.
 
 ## 5. Unity Editor'de doğrulama adımları
 
-1. **Unity Hub › Add › Add project from disk** ile depo kökünü (`CubeHaul3D/`) seçin. Sürüm sorulursa kurulu
-   **6000.3.x** editörünü seçin (aynı küçük sürüm içinde yama farkı sorun değildir).
-2. İlk açılışta Unity `Library/`'yi kurar, eksik `ProjectSettings/*.asset` dosyalarını ve `Packages/packages-lock.json`'ı
-   üretir. Input System için **"Enable the new input backends?"** sorulursa **Yes** deyin; editör yeniden başlar.
+1. Depoyu **eşitlenmeyen** yerel bir klasöre klonlayın (örn. `C:\Dev\CubeHaul3D`). OneDrive/Dropbox/Google Drive
+   klasörlerinde Unity'nin paket önbelleği bozulur: paketler "symbolic link" ve "Invalid signature" uyarıları verir,
+   Test Framework derlenemez ve testler `NUnit could not be found` hatasıyla düşer.
+2. **Unity Hub › Add › Add project from disk** ile klasörü seçin ve **6000.3.29f1** ile açın. İlk açılışta Unity
+   `Library/`'yi kurar; ilk açılış birkaç dakika sürer.
 3. **Console** penceresinde derleme hatası olmamalı. Paket sürümüyle ilgili bir uyarı çıkarsa
    **Window ▸ Package Manager**'da önerilen sürüme güncelleyin.
 4. **Window ▸ General ▸ Test Runner** › **EditMode** › **Run All**: 76 testin hepsi yeşil olmalı
@@ -153,12 +175,9 @@ EditMode testleri proje kökünü çalışma dizininden bulur (`ProjectPaths`). 
    `LevelRepositoryTests`, `ErrorReportTests`, `JsonWriterTests`).
 5. Aynı pencerede **PlayMode** › **Run All**: 2 test yeşil olmalı.
 6. Menüden **CubeHaul ▸ Validate Level Files**: Console'da "all 10 level files are valid" yazmalı.
-7. **URP'yi etkinleştirin** (iskelette render pipeline asset'i yok, çünkü bu dosyalar editörde üretilmeli):
-   `Assets/_CubeHaul/Art` içinde **Create ▸ Rendering ▸ URP Asset (with Universal Renderer)** → oluşan asset'i
-   **Edit ▸ Project Settings ▸ Graphics ▸ Default Render Pipeline** ve **Quality** altındaki her seviyeye atayın.
-8. Unity'nin ürettiği/değiştirdiği dosyaları commit edin: `Packages/packages-lock.json`, `ProjectSettings/*.asset`,
-   `ProjectVersion.txt`, URP asset'leri ve olası `.meta` güncellemeleri. `Library/`, `Temp/`, `Logs/`, `UserSettings/`
-   ve kökteki `.csproj`/`.sln` dosyaları `.gitignore`'dadır.
+7. URP, giriş sistemi ve oynatıcı ayarları depoda hazırdır (§3.1); elle bir şey atamak gerekmez.
+8. Unity bir ayarı ya da paketi değiştirirse ilgili dosyaları commit edin (`Packages/*.json`, `ProjectSettings/*`,
+   `.meta`). `Library/`, `Temp/`, `Logs/`, `UserSettings/` ve kökteki `.csproj`/`.sln` dosyaları `.gitignore`'dadır.
 
 Komut satırından (CI için) aynı testler:
 
@@ -187,7 +206,7 @@ node Tools/unity/metas.mjs --check
   `netstandard2.1` + C# 9 ile, **UnityEngine olmadan** derler; proje başvuruları asmdef başvurularıyla aynıdır
   (test edilir).
 - `Tools/dotnet/CubeHaul.Tests`: Unity EditMode testlerini (`Assets/_CubeHaul/Tests/EditMode`) aynen derleyip koşturur;
-  bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **259 / 259 geçti**, EditMode'un 76 testi dahil (Görev 06 itibarıyla).
+  bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **262 / 262 geçti**, EditMode'un 76 testi dahil.
 - Presentation, UI, Editor ve PlayMode kodu Unity API'si kullandığı için burada derlenemez. Bu yüzden yalnızca yerleşik,
   uzun süredir değişmeyen API'ler kullanıldı (`Vector3`, `Color32`, `GameObject`, `Time.frameCount`, `MenuItem`,
   `Debug.Log`, `UnityTest`). Kesin doğrulama §5'teki adımlardır.

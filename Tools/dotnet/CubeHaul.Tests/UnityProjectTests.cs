@@ -187,6 +187,52 @@ namespace CubeHaul.Tests.Project
             Assert.That(version, Does.Match(@"m_EditorVersion: 6000\.3\.\d+f\d+"));
         }
 
+        static string Setting(string file, string key)
+        {
+            Match m = new Regex(@"^\s*" + Regex.Escape(key) + @": (.*)$", RegexOptions.Multiline).Match(File.ReadAllText(Path.Combine(Repo, "ProjectSettings", file)));
+            Assert.That(m.Success, Is.True, key + " not found in " + file);
+            return m.Groups[1].Value.Trim();
+        }
+
+        static string GuidOf(string assetPath)
+        {
+            Match m = new Regex(@"^guid: ([0-9a-f]{32})$", RegexOptions.Multiline).Match(File.ReadAllText(Path.Combine(Repo, assetPath + ".meta")));
+            Assert.That(m.Success, Is.True, assetPath);
+            return m.Groups[1].Value;
+        }
+
+        [Test]
+        public void PlayerSettingsFitAPortraitMobileGame()
+        {
+            Assert.That(Setting("ProjectSettings.asset", "activeInputHandler"), Is.EqualTo("1"), "Input System package (new) only");
+            Assert.That(Setting("ProjectSettings.asset", "m_ActiveColorSpace"), Is.EqualTo("1"), "Linear color space (R-16)");
+            Assert.That(Setting("ProjectSettings.asset", "defaultScreenOrientation"), Is.EqualTo("0"), "Portrait");
+            Assert.That(Setting("ProjectSettings.asset", "productName"), Is.EqualTo("CubeHaul3D"));
+        }
+
+        [Test]
+        public void UrpIsTheActivePipelineOnEveryQualityLevel()
+        {
+            const string rendering = "Assets/_CubeHaul/Art/Rendering/";
+            string urp = GuidOf(rendering + "CubeHaul_URP.asset");
+            StringAssert.Contains("guid: " + urp, Setting("GraphicsSettings.asset", "m_CustomRenderPipeline"));
+            string[] levels = Regex.Matches(File.ReadAllText(Path.Combine(Repo, "ProjectSettings", "QualitySettings.asset")), @"customRenderPipeline: (.*)")
+                .Cast<Match>().Select(m => m.Groups[1].Value).ToArray();
+            Assert.That(levels, Is.Not.Empty);
+            foreach (string level in levels) StringAssert.Contains("guid: " + urp, level);
+            StringAssert.Contains("guid: " + GuidOf(rendering + "UniversalRenderPipelineGlobalSettings.asset"),
+                Setting("GraphicsSettings.asset", "UnityEngine.Rendering.Universal.UniversalRenderPipeline"));
+            CollectionAssert.IsEmpty(Directory.GetFiles(Path.Combine(Repo, "Assets"), "*.asset"), "rendering assets live in " + rendering);
+        }
+
+        [Test]
+        public void AssetsAreTextWithVisibleMetaFiles()
+        {
+            Assert.That(Setting("EditorSettings.asset", "m_SerializationMode"), Is.EqualTo("2"), "Force Text");
+            Assert.That(Setting("VersionControlSettings.asset", "m_Mode"), Is.EqualTo("Visible Meta Files"));
+            Assert.That(Setting("EditorSettings.asset", "m_LineEndingsForNewScripts"), Is.EqualTo("1"), "LF, as .gitattributes");
+        }
+
         [Test]
         public void EveryAssetHasAMetaWithAUniqueGuid()
         {
