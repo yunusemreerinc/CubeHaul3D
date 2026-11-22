@@ -12,6 +12,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { readLevelDefinition, validateLevelDefinition } from "../../level-format/src/validate";
 import { buildGoldenFiles, GOLDEN_DIR, LEVEL_IDS, levelFile, LEVELS_DIR, toLevel } from "../scripts/golden/golden";
 import { columnsSha256, fnv1a, sha256 } from "../scripts/golden/hash";
+import { expandRows, replayParity } from "../scripts/golden/parity";
 import { snapshot, type Step } from "../scripts/golden/snapshot";
 import { violations } from "./helpers";
 
@@ -104,6 +105,28 @@ describe("generator fixtures", () => {
         if (c.games) expect(c.games.reduce((a, b) => a + b, 0) / c.games.length).toBe(c.winRate);
       }
     });
+  });
+});
+
+describe("parity scenarios replay exactly from their recorded calls (docs/PARITY.md)", () => {
+  const dir = `${GOLDEN_DIR}/parity`;
+  const names = readdirSync(join(REPO, dir)).filter((f) => f.endsWith(".json")).sort();
+  const levelFiles = Object.fromEntries(
+    readdirSync(join(REPO, LEVELS_DIR)).map((f) => [`${LEVELS_DIR}/${f}`, disk(`${LEVELS_DIR}/${f}`)]),
+  );
+
+  it("there are at least 20, covering every level twice", () => {
+    expect(names.length).toBeGreaterThanOrEqual(20);
+    const levels = names.map((n) => json(`${dir}/${n}`).levelFile as string);
+    for (let i = 0; i < 10; i++) expect(levels.filter((l) => l === levelFile(i)).length).toBeGreaterThanOrEqual(2);
+  });
+
+  it.each(names)("%s", (name) => {
+    const doc = json(`${dir}/${name}`);
+    const { rows, traySha256 } = replayParity(doc, levelFiles, (g) => expect(violations(g)).toEqual([]));
+    expect(traySha256).toBe(doc.traySha256);
+    expect(rows).toEqual(expandRows(doc.steps));
+    expect(rows.at(-1)!.status).toBe(doc.outcome);
   });
 });
 

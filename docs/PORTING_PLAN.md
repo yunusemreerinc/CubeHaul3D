@@ -568,6 +568,10 @@ Böylece bu katmanlar istenirse Unity dışında, `dotnet test` ile de çalışt
 > `PickTarget`, `Claim`, `Eat`, `OpensUp` hiç bellek ayırmaz (46×46 tahta ≈ 124 KB). `OpenSides` bayrak (`SideMask`),
 > `Neighbors` çağıranın dizisine yazar.
 >
+> **Durum (Görev 10):** C# çekirdeğinin kabul testi yazıldı: 24 eşdeğerlik senaryosu (10 bölüm, farklı seed'ler,
+> kenarlar, slot sayıları, girdi politikaları; 8 936 adım) TS ile adım adım aynı. Fark çıkarsa ilk farklı adım, çağrı ve
+> beklenen/gerçek değer raporlanır. Kritik fark yok. Ayrıntılar: [PARITY.md](PARITY.md).
+>
 > **Durum (Görev 08):** `Game`, `GameState` + `GameEngine` olarak yazıldı — `Assets/_CubeHaul/Domain/GameState.cs`,
 > `GameEngine.cs`, `Crate.cs`; bölümden oyun: `LevelDefinition.CreateGame()` (`Levels/Scripts/GameFactory.cs`).
 > `GameState` salt okunur sorgular (`Front`, `CanTap`, `SlotCanEat`, `SlotBlocked`, `IsStuck`, `TrayCount`, `Status`,
@@ -923,6 +927,7 @@ C# yolları `Assets/_CubeHaul/` altına görelidir. "—" = taşınmaz.
 | `Tools/ts-reference/tests/game.edge.test.ts`, `timing.test.ts › the rules have no clock`, F-2/F-3 | `GameRuleTests.cs` (**yazıldı, Görev 08**) |
 | `Tools/ts-reference/tests/invariants.test.ts` | `GameInvariants.cs` (yardımcı), `GameInvariantTests.cs` (**yazıldı, Görev 08**) |
 | golden senaryolar (oyun düzeyi) | `GameGoldenTests.cs` (**yazıldı, Görev 08**) |
+| (yeni) çekirdek kabul testi: eşdeğerlik senaryoları | `Parity/ParityTests.cs`, `ParityRunner.cs`, `ParityReport.cs` (**yazıldı, Görev 10**) |
 | `› cubes next to the road first` | `TargetingTests.cs` |
 | `› levels`, `Tools/ts-reference/tests/generator.test.ts`, `solver.test.ts` | `GeneratorRuleTests.cs` (**yazıldı, Görev 09**) |
 | golden `rng`, `generate`, `build`, `generator-cases` ve bölüm dosyaları | `GeneratorGoldenTests.cs` (**yazıldı, Görev 09**) |
