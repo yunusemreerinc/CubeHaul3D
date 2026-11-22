@@ -560,6 +560,14 @@ Böylece bu katmanlar istenirse Unity dışında, `dotnet test` ile de çalışt
 
 ### 3.2 Core — oyun kuralları (`CubeHaul.Domain`)
 
+> **Durum (Görev 07):** `Board` yazıldı — `Assets/_CubeHaul/Domain/Board.cs`. Kurallar `board.ts` ile birebir; golden
+> senaryolar tahta düzeyinde tekrar oynatılıyor ve her `tick`'te C# `PickTarget` TS'in seçtiği küpü seçiyor, her adımın
+> durumu (remaining, pending, claimed, ulaşılabilirlik, hedefler, `OpensUp`, tahta özeti) aynı. Uygulama farkları (sonucu
+> değiştirmez): renk başına `Set` yerine konum dizinli diziler; `ReachableCells` artan sırada döner; `OpensUp` claim
+> edilmiş hücre listesinden başlar; flood/mesafe/`OpensUp` tamponları bir kez ayrılır — ilk kurulumdan sonra
+> `PickTarget`, `Claim`, `Eat`, `OpensUp` hiç bellek ayırmaz (46×46 tahta ≈ 124 KB). `OpenSides` bayrak (`SideMask`),
+> `Neighbors` çağıranın dizisine yazar. `Game` bir sonraki adım.
+
 | C# türü | TS karşılığı | Tasarım notu |
 |---|---|---|
 | `static class Cells { const int Empty = -1; }` | `EMPTY` | |
@@ -809,7 +817,7 @@ C# yolları `Assets/_CubeHaul/` altına görelidir. "—" = taşınmaz.
 | | `Block` | `Core/Crate.cs` | `sealed class Crate` | `Count` değişken. Veri modeli `BlockDefinition` **yazıldı (Görev 06)** |
 | | `Level`, `cloneLevel` | `Core/Level.cs` | `sealed class Level`, `Level.Clone()` | Veri modeli `LevelDefinition` + `DeepCopy()`, `LevelRepository` **yazıldı (Görev 06)**; [LEVEL_FORMAT §9](LEVEL_FORMAT.md#9-c-veri-modeli-görev-06) |
 | `core/board.ts` | `Side` | `Core/OpenEdges.cs` | `enum Side` | |
-| | `Board` | `Core/Board.cs` | `sealed class Board` | Tüm genel ve özel üyeler aynı adla (§3.2); `better` → `private static bool Better(...)` |
+| | `Board` | `Domain/Board.cs` | `sealed class Board` | **Yazıldı (Görev 07)**; genel üyeler aynı adla (`PickTarget`, `Claim`, `Eat`, `OpensUp`, …), §3.2 |
 | `core/game.ts` | `Status` | `Core/GameStatus.cs` | `enum GameStatus` | |
 | | `Dispatch` | `Core/Dispatch.cs` | `readonly struct Dispatch` | |
 | | `Game` | `Core/Game.cs` | `sealed class Game` | `Tick` çıktı listesi alır |
