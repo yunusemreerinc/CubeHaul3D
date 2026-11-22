@@ -210,7 +210,7 @@ node Tools/unity/metas.mjs --check
   `netstandard2.1` + C# 9 ile, **UnityEngine olmadan** derler; proje başvuruları asmdef başvurularıyla aynıdır
   (test edilir).
 - `Tools/dotnet/CubeHaul.Tests`: Unity EditMode testlerini (`Assets/_CubeHaul/Tests/EditMode`) aynen derleyip koşturur;
-  bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **600 / 600 geçti**, EditMode'un 405 testi dahil (Görev 11). Bellek ayırmama testleri (`BoardAllocationTests`,
+  bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **603 / 603 geçti**, EditMode'un 405 testi dahil (Görev 11). Bellek ayırmama testleri (`BoardAllocationTests`,
   `GameAllocationTests`) yalnızca burada koşar: `GC.GetAllocatedBytesForCurrentThread` Unity profilinde yok.
   `GeneratorTimingTests` bölüm başına üretim süresini yazar ([LEVEL_GENERATION §5](LEVEL_GENERATION.md#5-önceden-üretim-ve-çalışma-zamanı)).
 - Presentation, UI, Editor ve PlayMode kodu Unity API'si kullandığı için burada derlenemez. Bu yüzden yalnızca yerleşik,
