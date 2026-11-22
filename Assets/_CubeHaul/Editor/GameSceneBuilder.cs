@@ -60,11 +60,18 @@ namespace CubeHaul.EditorTools
 
         static void Build(bool openAfterwards)
         {
-            LevelLibrary library = EnsureLevelLibrary();
             Directory.CreateDirectory(Path.GetDirectoryName(ScenePath));
             Scene previous = SceneManager.GetActiveScene();
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, openAfterwards ? NewSceneMode.Single : NewSceneMode.Additive);
             SceneManager.SetActiveScene(scene);
+            // Only now: opening a scene unloads the assets no scene uses, and a LevelLibrary loaded before it would be a
+            // destroyed object here (== null), leaving the placeholder title and the checkerboard preview.
+            LevelLibrary library = EnsureLevelLibrary();
+            if (library == null)
+            {
+                Debug.LogError("CubeHaul: could not load " + LibraryPath + "; the scene was not built.");
+                return;
+            }
             GameSceneComposer.Compose(library);
             EditorSceneManager.SaveScene(scene, ScenePath);
             if (!openAfterwards)

@@ -105,6 +105,9 @@ namespace CubeHaul.UI
             c.Controls.Add(Button(c.Header, "Speed", "1x", new Vector2(1, 1), new Vector2(-53, -33), new Vector2(82, 38), ButtonBlue, 17));
             string title = "1/10 · Level";
             DifficultyLabel label = DifficultyLabel.Easy;
+            if (!ReferenceEquals(library, null) && library == null)
+                Debug.LogWarning("CubeHaul: the level library given to the scene composer has been unloaded (a destroyed object); "
+                    + "the top bar keeps its placeholder title and the preview shows a checkerboard. Load the library after opening the scene.");
             if (library != null)
             {
                 LevelRepository repo = library.Load();
