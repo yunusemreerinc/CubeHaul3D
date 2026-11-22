@@ -90,7 +90,7 @@ namespace CubeHaul.Presentation
             go.name = name;
             go.hideFlags = HideFlags.DontSave;
             go.transform.SetParent(transform, false);
-            go.transform.localPosition = WorldMapper.ToWorld(design.CenterX, design.CenterY, height / 2);
+            go.transform.localPosition = WorldMapper.FromDesign(design.CenterX, design.CenterY, height / 2);
             go.transform.localScale = new Vector3((float)design.Width, height, (float)design.Height) * WorldMapper.UnitsPerDesign;
             var r = go.GetComponent<Renderer>();
             r.sharedMaterial = lit;
@@ -129,8 +129,8 @@ namespace CubeHaul.Presentation
             var mesh = Keep(new Mesh { name = "Layout Preview Field" });
             mesh.vertices = new[]
             {
-                WorldMapper.ToWorld(f.XMin, f.YMax, lift), WorldMapper.ToWorld(f.XMax, f.YMax, lift),
-                WorldMapper.ToWorld(f.XMin, f.YMin, lift), WorldMapper.ToWorld(f.XMax, f.YMin, lift),
+                WorldMapper.FromDesign(f.XMin, f.YMax, lift), WorldMapper.FromDesign(f.XMax, f.YMax, lift),
+                WorldMapper.FromDesign(f.XMin, f.YMin, lift), WorldMapper.FromDesign(f.XMax, f.YMin, lift),
             };
             mesh.uv = new[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 1), new Vector2(1, 1) };
             mesh.triangles = new[] { 0, 2, 1, 1, 2, 3 };

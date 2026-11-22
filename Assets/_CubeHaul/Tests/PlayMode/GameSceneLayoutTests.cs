@@ -145,7 +145,7 @@ namespace CubeHaul.Tests.PlayMode
             Assert.That(scene.Camera.pixelWidth, Is.EqualTo(s.W));
             foreach (var (x, y, h) in new[] { (0.0, 64.0, 0.0), (420.0, 808.0, 0.0), (210.0, 540.0, 40.0), (16.0, 452.0, 10.0) })
             {
-                Vector3 p = scene.Camera.WorldToScreenPoint(CubeHaul.Presentation.WorldMapper.ToWorld(x, y, h));
+                Vector3 p = scene.Camera.WorldToScreenPoint(CubeHaul.Presentation.WorldMapper.FromDesign(x, y, h));
                 (double ex, double ey) = layout.DesignToScreen(x, y, h);
                 Assert.That(p.x, Is.EqualTo((float)ex).Within(0.5f), $"design ({x}, {y}, {h}) x");
                 Assert.That(p.y, Is.EqualTo((float)ey).Within(0.5f), $"design ({x}, {y}, {h}) y");

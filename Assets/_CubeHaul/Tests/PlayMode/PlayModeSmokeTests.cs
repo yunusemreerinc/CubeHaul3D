@@ -28,5 +28,18 @@ namespace CubeHaul.Tests.PlayMode
             Assert.That(p.y, Is.EqualTo(0f));
             Assert.That(p.z, Is.EqualTo(-10f));
         }
+
+        [Test]
+        public void FromDesignUsesUnitsPerDesignWhateverTheTypeOfTheHeight()
+        {
+            // A float height once bound to ToWorld's unitsPerPixel overload and put the layout preview 40 times too far.
+            float floatHeight = 2f;
+            Vector3 a = WorldMapper.FromDesign(210, 258, floatHeight);
+            Vector3 b = WorldMapper.FromDesign(210.0, 258.0, 2.0);
+            Assert.That(a, Is.EqualTo(b));
+            Assert.That(a.x, Is.EqualTo(210 * WorldMapper.UnitsPerDesign).Within(1e-5f));
+            Assert.That(a.y, Is.EqualTo(2 * WorldMapper.UnitsPerDesign).Within(1e-5f));
+            Assert.That(a.z, Is.EqualTo(-258 * WorldMapper.UnitsPerDesign).Within(1e-5f));
+        }
     }
 }
