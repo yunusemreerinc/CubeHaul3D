@@ -9,9 +9,18 @@ namespace CubeHaul.Presentation
     /// </summary>
     public static class WorldMapper
     {
+        /// <summary>World units per design unit: the 420-unit-wide design screen is 10.5 world units wide.</summary>
+        public const float UnitsPerDesign = 0.025f;
+
         public static Vector3 ToWorld(double x, double y, float unitsPerPixel)
         {
             return new Vector3((float)(x * unitsPerPixel), 0f, (float)(-y * unitsPerPixel));
+        }
+
+        /// <summary>A design point at <paramref name="height"/> design units above the ground.</summary>
+        public static Vector3 ToWorld(double x, double y, double height = 0)
+        {
+            return new Vector3((float)(x * UnitsPerDesign), (float)(height * UnitsPerDesign), (float)(-y * UnitsPerDesign));
         }
     }
 }

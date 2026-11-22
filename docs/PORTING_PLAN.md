@@ -785,8 +785,12 @@ küçülmez. Kamera rampa tarafından, eğik bir açıyla (başlangıç önerisi
 ayarlanır) bakar; 90° (tam tepeden) de aynı kodla desteklenir. Derinlik hissi perspektiften değil, küplerin yan
 yüzleri, yumuşak gölge ve ambient occlusion ile verilir. Ortografik kameranın yan faydaları: ekrandan dünyaya
 dönüşüm doğrusaldır (dokunma testleri ve UI hizalaması basit), `orthographicSize` tek bir sayıyla bölüm boyutuna
-göre ayarlanır, kare-başı kamera hareketi gerekmez. Eğik açıda tarla dikey olarak `cos(açı)` kadar kısalır; bu
-`CameraRig`'in sığdırma hesabına dahil edilir.
+göre ayarlanır, kare-başı kamera hareketi gerekmez. Eğik açıda (yataydan ölçülen eğim) tarla dikey olarak `sin(açı)`
+kadar kısalır; bu `CameraRig`'in sığdırma hesabına dahil edilir.
+
+> **Durum (Görev 11):** `GameCameraRig` (60°, yaw yok), `ScreenLayout`/`DesignLayout` (Gameplay, motordan bağımsız),
+> `SafeAreaFitter`, `GameSceneComposer` ve Editor'deki **CubeHaul ▸ Setup ▸ Create Game Scene** yazıldı. Ayrıntılar,
+> testler ve elle doğrulama: [SCENE_LAYOUT.md](SCENE_LAYOUT.md).
 
 **Koordinat eşlemesi.** Izgara satırı `y = 0` en üstte, `y = height−1` rampaya en yakın satır. 3D'de kamera rampa
 tarafından bakar; tasarım düzlemi XZ düzlemine `X = x·s`, `Z = −y·s` ile yatırılır. Böylece alt satır kameraya en

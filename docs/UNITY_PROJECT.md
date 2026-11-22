@@ -86,7 +86,7 @@ flowchart BT
 | `CubeHaul.UI` | Domain, Levels, Gameplay, Presentation, `UnityEngine.UI`, `Unity.TextMeshPro` | hepsi | |
 | `CubeHaul.Editor` | tüm oyun katmanları | Editor | namespace `CubeHaul.EditorTools` (`UnityEditor.Editor` sınıfıyla çakışmasın) |
 | `CubeHaul.Tests.EditMode` | Test Runner, Domain, Levels, Gameplay | Editor | `UNITY_INCLUDE_TESTS`, `nunit.framework.dll`, `autoReferenced: false` |
-| `CubeHaul.Tests.PlayMode` | Test Runner, Domain, Levels, Gameplay, Presentation | hepsi | aynı test şablonu |
+| `CubeHaul.Tests.PlayMode` | Test Runner, Domain, Levels, Gameplay, Presentation, UI, uGUI | hepsi | aynı test şablonu |
 
 Kurallar (`UnityProjectTests` ile zorlanır):
 
@@ -107,6 +107,7 @@ Her assembly'de, ileride büyüyecek küçük ama gerçek bir başlangıç tür�
 | UI | `DifficultyChipColors` | Easy/Medium/Hard/Expert çip renkleri |
 | Editor | `LevelFileValidatorMenu` | **CubeHaul ▸ Validate Level Files**: bölüm dosyalarını oyunun doğrulayıcısıyla denetler |
 | Editor | `LevelBakeMenu` | **CubeHaul ▸ Levels ▸ Verify Baked Trays** / **Bake Trays From Generation Settings**: tepsileri generation ayarlarından önceden üretir (Görev 09, [LEVEL_GENERATION §5](LEVEL_GENERATION.md#5-önceden-üretim-ve-çalışma-zamanı)) |
+| Editor | `GameSceneBuilder` | **CubeHaul ▸ Setup ▸ Create Game Scene / Open Game Scene**: `Scenes/GameScene.unity` ve `LevelLibrary.asset`; sahne yoksa proje açılırken bir kez otomatik (Görev 11, [SCENE_LAYOUT §4](SCENE_LAYOUT.md#4-sahneyi-oluşturma)) |
 
 ## 3. Paketler
 
@@ -156,7 +157,7 @@ Henüz karar bekleyen: **Company Name** (`DefaultCompany`) ve uygulama paket kim
 | Takım | Yer | Ne sınar | Nerede koşar |
 |---|---|---|---|
 | EditMode | `Tests/EditMode` | Saf katmanların Unity'ye başvurmaması ve bağımlılık yönü; 10 bölüm dosyasının oyunun okuyucusuyla yüklenmesi; `SimConstants` değerleri | Unity Test Runner **ve** `dotnet test` (testler yalnızca NUnit ve saf .NET kullanır) |
-| PlayMode | `Tests/PlayMode` | Motorun kare ilerletmesi; `WorldMapper` dönüşümü | Yalnızca Unity |
+| PlayMode | `Tests/PlayMode` | Motorun kare ilerletmesi; `WorldMapper` dönüşümü; oyun sahnesinin her ekran boyunda taşmadan yerleşmesi (Görev 11) | Yalnızca Unity |
 | Yapı | `Tools/dotnet/CubeHaul.Tests/UnityProjectTests.cs` | Klasörler, asmdef kuralları, paket sürümlerinin tam sabitlenmesi, editör sürümü, proje ayarları (§3.1), URP ataması, `.meta` dosyaları | `dotnet test` |
 
 EditMode testleri proje kökünü çalışma dizininden bulur (`ProjectPaths`). Editörde çalışma dizini proje köküdür,
@@ -171,14 +172,15 @@ EditMode testleri proje kökünü çalışma dizininden bulur (`ProjectPaths`). 
    `Library/`'yi kurar; ilk açılış birkaç dakika sürer.
 3. **Console** penceresinde derleme hatası olmamalı. Paket sürümüyle ilgili bir uyarı çıkarsa
    **Window ▸ Package Manager**'da önerilen sürüme güncelleyin.
-4. **Window ▸ General ▸ Test Runner** › **EditMode** › **Run All**: 353 testin hepsi yeşil olmalı (Görev 10 itibarıyla; Board için 48, Game için 73, üretici/çözücü için 114, eşdeğerlik için 41 test dahil). Eşdeğerlik raporu `Logs/cubehaul-parity-report.txt`'ye yazılır ([PARITY.md](PARITY.md))
+4. **Window ▸ General ▸ Test Runner** › **EditMode** › **Run All**: 406 testin hepsi yeşil olmalı (Görev 11 itibarıyla; Board için 48, Game için 73, üretici/çözücü için 114, eşdeğerlik için 41, ekran yerleşimi için 53 test dahil). Eşdeğerlik raporu `Logs/cubehaul-parity-report.txt`'ye yazılır ([PARITY.md](PARITY.md))
    (Görev 05'in 9 testi ve Görev 06'nın veri modeli testleri: `NoDataLossTests`, `RealLevelTests`, `DeepCopyTests`,
    `LevelRepositoryTests`, `ErrorReportTests`, `JsonWriterTests`).
-5. Aynı pencerede **PlayMode** › **Run All**: 2 test yeşil olmalı.
+5. Aynı pencerede **PlayMode** › **Run All**: 24 test yeşil olmalı (Görev 11: `GameSceneLayoutTests` sahneyi 7 ekran boyunda ölçer, [SCENE_LAYOUT §5](SCENE_LAYOUT.md#5-doğrulama)).
 6. Menüden **CubeHaul ▸ Validate Level Files**: Console'da "all 10 level files are valid" yazmalı.
-7. Menüden **CubeHaul ▸ Levels ▸ Verify Baked Trays**: Console'da "10 level files, 0 out of date, 0 without generation settings, 0 unreadable, 0 unverified" yazmalı (birkaç saniye sürer).
-8. URP, giriş sistemi ve oynatıcı ayarları depoda hazırdır (§3.1); elle bir şey atamak gerekmez.
-9. Unity bir ayarı ya da paketi değiştirirse ilgili dosyaları commit edin (`Packages/*.json`, `ProjectSettings/*`,
+7. **CubeHaul ▸ Setup ▸ Open Game Scene** ile sahneyi açıp Play: Game penceresinde 1080×1920 ve 1170×2532 çözünürlüklerinde tahta üstte, slotlar ortada, tepsi altta, hiçbir şey taşmadan görünmeli. Oluşan sahneyi, `LevelLibrary.asset`'i ve `ProjectSettings/EditorBuildSettings.asset`'i commit edin.
+8. Menüden **CubeHaul ▸ Levels ▸ Verify Baked Trays**: Console'da "10 level files, 0 out of date, 0 without generation settings, 0 unreadable, 0 unverified" yazmalı (birkaç saniye sürer).
+9. URP, giriş sistemi ve oynatıcı ayarları depoda hazırdır (§3.1); elle bir şey atamak gerekmez.
+10. Unity bir ayarı ya da paketi değiştirirse ilgili dosyaları commit edin (`Packages/*.json`, `ProjectSettings/*`,
    `.meta`). `Library/`, `Temp/`, `Logs/`, `UserSettings/` ve kökteki `.csproj`/`.sln` dosyaları `.gitignore`'dadır.
 
 Komut satırından (CI için) aynı testler:
@@ -208,7 +210,7 @@ node Tools/unity/metas.mjs --check
   `netstandard2.1` + C# 9 ile, **UnityEngine olmadan** derler; proje başvuruları asmdef başvurularıyla aynıdır
   (test edilir).
 - `Tools/dotnet/CubeHaul.Tests`: Unity EditMode testlerini (`Assets/_CubeHaul/Tests/EditMode`) aynen derleyip koşturur;
-  bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **546 / 546 geçti**, EditMode'un 353 testi dahil (Görev 10). Bellek ayırmama testleri (`BoardAllocationTests`,
+  bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **599 / 599 geçti**, EditMode'un 406 testi dahil (Görev 11). Bellek ayırmama testleri (`BoardAllocationTests`,
   `GameAllocationTests`) yalnızca burada koşar: `GC.GetAllocatedBytesForCurrentThread` Unity profilinde yok.
   `GeneratorTimingTests` bölüm başına üretim süresini yazar ([LEVEL_GENERATION §5](LEVEL_GENERATION.md#5-önceden-üretim-ve-çalışma-zamanı)).
 - Presentation, UI, Editor ve PlayMode kodu Unity API'si kullandığı için burada derlenemez. Bu yüzden yalnızca yerleşik,

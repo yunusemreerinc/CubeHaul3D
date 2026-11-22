@@ -7,7 +7,9 @@
         "CubeHaul.Domain",
         "CubeHaul.Levels",
         "CubeHaul.Gameplay",
-        "CubeHaul.Presentation"
+        "CubeHaul.Presentation",
+        "CubeHaul.UI",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
