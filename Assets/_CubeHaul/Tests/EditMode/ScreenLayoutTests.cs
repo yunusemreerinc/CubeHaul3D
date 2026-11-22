@@ -134,7 +134,8 @@ namespace CubeHaul.Tests.EditMode
             for (double t = 1; t < 100; t *= 3)
             {
                 (double x, double y) = l.WorldToScreen(l.CameraX, l.CameraY - t * Math.Sin(th), l.CameraZ + t * Math.Cos(th));
-                Assert.That((x, y), Is.EqualTo((540.0, 960.0)).Within(1e-6));
+                Assert.That(x, Is.EqualTo(540.0).Within(1e-6), "x at depth " + t);
+                Assert.That(y, Is.EqualTo(960.0).Within(1e-6), "y at depth " + t);
             }
             // Raising a point moves it up the screen by height * cos(pitch).
             (double _, double y0) = l.DesignToScreen(100, 300, 0);
@@ -163,7 +164,8 @@ namespace CubeHaul.Tests.EditMode
             Assert.That(DesignLayout.SlotRect(0, 5), Is.EqualTo(new RectD(20, 540, 68, 66)));
             Assert.That(DesignLayout.SlotRect(4, 5), Is.EqualTo(new RectD(332, 540, 68, 66)));
             RectD six = DesignLayout.SlotRect(0, 6);
-            Assert.That((six.X, six.Width), Is.EqualTo((16.0, 338.0 / 6)).Within(1e-12));
+            Assert.That(six.X, Is.EqualTo(16.0).Within(1e-12));
+            Assert.That(six.Width, Is.EqualTo(338.0 / 6).Within(1e-12));
             Assert.That(DesignLayout.SlotRect(5, 6).XMax, Is.EqualTo(404).Within(1e-9));
             for (int n = 1; n <= 7; n++)
                 for (int i = 0; i < n; i++)
@@ -190,9 +192,11 @@ namespace CubeHaul.Tests.EditMode
             Assert.That(DesignLayout.CellSize(29, 29), Is.EqualTo(312.0 / 29));
             Assert.That(DesignLayout.CellSize(36, 46), Is.EqualTo(312.0 / 46));
             RectD f = DesignLayout.Field(36, 46);
-            Assert.That((f.CenterX, f.CenterY), Is.EqualTo((210.0, 258.0)).Within(1e-9));
+            Assert.That(f.CenterX, Is.EqualTo(210.0).Within(1e-9));
+            Assert.That(f.CenterY, Is.EqualTo(258.0).Within(1e-9));
             (double x, double y) = DesignLayout.CellCenter(0, 29, 29);
-            Assert.That((x, y), Is.EqualTo((16 + 38 + 312.0 / 58, 64 + 38 + 312.0 / 58)).Within(1e-9));
+            Assert.That(x, Is.EqualTo(16 + 38 + 312.0 / 58).Within(1e-9));
+            Assert.That(y, Is.EqualTo(64 + 38 + 312.0 / 58).Within(1e-9));
             Assert.That(DesignLayout.Board.Contains(DesignLayout.Field(46, 35)), Is.True);
             Assert.That(DesignLayout.WorldContent.Contains(DesignLayout.Board) && DesignLayout.WorldContent.Contains(DesignLayout.Tunnel), Is.True);
             Assert.That((DesignLayout.HeaderHeight, DesignLayout.FooterHeight), Is.EqualTo((64.0, 74.0)));

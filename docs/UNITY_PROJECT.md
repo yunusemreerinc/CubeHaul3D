@@ -172,7 +172,7 @@ EditMode testleri proje kökünü çalışma dizininden bulur (`ProjectPaths`). 
    `Library/`'yi kurar; ilk açılış birkaç dakika sürer.
 3. **Console** penceresinde derleme hatası olmamalı. Paket sürümüyle ilgili bir uyarı çıkarsa
    **Window ▸ Package Manager**'da önerilen sürüme güncelleyin.
-4. **Window ▸ General ▸ Test Runner** › **EditMode** › **Run All**: 406 testin hepsi yeşil olmalı (Görev 11 itibarıyla; Board için 48, Game için 73, üretici/çözücü için 114, eşdeğerlik için 41, ekran yerleşimi için 53 test dahil). Eşdeğerlik raporu `Logs/cubehaul-parity-report.txt`'ye yazılır ([PARITY.md](PARITY.md))
+4. **Window ▸ General ▸ Test Runner** › **EditMode** › **Run All**: 405 testin hepsi yeşil olmalı (Görev 11 itibarıyla; Board için 48, Game için 73, üretici/çözücü için 114, eşdeğerlik için 41, ekran yerleşimi için 53 test dahil). Eşdeğerlik raporu `Logs/cubehaul-parity-report.txt`'ye yazılır ([PARITY.md](PARITY.md))
    (Görev 05'in 9 testi ve Görev 06'nın veri modeli testleri: `NoDataLossTests`, `RealLevelTests`, `DeepCopyTests`,
    `LevelRepositoryTests`, `ErrorReportTests`, `JsonWriterTests`).
 5. Aynı pencerede **PlayMode** › **Run All**: 24 test yeşil olmalı (Görev 11: `GameSceneLayoutTests` sahneyi 7 ekran boyunda ölçer, [SCENE_LAYOUT §5](SCENE_LAYOUT.md#5-doğrulama)).
@@ -210,7 +210,7 @@ node Tools/unity/metas.mjs --check
   `netstandard2.1` + C# 9 ile, **UnityEngine olmadan** derler; proje başvuruları asmdef başvurularıyla aynıdır
   (test edilir).
 - `Tools/dotnet/CubeHaul.Tests`: Unity EditMode testlerini (`Assets/_CubeHaul/Tests/EditMode`) aynen derleyip koşturur;
-  bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **599 / 599 geçti**, EditMode'un 406 testi dahil (Görev 11). Bellek ayırmama testleri (`BoardAllocationTests`,
+  bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **600 / 600 geçti**, EditMode'un 405 testi dahil (Görev 11). Bellek ayırmama testleri (`BoardAllocationTests`,
   `GameAllocationTests`) yalnızca burada koşar: `GC.GetAllocatedBytesForCurrentThread` Unity profilinde yok.
   `GeneratorTimingTests` bölüm başına üretim süresini yazar ([LEVEL_GENERATION §5](LEVEL_GENERATION.md#5-önceden-üretim-ve-çalışma-zamanı)).
 - Presentation, UI, Editor ve PlayMode kodu Unity API'si kullandığı için burada derlenemez. Bu yüzden yalnızca yerleşik,
