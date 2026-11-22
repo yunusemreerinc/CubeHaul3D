@@ -38,6 +38,7 @@ bağlı hiçbir girdi kullanılmaz.
 | `…/Golden/peel-layers.json` | Her bölümün kendi kenar türüyle `peelLayers` sonucu | G-03 |
 | `…/Golden/generate.json` | Her bölüm için `generateLevel`, tohum {1, 77} × karıştırma {0, 1.5}: kasa sayısı, kolon uzunlukları, öndeki kasalar, kolon özeti | G-05 |
 | `…/Golden/build.json` | `buildLevel`'in tam izi: denenen her aday (tohum, kolon özeti, açgözlü çözücü sonucu, 24 rastgele oyunun tek tek sonucu, kazanma oranı), seçilen aday | G-06, G-07 |
+| `…/Golden/generator-cases.json` | Yerleşik bölümlerin ulaşmadığı üretim durumları (Görev 09): elle verilen seçenekler, büyük seed'ler, `buildLevel`'in yedek ve doğrulanamadı yolları; her durum için tam `generateLevel` tepsisi, `buildLevel`'in denediği her tepsi ve döndürdüğü tepsi | G-05, G-06, G-07 |
 | `…/Golden/scenarios/*.json` | 10 senaryo: her işlemden sonra oyunun tam durumu | G-08 |
 | `…/Golden/manifest.json` | Diğer tüm dosyaların boyutu ve SHA-256'sı | — |
 
@@ -125,11 +126,32 @@ C# karşılığı `Tools/dotnet/CubeHaul.Tests/GoldenFixtureTests.cs › Fnv1a`;
 **`columnsSha256`** (generate/build): `JSON.stringify(columns)` metninin SHA-256'sı — anahtarlar `id, color, count`
 sırasında, boşluksuz, örn. `[[{"id":2,"color":0,"count":10},…],…]`.
 
+### 3.2 Üretim durumları (`generator-cases.json`)
+
+| Durum | Neyi sabitler |
+|---|---|
+| `heart-example` | `LevelFormat/examples/heart.generated.level.json`: tepsisiz, yalnızca generation ayarlı bölüm |
+| `strawberry-f4-block-bounds` | F-4: `minBlock 40`, `maxBlock 12` |
+| `cat-one-column-no-big` | Tek kolon, `bigChance 0` |
+| `rocket-ten-columns-all-big` | 10 kolon (düzensiz son sıra), `bigChance 1`, `sides` kenarı, 6 slot |
+| `sunset-max-seed` | `seed = 2³¹−1`: `seed + 7919k` int sınırını aşar |
+| `mushroom-seed-0-max-shuffle` | `seed 0`, `shuffle 100`; hiçbir aday çözülmez → yedek k = 8 |
+| `bands-fallback` | Yedek yolu: k = 3 |
+| `stripes-unverified` | Doğrulanamadı yolu: karıştırılmamış tepsi, kazanma oranı 0 |
+| `round-half-1275/1040/1000-cubes` | `Math.round` yarımları: 1275/150 = 8,5 → 9; 1040/32 = 32,5 → 33; 1000/16 = 62,5 → 63 |
+| `single-cube` | En küçük resim |
+
+Her durumda: `generate` (seed'in kendisiyle `generateLevel`, tüm kasalar), `build.tried` (sırayla denenen her tepsi:
+`phase` = `candidate` / `fallback` / `unverified`, `k`, `seed`, `shuffle`, SHA-256, açgözlü sonuç, çözülenlerde 24 oyun
+ve kazanma oranı), `build.result` (yol, seçilen deneme, kazanma oranı, açgözlü sonuç, tüm kasalar). Dışa aktarıcı izi
+`buildLevel`'in kendi sonucuyla karşılaştırır; tutmazsa dosya üretilmez.
+
 ## 4. Testler
 
 | Takım | Ne sınar |
 |---|---|
 | `Tools/ts-reference › tests/golden.test.ts` (28) | Diskteki dosyalar dışa aktarıcının çıktısıyla bayt bayt aynı; eski dosya yok; ikinci üretim aynı; manifest doğru; 10 bölüm geçerli ve resmi, paleti, tepsisi TS'tekiyle aynı; `rng.json` = `mulberry32`; `build.json`'da seçilen aday bölüm dosyasının tepsisi ve oyun sonuçlarının ortalaması kazanma oranı; **her senaryo yalnızca kaydedilen hamlelerden yeni bir `Game` üzerinde birebir aynı durumları veriyor** ve her adımda invariantlar sağlanıyor |
+| `Assets/_CubeHaul/Tests/EditMode › GeneratorGoldenTests` (35, Görev 09) | `rng`, `generate`, `build`, `generator-cases` dosyalarının C# RNG, üretici ve çözücülerle birebir tutması; 10 bölüm dosyasının generation ayarlarından byte byte yeniden üretilmesi ([LEVEL_GENERATION §6](LEVEL_GENERATION.md#6-doğrulama)) |
 | `Tools/dotnet/CubeHaul.Tests › GoldenFixtureTests` (25) | Manifest SHA-256'ları ve boyutları tutuyor (satır sonu değişirse yakalar), 10 bölüm C# okuyucusuyla hatasız okunuyor, tüm dosyalar ayrıştırılıyor, senaryolar iyi biçimli, `fnv1a` tanımı iki dilde aynı |
 
 `.gitattributes` JSON dosyalarını LF satır sonuyla sabitler. Windows'ta git'in satır sonlarını CRLF'e çevirmesi
@@ -138,8 +160,9 @@ SHA-256'ları bozacağı için bu gereklidir.
 ## 5. C# eşdeğerlik testinde kullanım (sonraki görevler)
 
 1. `rng.json` → `Mulberry32` (uint32 eşitliği).
-2. `peel-layers.json`, `generate.json`, `build.json` → `PeelLayers`, `LevelGenerator.Generate`, `LevelGenerator.Build`,
-   `GreedySolver`, `RandomPlayer`. Sorun çıkarsa `build.json`'daki aday izi farkın hangi adayda başladığını gösterir.
+2. `peel-layers.json`, `generate.json`, `build.json`, `generator-cases.json` → `PeelLayers`, `LevelGenerator.Generate`,
+   `LevelBuilder.Build`, `GreedySolver`, `RandomPlayer`. Sorun çıkarsa `build.json`'daki aday izi farkın hangi adayda
+   başladığını gösterir. **Görev 09:** hepsi birebir tutuyor (`GeneratorGoldenTests.cs`).
 3. `scenarios/*.json` → C# `Game` üzerinde hamleleri tekrar oynat, her adımda `state`'in her alanını karşılaştır.
    `boardHash` ve `reachableHash` aynı `fnv1a` tanımıyla hesaplanır.
    **Görev 07:** tahta düzeyindeki alanlar (`remaining`, `pending`, `claimed`, `emptied`, `reachableCount`, `pickTarget`,

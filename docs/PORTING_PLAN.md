@@ -642,20 +642,28 @@ olarak kalır (önden çıkarma `RemoveAt(0)`; kolonlar en fazla ~15 kasa), çü
 
 ### 3.3 Levels — bölüm üretimi (`CubeHaul.Levels`)
 
+> **Durum (Görev 09):** `rng.ts`, `generator.ts`, `solver.ts` yazıldı — `Assets/_CubeHaul/Levels/Scripts/Generation/`
+> (namespace `CubeHaul.Levels.Generation`). Referans seed'lerin hepsinde sonuç TS ile **birebir aynı**: RNG değerleri,
+> `generateLevel` tepsileri, `buildLevel`'in denediği her tepsi, açgözlü çözücünün tick/tap sayıları, rastgele oyuncunun
+> her oyunu ve kazanma oranı (double olarak tam eşit). 10 bölüm dosyası generation ayarlarından byte byte aynı yeniden
+> üretiliyor. JS/C# sayı farkları, sıralama eşitlik bozucuları, belgelenmiş davranış farkları ve önceden üretim
+> (bake) seçenekleri: [LEVEL_GENERATION.md](LEVEL_GENERATION.md).
+
 | C# türü | TS karşılığı | Not |
 |---|---|---|
-| `sealed class Mulberry32` (`double Next()`) | `mulberry32` | `uint` aritmetiği, `unchecked` (R-03) |
-| `static class StableSort` | `Array.prototype.sort` | Kararlı sıralama; `List.Sort` **kullanılmaz** (R-01) |
-| `static class JsMath` (`Round`, `Imul`) | `Math.round`, `Math.imul` | `Round(x) = Math.Floor(x + 0.5)` (R-02) |
-| `struct GenOptions`, `struct BuildOptions` | `GenOptions`, `BuildOptions` | Opsiyonel alanlar `int?/double?` |
-| `static class PeelLayers` | `peelLayers` | |
-| `static class LevelGenerator` (`Generate`, `Build`, `Shuffled`, `SplitCount`) | `generateLevel`, `buildLevel`, `shuffled`, `splitCount` | `Build` iptal edilebilir (`CancellationToken`) |
-| `readonly struct BuiltLevel` (`Level`, `WinRate`) | `BuiltLevel` | |
-| `static class GreedySolver` → `SolveResult` | `solveGreedy` | |
-| `static class RandomPlayer` (`WinRate`) | `randomWinRate` | |
-| `static class ImageQuantizer` (`Quantize(byte[] rgba, int w, int h, int k, string name)`) | `quantize` | |
-| `static class DifficultyLabel` (`From(double winRate)`) | `main.ts` eşikleri | B-25 |
-| `sealed class LevelSpec` | `LevelSpec` | JSON'dan gelir |
+| `sealed class Mulberry32` (`Next()`, `NextUInt32()`, `NextIndex(n)`) | `mulberry32` | `uint` aritmetiği, `unchecked`; seed `long`, mod 2³² (R-03) |
+| `static class JsMath` (`Round`, `RoundToInt`) | `Math.round` | Yarımlar +∞'a; `Math.Floor(x + 0.5)` **değil** (0.49999999999999994 için yanlış) (R-02) |
+| (ayrı `StableSort` yok) | `Array.prototype.sort` | Her sıralama önce anahtarı, sonra sıralamadan önceki konumu karşılaştırır = kararlı sıra (R-01) |
+| `sealed class GenerationOptions` (+ `For(LevelDefinition)`, `With(seed, shuffle)`) | `GenOptions`, `BuildOptions`, `candidates` | Varsayılanlar TS'inkiler |
+| `readonly struct CrateSizes` (`For(total, options)`) | `CrateSizes` + boyut formülleri | F-4 aynen |
+| `static class PeelLayers` (`Of`) | `peelLayers` | |
+| `static class LevelGenerator` (`Generate`, `SplitCount`, `Shuffled`) | `generateLevel`, `splitCount`, `shuffled` | `TrayDefinition` döndürür |
+| `static class LevelBuilder` (`Build`) → `BuildResult` (`Tray`, `WinRate`, `Path`, `Attempts`) | `buildLevel` → `BuiltLevel` | İptal edilebilir; hangi yoldan geldiği ve denenen her tepsi görünür |
+| `static class GreedySolver` (`Solve`, `ChooseTap`) → `SolveResult` | `solveGreedy`, `chooseTap` | |
+| `static class RandomPlayer` (`WinRate`, `Play`) | `randomWinRate` | |
+| `static class LevelBaker` (`Bake`, `BakeFile`, `BakeAsync`, `EnsureTrayAsync`) | `builtInDefinition` (export), `worker.ts` | Editor'de önceden üretim ve çalışma zamanında arka planda üretim |
+| `static class ImageQuantizer` (`Quantize(byte[] rgba, int w, int h, int k, string name)`) | `quantize` | v1'de yok |
+| `DifficultyLabels.FromWinRate` | `main.ts` eşikleri | B-25 (Görev 06) |
 
 ### 3.4 Simulation — kurala etki eden zamanlama (`CubeHaul.Gameplay`)
 
@@ -846,14 +854,14 @@ C# yolları `Assets/_CubeHaul/` altına görelidir. "—" = taşınmaz.
 
 | TS dosyası | TS sembolü | C# dosyası | C# türü / üyesi | Not |
 |---|---|---|---|---|
-| `levels/rng.ts` | `mulberry32` | `Levels/Mulberry32.cs` | `sealed class Mulberry32 { double Next(); }` | `uint`, `unchecked` |
-| (JS çalışma zamanı) | `Array.sort`, `Math.round`, `Math.imul` | `Levels/StableSort.cs`, `Levels/JsMath.cs` | `StableSort.Sort`, `JsMath.Round`, `JsMath.Imul` | R-01, R-02, R-03 |
-| `levels/generator.ts` | `GenOptions`, `BuildOptions`, `CrateSizes` | `Levels/GenOptions.cs` | `struct GenOptions`, `struct BuildOptions`, `struct CrateSizes` | |
-| | `peelLayers` | `Levels/PeelLayers.cs` | `PeelLayers.Compute` | |
-| | `shuffled`, `splitCount`, `generateLevel`, `buildLevel` | `Levels/LevelGenerator.cs` | `Shuffled`, `SplitCount`, `Generate`, `Build` | |
-| | `BuiltLevel` | `Levels/BuiltLevel.cs` | `readonly struct BuiltLevel` | |
-| `levels/solver.ts` | `SolveResult`, `solveGreedy`, `chooseTap` | `Levels/GreedySolver.cs` | `GreedySolver.Solve`, `ChooseTap` | |
-| | `randomWinRate` | `Levels/RandomPlayer.cs` | `RandomPlayer.WinRate` | |
+| `levels/rng.ts` | `mulberry32` | `Levels/Scripts/Generation/Mulberry32.cs` | `sealed class Mulberry32` | **Yazıldı (Görev 09)**; `uint`, `unchecked` |
+| (JS çalışma zamanı) | `Array.sort`, `Math.round`, `Math.imul`, `>>>` | `Generation/JsMath.cs`, eşitlik bozuculu sıralamalar | `JsMath.Round` | **Yazıldı (Görev 09)**; R-01, R-02, R-03 |
+| `levels/generator.ts` | `GenOptions`, `BuildOptions`, `CrateSizes` | `Generation/GenerationOptions.cs` | `GenerationOptions`, `readonly struct CrateSizes` | **Yazıldı (Görev 09)** |
+| | `peelLayers` | `Generation/PeelLayers.cs` | `PeelLayers.Of` | **Yazıldı (Görev 09)** |
+| | `shuffled`, `splitCount`, `generateLevel` | `Generation/LevelGenerator.cs` | `Shuffled`, `SplitCount`, `Generate` | **Yazıldı (Görev 09)** |
+| | `buildLevel`, `BuiltLevel` | `Generation/LevelBuilder.cs` | `LevelBuilder.Build` → `BuildResult` | **Yazıldı (Görev 09)** |
+| `levels/solver.ts` | `SolveResult`, `solveGreedy`, `chooseTap`, `randomWinRate` | `Generation/Solvers.cs` | `GreedySolver.Solve`, `ChooseTap`, `RandomPlayer.WinRate` | **Yazıldı (Görev 09)** |
+| `levels/worker.ts` | arka planda üretim | `Generation/LevelBaker.cs`, `Editor/LevelBakeMenu.cs` | `LevelBaker.BakeAsync`, `EnsureTrayAsync`; Editor menüsü | **Yazıldı (Görev 09)** |
 | `levels/image.ts` | `quantize` | `Levels/ImageQuantizer.cs` | `ImageQuantizer.Quantize` | v1'de oyunda kullanılmaz |
 | | `pictureFromFile` | — | — | v1'de yok |
 | `levels/art.ts` | `Sketch`, 10 resim fonksiyonu | — → `Tools/ts-reference` (`npm run export:golden`) | — | Çıktı: `Content/Levels/*.level.json` (R-04, Görev 04) |
@@ -916,7 +924,8 @@ C# yolları `Assets/_CubeHaul/` altına görelidir. "—" = taşınmaz.
 | `Tools/ts-reference/tests/invariants.test.ts` | `GameInvariants.cs` (yardımcı), `GameInvariantTests.cs` (**yazıldı, Görev 08**) |
 | golden senaryolar (oyun düzeyi) | `GameGoldenTests.cs` (**yazıldı, Görev 08**) |
 | `› cubes next to the road first` | `TargetingTests.cs` |
-| `› levels` | `BuiltInLevelTests.cs`, `GeneratorTests.cs` |
+| `› levels`, `Tools/ts-reference/tests/generator.test.ts`, `solver.test.ts` | `GeneratorRuleTests.cs` (**yazıldı, Görev 09**) |
+| golden `rng`, `generate`, `build`, `generator-cases` ve bölüm dosyaları | `GeneratorGoldenTests.cs` (**yazıldı, Görev 09**) |
 | `› quantize` | `ImageQuantizerTests.cs` |
 | `tests/roads.test.ts` | `RoadMapTests.cs`, `RoadMapLevelTests.cs` |
 | (yeni) §4 invariantları | `InvariantChecker.cs` (test yardımcısı), `InvariantFuzzTests.cs` |
@@ -1127,7 +1136,7 @@ portlanmadan önce yazılır.
 | # | Risk | Ol. | Etki | Önlem |
 |---|---|:-:|:-:|---|
 | R-01 | **Kararlı olmayan sıralama.** JS `sort` kararlıdır (ES2019); C# `List.Sort`/`Array.Sort` değildir. `generateLevel` üç yerde eşit anahtarlı sıralamaya dayanıyor (hücreleri katmana göre, kasaları zamana göre — `shuffle = 0` geri dönüşünde eşitlik çok —, kolonları uzunluğa göre). Farklı tepsi = farklı bölüm. | Y | Y | `StableSort` yardımcı sınıfı (eklemeli sıralama ya da indeks eşitlik bozuculu karşılaştırma) veya LINQ `OrderBy`; G-05 shuffle 0 durumu |
-| R-02 | **`Math.round` farkı.** JS yarımları yukarı yuvarlar (`2.5 → 3`, `−2.5 → −2`), C# `Math.Round` bankacı yuvarlaması yapar (`2.5 → 2`). Kasa boyutu formülleri (B-22) etkilenir. | Y | Y | `JsMath.Round(x) = Math.Floor(x + 0.5)`; `Math.Round` kullanımını analizörle yasaklama; G-04 |
+| R-02 | **`Math.round` farkı.** JS yarımları yukarı yuvarlar (`2.5 → 3`, `−2.5 → −2`), C# `Math.Round` bankacı yuvarlaması yapar (`2.5 → 2`). Kasa boyutu formülleri (B-22) etkilenir. | Y | Y | `JsMath.Round` (taban + kesir ≥ 0.5 testi; `Math.Floor(x + 0.5)` 0.49999999999999994'te yanlış). **Görev 09:** yazıldı; `generator-cases.json`'daki `round-half-*` resimleri farkı sabitler |
 | R-03 | **`mulberry32` 32-bit aritmetiği.** `>>>`, `Math.imul`, işaretli/işaretsiz karışımı. `checked` bağlamda taşma istisnası. | O | Y | Tamamen `uint` ile `unchecked`; G-01 ile 1000 değer bit eşitliği |
 | R-04 | **`art.ts` kayan nokta eşikleri.** `Math.sin/sqrt/**` sonuçları platformlar arasında son bitte farklı olabilir; eşik üzerindeki bir piksel değişirse resim değişir. | O | O | `Sketch` taşınmaz; resimler JSON'a pişirilir (G-02) |
 | R-05 | **`Float32Array` yol mesafeleri.** TS `road`'u float32 saklayıp double ile karşılaştırıyor. Değerler 0.5'in katı ve < 2²⁴ olduğu için kesin; yine de C#'ta farklı tür seçimi sapma riski taşır. | D | O | C#'ta `double[]` (değerler kesin olduğundan sonuç aynı); G-03/G-08 ile doğrulama |
@@ -1137,7 +1146,7 @@ portlanmadan önce yazılır.
 | R-09 | **Koordinat dönüşümü.** Canvas y aşağı, Unity Y yukarı / Z ileri; yanlış eşleme resmi aynalar ya da rampayı ters tarafa koyar. | O | O | Tek nokta `WorldMapper`; birim testi; satır 0 = en uzak |
 | R-10 | **Piksel cinsinden epsilon'lar.** `RoadMap.along` ve `roadPath` 0.5 px eşik kullanıyor; birimler dünya metresine çevrilirse rota yanlış kenarı seçer. | O | O | `RoadMap` tasarım pikselinde kalır; dünyaya yalnızca `WorldMapper` çevirir |
 | R-11 | **Mobil performans/GC.** `opensUp` her çağrıda tahta boyunda dizi ayırıyor ve her karede her slot için çağrılıyor; `Tick` dizi döndürüyor; 2116 ayrı `GameObject`/materyal çizim çağrısı. | Y | O | Tampon yeniden kullanımı, sürüm sayaçlı önbellek; instancing tek materyal; nesne havuzları; Profiler bütçesi |
-| R-12 | **Üretim süresi.** Masaüstünde 36–482 ms; IL2CPP + düşük segment telefonda saniyeler sürebilir; ana iş parçacığında donma. | O | O | Yerleşik bölümler pişirilmiş; özel resim `Task.Run` + "Building level…" göstergesi + iptal |
+| R-12 | **Üretim süresi.** Masaüstünde 36–482 ms; IL2CPP + düşük segment telefonda saniyeler sürebilir; ana iş parçacığında donma. | O | O | Yerleşik bölümler pişirilmiş; özel resim `Task.Run` + "Building level…" göstergesi + iptal. **Görev 09:** C# üretimi masaüstünde bölüm başına 14–327 ms (10 bölüm 1,4 s); Editor bake menüsü ve `LevelBaker.EnsureTrayAsync` yazıldı ([LEVEL_GENERATION §5](LEVEL_GENERATION.md#5-önceden-üretim-ve-çalışma-zamanı)) |
 | R-13 | **`JsonUtility` kısıtları.** İç içe dizi, `null`, sözlük, metin enum desteklenmez; opsiyonel alanlar varsayılana düşer. | Y | O | **Giderildi (Görev 03):** `JsonUtility` kullanılmıyor; `CubeHaul.Data` kendi katı JSON ayrıştırıcısıyla okuyor ([LEVEL_FORMAT §4](LEVEL_FORMAT.md#4-okuma-sırası-ve-iki-dilde-aynı-davranış)) |
 | R-14 | **Türkçe yerel ayar (tr-TR).** `"SIDES".ToLower()` → `"sıdes"`; `double.Parse("0.2")` ondalık virgül bekler; `ToString()` virgüllü yazar. Hedef kitlede yaygın. | Y | Y | Her yerde `ToLowerInvariant`, `StringComparison.Ordinal`, `CultureInfo.InvariantCulture`; enum'lar için `switch` ile ordinal ayrıştırma; testler tr-TR altında da |
 | R-15 | **IL2CPP kod ayıklama / AOT.** Yansımaya dayalı JSON (Newtonsoft) ve jenerikler iOS'ta çalışma zamanında kırılabilir. | O | O | Bölüm verisi yansıma kullanmayan kendi ayrıştırıcımızla okunuyor (Görev 03); başka yerde Newtonsoft gerekirse `link.xml`; cihazda IL2CPP derlemesiyle test |

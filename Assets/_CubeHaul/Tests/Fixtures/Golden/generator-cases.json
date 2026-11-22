@@ -1,0 +1,2046 @@
+{
+  "format": "cubehaul.golden.generator-cases",
+  "version": 1,
+  "source": {
+    "repo": "https://github.com/yunusemreerinc/cube-hunt",
+    "commit": "559dfd90977b1e15367bd7de25aec9fbae4b52f6"
+  },
+  "description": "generateLevel / solveGreedy / randomWinRate / buildLevel on cases the built-in levels do not reach: hand-set options, large seeds, the fallback and unverified paths. tried = every tray buildLevel generates, in order (phase candidate: seed + 7919k; fallback: seed + k, shuffle * (1 - k/8); unverified: shuffle 0); result = what buildLevel returns, result.tried = its index in tried; greedy = [solved, ticks, taps]; games[g] = randomWinRate(level, 1, seed + 101g).",
+  "cases": [
+    {
+      "name": "heart-example",
+      "description": "LevelFormat/examples/heart.generated.level.json: generation settings only, baked at build time or at runtime",
+      "picture": {
+        "width": 7,
+        "height": 6,
+        "palette": ["#e8424f", "#ffffff"],
+        "cells": [-1, 0, 0, -1, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1, -1, -1, 0, 0, 0, -1, -1, -1, -1, -1, 0, -1, -1, -1]
+      },
+      "edges": "bottom",
+      "slotCount": 5,
+      "generation": {
+        "seed": 7,
+        "shuffle": 0.5,
+        "targetWinRate": 0.8
+      },
+      "generate": {
+        "columnsSha256": "94ee17fae823051c6cc7ac57f71e35b93fbfc1e2723b08e9d3eee4fb0f57570f",
+        "columns": [
+          [
+            [2, 0, 8]
+          ],
+          [
+            [1, 0, 12]
+          ],
+          [],
+          [
+            [0, 0, 6]
+          ],
+          [
+            [3, 1, 1]
+          ]
+        ]
+      },
+      "build": {
+        "tried": [
+          {
+            "phase": "candidate",
+            "k": 0,
+            "seed": 7,
+            "shuffle": 0.5,
+            "columnsSha256": "94ee17fae823051c6cc7ac57f71e35b93fbfc1e2723b08e9d3eee4fb0f57570f",
+            "greedy": [true, 12, 4],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 1,
+            "seed": 7926,
+            "shuffle": 0.5,
+            "columnsSha256": "329e3c3c43834efc1ccc4f8ec87ab10a07cd976cd965f94aae580ebbdbf263ed",
+            "greedy": [true, 10, 4],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 2,
+            "seed": 15845,
+            "shuffle": 0.5,
+            "columnsSha256": "8ab2035c5da8935604adfd82c454660dde32b1d368453b42e03959ba175600c3",
+            "greedy": [true, 14, 3],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 3,
+            "seed": 23764,
+            "shuffle": 0.5,
+            "columnsSha256": "b0af10449ca065b0618eafb8ac01f979b630ab568ae4a8df27d1ad5b1ee307dc",
+            "greedy": [true, 14, 3],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 4,
+            "seed": 31683,
+            "shuffle": 0.5,
+            "columnsSha256": "67bf943edcd7842c499147b35da51f7b3c72fc6e1fd37eb6746cdbd821e974a3",
+            "greedy": [true, 14, 3],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 5,
+            "seed": 39602,
+            "shuffle": 0.5,
+            "columnsSha256": "bcdd033d6ae78d1bcc68dc571b372a08ac5e14ded98b8f453d68e1cc44a2202c",
+            "greedy": [true, 12, 4],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 6,
+            "seed": 47521,
+            "shuffle": 0.5,
+            "columnsSha256": "2ecf1f0e608db78e626c559be77426a6e317a7fb059865d6e3828eda3caab5be",
+            "greedy": [true, 14, 3],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 7,
+            "seed": 55440,
+            "shuffle": 0.5,
+            "columnsSha256": "333aa40a10278d688a56aee7104c3f172b5093642fbac703da62fb554ecb75aa",
+            "greedy": [true, 13, 3],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 8,
+            "seed": 63359,
+            "shuffle": 0.5,
+            "columnsSha256": "6336a11736afd81bedb4512e7abeff22d755d1f9e81d6973423d969a0a0d1d30",
+            "greedy": [true, 10, 4],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 9,
+            "seed": 71278,
+            "shuffle": 0.5,
+            "columnsSha256": "fe8ce8d7d3ef3240e4c007a99ad98a4015e35ed77c9fbbb8749b017d2de9bf6f",
+            "greedy": [true, 10, 4],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 10,
+            "seed": 79197,
+            "shuffle": 0.5,
+            "columnsSha256": "9f3296fa2364b8f2baeedc7a97655f8234ff8644d4c07cf9ec2b9ca2a371de1a",
+            "greedy": [true, 11, 4],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 11,
+            "seed": 87116,
+            "shuffle": 0.5,
+            "columnsSha256": "8fb415b2ed0ac8bc42480cdd00a40a7708f3c7a6c4bd8ac007755f2eb49ce22d",
+            "greedy": [true, 11, 4],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 12,
+            "seed": 95035,
+            "shuffle": 0.5,
+            "columnsSha256": "4027bacef79083462b47d59fbef0a432ded03395ffd47d9ccde3d3795e24900d",
+            "greedy": [true, 14, 3],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 13,
+            "seed": 102954,
+            "shuffle": 0.5,
+            "columnsSha256": "9bb1c33873d93a4a301d4f2e33540beef9c449055640ebedfc2c6c588961e64d",
+            "greedy": [true, 10, 4],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 14,
+            "seed": 110873,
+            "shuffle": 0.5,
+            "columnsSha256": "2d14134163a10af7b4eecf3fb80441950e3c9091c8f45b6cb106acb5c2483893",
+            "greedy": [true, 14, 3],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 15,
+            "seed": 118792,
+            "shuffle": 0.5,
+            "columnsSha256": "e61c33863af3504a32e179cf8afaa42160fdcbfbd39ba73b33125faa34a53d47",
+            "greedy": [true, 11, 4],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          }
+        ],
+        "result": {
+          "path": "candidate",
+          "tried": 0,
+          "winRate": 1,
+          "greedy": [true, 12, 4],
+          "columns": [
+            [
+              [2, 0, 8]
+            ],
+            [
+              [1, 0, 12]
+            ],
+            [],
+            [
+              [0, 0, 6]
+            ],
+            [
+              [3, 1, 1]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "strawberry-f4-block-bounds",
+      "description": "F-4: minBlock 40 and maxBlock 12 given by hand; crate sizes leave the bounds, kept as in TypeScript",
+      "pictureFrom": "Assets/_CubeHaul/Levels/Content/level-01-strawberry.level.json",
+      "edges": "all",
+      "slotCount": 5,
+      "generation": {
+        "seed": 3,
+        "shuffle": 0.5,
+        "targetWinRate": 0.9,
+        "minBlock": 40,
+        "maxBlock": 12,
+        "candidates": 4
+      },
+      "generate": {
+        "columnsSha256": "da9dcd123feab7a0b1dd7e3f84e3086ecc3fb252ceff781c620b85368885c6f5",
+        "columns": [
+          [
+            [11, 1, 40],
+            [2, 0, 44]
+          ],
+          [
+            [0, 0, 40],
+            [1, 0, 40],
+            [9, 0, 40]
+          ],
+          [
+            [3, 0, 41],
+            [12, 2, 12],
+            [7, 0, 47]
+          ],
+          [
+            [10, 1, 41],
+            [4, 0, 44],
+            [6, 0, 44]
+          ],
+          [
+            [13, 3, 14],
+            [5, 0, 40],
+            [8, 0, 40]
+          ]
+        ]
+      },
+      "build": {
+        "tried": [
+          {
+            "phase": "candidate",
+            "k": 0,
+            "seed": 3,
+            "shuffle": 0.5,
+            "columnsSha256": "da9dcd123feab7a0b1dd7e3f84e3086ecc3fb252ceff781c620b85368885c6f5",
+            "greedy": [true, 131, 14],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 1,
+            "seed": 7922,
+            "shuffle": 0.5,
+            "columnsSha256": "9d6f9af2c5f593196b210fc535c83894ab379b8fac9c9e0a9110e47c7cc008d8",
+            "greedy": [true, 120, 14],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 2,
+            "seed": 15841,
+            "shuffle": 0.5,
+            "columnsSha256": "6643a4b864ac71ea8295e42eaf794bc74e9420f3179772538acaf56d98d0c95c",
+            "greedy": [true, 129, 15],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 3,
+            "seed": 23760,
+            "shuffle": 0.5,
+            "columnsSha256": "d7c52e9f9300c445d7b1fbf7ae046160aa294e9d1d342cd44f23b04891a5c717",
+            "greedy": [true, 125, 14],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          }
+        ],
+        "result": {
+          "path": "candidate",
+          "tried": 0,
+          "winRate": 1,
+          "greedy": [true, 131, 14],
+          "columns": [
+            [
+              [11, 1, 40],
+              [2, 0, 44]
+            ],
+            [
+              [0, 0, 40],
+              [1, 0, 40],
+              [9, 0, 40]
+            ],
+            [
+              [3, 0, 41],
+              [12, 2, 12],
+              [7, 0, 47]
+            ],
+            [
+              [10, 1, 41],
+              [4, 0, 44],
+              [6, 0, 44]
+            ],
+            [
+              [13, 3, 14],
+              [5, 0, 40],
+              [8, 0, 40]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "cat-one-column-no-big",
+      "description": "One tray column, bigChance 0: every crate small",
+      "pictureFrom": "Assets/_CubeHaul/Levels/Content/level-05-cat.level.json",
+      "edges": "bottom",
+      "slotCount": 5,
+      "generation": {
+        "seed": 9,
+        "shuffle": 1,
+        "targetWinRate": 0.5,
+        "columns": 1,
+        "bigChance": 0,
+        "candidates": 3
+      },
+      "generate": {
+        "columnsSha256": "ad8b26e883dcf168e2d73b688a26a90bb0eb5eb12ea2dfa4b8842626d45fbfa5",
+        "columns": [
+          [
+            [40, 1, 19],
+            [72, 5, 13],
+            [69, 4, 30],
+            [5, 0, 25],
+            [10, 0, 22],
+            [41, 1, 31],
+            [2, 0, 27],
+            [12, 0, 19],
+            [70, 4, 24],
+            [48, 1, 12],
+            [6, 0, 33],
+            [3, 0, 33],
+            [54, 1, 14],
+            [56, 1, 31],
+            [8, 0, 20],
+            [7, 0, 28],
+            [49, 1, 25],
+            [45, 1, 16],
+            [52, 1, 12],
+            [17, 0, 13],
+            [65, 2, 34],
+            [11, 0, 16],
+            [0, 0, 31],
+            [76, 5, 25],
+            [25, 0, 27],
+            [42, 1, 25],
+            [14, 0, 24],
+            [22, 0, 19],
+            [58, 1, 31],
+            [4, 0, 26],
+            [18, 0, 19],
+            [44, 1, 18],
+            [1, 0, 30],
+            [71, 4, 30],
+            [43, 1, 19],
+            [46, 1, 27],
+            [26, 0, 16],
+            [20, 0, 34],
+            [27, 0, 25],
+            [73, 5, 33],
+            [13, 0, 32],
+            [9, 0, 32],
+            [55, 1, 16],
+            [31, 0, 14],
+            [64, 1, 26],
+            [60, 1, 33],
+            [74, 5, 33],
+            [39, 0, 20],
+            [16, 0, 28],
+            [15, 0, 13],
+            [68, 4, 22],
+            [61, 1, 23],
+            [33, 0, 28],
+            [57, 1, 31],
+            [47, 1, 33],
+            [53, 1, 14],
+            [66, 3, 16],
+            [19, 0, 18],
+            [51, 1, 32],
+            [59, 1, 33],
+            [23, 0, 30],
+            [75, 5, 32],
+            [30, 0, 12],
+            [32, 0, 26],
+            [28, 0, 24],
+            [50, 1, 16],
+            [36, 0, 14],
+            [24, 0, 26],
+            [67, 3, 21],
+            [63, 1, 13],
+            [38, 0, 16],
+            [21, 0, 15],
+            [62, 1, 33],
+            [34, 0, 30],
+            [29, 0, 34],
+            [37, 0, 27],
+            [35, 0, 27]
+          ]
+        ]
+      },
+      "build": {
+        "tried": [
+          {
+            "phase": "candidate",
+            "k": 0,
+            "seed": 9,
+            "shuffle": 1,
+            "columnsSha256": "ad8b26e883dcf168e2d73b688a26a90bb0eb5eb12ea2dfa4b8842626d45fbfa5",
+            "greedy": [true, 475, 77],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 1,
+            "seed": 7928,
+            "shuffle": 1,
+            "columnsSha256": "c7d4296a98e080da0f0b44c4045e36cd25894609c22eea6c2645b0de9b67e649",
+            "greedy": [false, 54, 9]
+          },
+          {
+            "phase": "candidate",
+            "k": 2,
+            "seed": 15847,
+            "shuffle": 1,
+            "columnsSha256": "8d0b58470a5a6d8fe6782576df0a7fc65a12dc22d2651bfaf2308f97794490ea",
+            "greedy": [true, 671, 86],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          }
+        ],
+        "result": {
+          "path": "candidate",
+          "tried": 0,
+          "winRate": 1,
+          "greedy": [true, 475, 77],
+          "columns": [
+            [
+              [40, 1, 19],
+              [72, 5, 13],
+              [69, 4, 30],
+              [5, 0, 25],
+              [10, 0, 22],
+              [41, 1, 31],
+              [2, 0, 27],
+              [12, 0, 19],
+              [70, 4, 24],
+              [48, 1, 12],
+              [6, 0, 33],
+              [3, 0, 33],
+              [54, 1, 14],
+              [56, 1, 31],
+              [8, 0, 20],
+              [7, 0, 28],
+              [49, 1, 25],
+              [45, 1, 16],
+              [52, 1, 12],
+              [17, 0, 13],
+              [65, 2, 34],
+              [11, 0, 16],
+              [0, 0, 31],
+              [76, 5, 25],
+              [25, 0, 27],
+              [42, 1, 25],
+              [14, 0, 24],
+              [22, 0, 19],
+              [58, 1, 31],
+              [4, 0, 26],
+              [18, 0, 19],
+              [44, 1, 18],
+              [1, 0, 30],
+              [71, 4, 30],
+              [43, 1, 19],
+              [46, 1, 27],
+              [26, 0, 16],
+              [20, 0, 34],
+              [27, 0, 25],
+              [73, 5, 33],
+              [13, 0, 32],
+              [9, 0, 32],
+              [55, 1, 16],
+              [31, 0, 14],
+              [64, 1, 26],
+              [60, 1, 33],
+              [74, 5, 33],
+              [39, 0, 20],
+              [16, 0, 28],
+              [15, 0, 13],
+              [68, 4, 22],
+              [61, 1, 23],
+              [33, 0, 28],
+              [57, 1, 31],
+              [47, 1, 33],
+              [53, 1, 14],
+              [66, 3, 16],
+              [19, 0, 18],
+              [51, 1, 32],
+              [59, 1, 33],
+              [23, 0, 30],
+              [75, 5, 32],
+              [30, 0, 12],
+              [32, 0, 26],
+              [28, 0, 24],
+              [50, 1, 16],
+              [36, 0, 14],
+              [24, 0, 26],
+              [67, 3, 21],
+              [63, 1, 13],
+              [38, 0, 16],
+              [21, 0, 15],
+              [62, 1, 33],
+              [34, 0, 30],
+              [29, 0, 34],
+              [37, 0, 27],
+              [35, 0, 27]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "rocket-ten-columns-all-big",
+      "description": "Ten columns (a ragged last row), bigChance 1: big crates whenever there is room",
+      "pictureFrom": "Assets/_CubeHaul/Levels/Content/level-07-rocket.level.json",
+      "edges": "sides",
+      "slotCount": 6,
+      "generation": {
+        "seed": 4,
+        "shuffle": 0.7,
+        "targetWinRate": 0.6,
+        "columns": 10,
+        "bigChance": 1,
+        "candidates": 3
+      },
+      "generate": {
+        "columnsSha256": "72e32aae37652468a1005e33e8453b04892c940ef501437eabf13dca7f51cb2c",
+        "columns": [
+          [
+            [2, 0, 68],
+            [8, 0, 68],
+            [18, 0, 26]
+          ],
+          [
+            [5, 0, 65],
+            [12, 0, 74],
+            [17, 0, 20],
+            [25, 2, 12]
+          ],
+          [
+            [31, 5, 12],
+            [1, 0, 58],
+            [21, 2, 71]
+          ],
+          [
+            [32, 5, 32],
+            [16, 0, 58],
+            [13, 0, 64],
+            [24, 2, 66]
+          ],
+          [
+            [3, 0, 80],
+            [15, 0, 69],
+            [14, 0, 56],
+            [30, 4, 24]
+          ],
+          [
+            [10, 0, 67],
+            [20, 1, 18],
+            [27, 3, 66]
+          ],
+          [
+            [0, 0, 64],
+            [4, 0, 73],
+            [23, 2, 79]
+          ],
+          [
+            [26, 3, 60],
+            [9, 0, 79],
+            [29, 4, 28]
+          ],
+          [
+            [7, 0, 74],
+            [19, 1, 19],
+            [28, 3, 23]
+          ],
+          [
+            [11, 0, 75],
+            [6, 0, 77],
+            [22, 2, 69]
+          ]
+        ]
+      },
+      "build": {
+        "tried": [
+          {
+            "phase": "candidate",
+            "k": 0,
+            "seed": 4,
+            "shuffle": 0.7,
+            "columnsSha256": "72e32aae37652468a1005e33e8453b04892c940ef501437eabf13dca7f51cb2c",
+            "greedy": [true, 342, 33],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 1,
+            "seed": 7923,
+            "shuffle": 0.7,
+            "columnsSha256": "48c24e51a5dc27d0bb9b5d74db799487eaea713eb63aec5213c541eea0f71e85",
+            "greedy": [true, 358, 35],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 2,
+            "seed": 15842,
+            "shuffle": 0.7,
+            "columnsSha256": "34ba151cdf72e89ca512778ffd53a1f450444e17ab10593f50320eab718980e9",
+            "greedy": [true, 339, 34],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          }
+        ],
+        "result": {
+          "path": "candidate",
+          "tried": 0,
+          "winRate": 1,
+          "greedy": [true, 342, 33],
+          "columns": [
+            [
+              [2, 0, 68],
+              [8, 0, 68],
+              [18, 0, 26]
+            ],
+            [
+              [5, 0, 65],
+              [12, 0, 74],
+              [17, 0, 20],
+              [25, 2, 12]
+            ],
+            [
+              [31, 5, 12],
+              [1, 0, 58],
+              [21, 2, 71]
+            ],
+            [
+              [32, 5, 32],
+              [16, 0, 58],
+              [13, 0, 64],
+              [24, 2, 66]
+            ],
+            [
+              [3, 0, 80],
+              [15, 0, 69],
+              [14, 0, 56],
+              [30, 4, 24]
+            ],
+            [
+              [10, 0, 67],
+              [20, 1, 18],
+              [27, 3, 66]
+            ],
+            [
+              [0, 0, 64],
+              [4, 0, 73],
+              [23, 2, 79]
+            ],
+            [
+              [26, 3, 60],
+              [9, 0, 79],
+              [29, 4, 28]
+            ],
+            [
+              [7, 0, 74],
+              [19, 1, 19],
+              [28, 3, 23]
+            ],
+            [
+              [11, 0, 75],
+              [6, 0, 77],
+              [22, 2, 69]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "sunset-max-seed",
+      "description": "seed 2147483647: seed + 7919k passes 2^31 (int overflow in C#) and mulberry32 takes it modulo 2^32",
+      "pictureFrom": "Assets/_CubeHaul/Levels/Content/level-03-sunset.level.json",
+      "edges": "sides",
+      "slotCount": 5,
+      "generation": {
+        "seed": 2147483647,
+        "shuffle": 0.4,
+        "targetWinRate": 0.3,
+        "candidates": 5
+      },
+      "generate": {
+        "columnsSha256": "4e758b302fbc317164ccf9cccbf3162f785170429c6cc222075f988e950cb526",
+        "columns": [
+          [
+            [39, 4, 20],
+            [37, 4, 21],
+            [26, 3, 18],
+            [45, 4, 24],
+            [21, 2, 15],
+            [50, 4, 11],
+            [61, 5, 9],
+            [24, 2, 49],
+            [3, 0, 24],
+            [56, 4, 15],
+            [25, 2, 9],
+            [33, 3, 17],
+            [16, 1, 17]
+          ],
+          [
+            [59, 5, 10],
+            [0, 0, 11],
+            [48, 4, 21],
+            [8, 1, 17],
+            [22, 2, 21],
+            [44, 4, 17],
+            [51, 4, 43],
+            [23, 2, 24],
+            [55, 4, 17],
+            [13, 1, 12],
+            [35, 3, 14],
+            [14, 1, 23]
+          ],
+          [
+            [9, 1, 13],
+            [38, 4, 24],
+            [17, 2, 12],
+            [41, 4, 18],
+            [43, 4, 24],
+            [12, 1, 77],
+            [46, 4, 19],
+            [11, 1, 21],
+            [54, 4, 21],
+            [5, 0, 23],
+            [31, 3, 14],
+            [34, 3, 12]
+          ],
+          [
+            [1, 0, 15],
+            [18, 2, 43],
+            [42, 4, 19],
+            [7, 1, 11],
+            [40, 4, 16],
+            [20, 2, 21],
+            [52, 4, 20],
+            [28, 3, 21],
+            [53, 4, 18],
+            [30, 3, 12],
+            [29, 3, 10],
+            [32, 3, 18]
+          ],
+          [
+            [2, 0, 79],
+            [58, 5, 22],
+            [57, 5, 18],
+            [19, 2, 22],
+            [47, 4, 11],
+            [60, 5, 19],
+            [10, 1, 43],
+            [49, 4, 23],
+            [4, 0, 13],
+            [27, 3, 18],
+            [15, 1, 22],
+            [36, 3, 14],
+            [6, 0, 11]
+          ]
+        ]
+      },
+      "build": {
+        "tried": [
+          {
+            "phase": "candidate",
+            "k": 0,
+            "seed": 2147483647,
+            "shuffle": 0.4,
+            "columnsSha256": "4e758b302fbc317164ccf9cccbf3162f785170429c6cc222075f988e950cb526",
+            "greedy": [true, 266, 62],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 0.9583333333333334
+          },
+          {
+            "phase": "candidate",
+            "k": 1,
+            "seed": 2147491566,
+            "shuffle": 0.4,
+            "columnsSha256": "010a869c76ca13b908a6cba53c50051f492ad60ff93797c7538611132cd6ff57",
+            "greedy": [true, 285, 62],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 2,
+            "seed": 2147499485,
+            "shuffle": 0.4,
+            "columnsSha256": "35c0b687c428cb4297bec667008dd7e62fe35ac34b08c954968bd18b7855c66d",
+            "greedy": [true, 282, 59],
+            "games": [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 0.9583333333333334
+          },
+          {
+            "phase": "candidate",
+            "k": 3,
+            "seed": 2147507404,
+            "shuffle": 0.4,
+            "columnsSha256": "df1f28b123ec80b558b73f01ef8bec9502315bd416488cfd057a0257c110eb9b",
+            "greedy": [true, 272, 63],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          },
+          {
+            "phase": "candidate",
+            "k": 4,
+            "seed": 2147515323,
+            "shuffle": 0.4,
+            "columnsSha256": "3f2e82982fab275bde90d03a1d2ad6ca19a40b367315c1d387103f43aeb19a8b",
+            "greedy": [true, 282, 58],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+            "winRate": 0.9583333333333334
+          }
+        ],
+        "result": {
+          "path": "candidate",
+          "tried": 0,
+          "winRate": 0.9583333333333334,
+          "greedy": [true, 266, 62],
+          "columns": [
+            [
+              [39, 4, 20],
+              [37, 4, 21],
+              [26, 3, 18],
+              [45, 4, 24],
+              [21, 2, 15],
+              [50, 4, 11],
+              [61, 5, 9],
+              [24, 2, 49],
+              [3, 0, 24],
+              [56, 4, 15],
+              [25, 2, 9],
+              [33, 3, 17],
+              [16, 1, 17]
+            ],
+            [
+              [59, 5, 10],
+              [0, 0, 11],
+              [48, 4, 21],
+              [8, 1, 17],
+              [22, 2, 21],
+              [44, 4, 17],
+              [51, 4, 43],
+              [23, 2, 24],
+              [55, 4, 17],
+              [13, 1, 12],
+              [35, 3, 14],
+              [14, 1, 23]
+            ],
+            [
+              [9, 1, 13],
+              [38, 4, 24],
+              [17, 2, 12],
+              [41, 4, 18],
+              [43, 4, 24],
+              [12, 1, 77],
+              [46, 4, 19],
+              [11, 1, 21],
+              [54, 4, 21],
+              [5, 0, 23],
+              [31, 3, 14],
+              [34, 3, 12]
+            ],
+            [
+              [1, 0, 15],
+              [18, 2, 43],
+              [42, 4, 19],
+              [7, 1, 11],
+              [40, 4, 16],
+              [20, 2, 21],
+              [52, 4, 20],
+              [28, 3, 21],
+              [53, 4, 18],
+              [30, 3, 12],
+              [29, 3, 10],
+              [32, 3, 18]
+            ],
+            [
+              [2, 0, 79],
+              [58, 5, 22],
+              [57, 5, 18],
+              [19, 2, 22],
+              [47, 4, 11],
+              [60, 5, 19],
+              [10, 1, 43],
+              [49, 4, 23],
+              [4, 0, 13],
+              [27, 3, 18],
+              [15, 1, 22],
+              [36, 3, 14],
+              [6, 0, 11]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "mushroom-seed-0-max-shuffle",
+      "description": "seed 0, shuffle 100 (the schema maximum): the order is almost all noise",
+      "pictureFrom": "Assets/_CubeHaul/Levels/Content/level-02-mushroom.level.json",
+      "edges": "bottom",
+      "slotCount": 5,
+      "generation": {
+        "seed": 0,
+        "shuffle": 100,
+        "targetWinRate": 0.7,
+        "candidates": 3
+      },
+      "generate": {
+        "columnsSha256": "cd2a705213e7d7e521a079c8cd74c802cc482805128053cc24a4a81187b5c46b",
+        "columns": [
+          [
+            [61, 5, 10],
+            [56, 3, 14],
+            [7, 0, 19],
+            [10, 0, 22],
+            [57, 4, 17],
+            [42, 2, 22],
+            [12, 0, 23],
+            [29, 0, 47],
+            [31, 0, 12],
+            [45, 2, 19],
+            [14, 0, 10],
+            [3, 0, 19],
+            [8, 0, 19]
+          ],
+          [
+            [32, 0, 20],
+            [1, 0, 11],
+            [33, 1, 23],
+            [15, 0, 17],
+            [47, 2, 18],
+            [51, 3, 11],
+            [48, 2, 12],
+            [9, 0, 10],
+            [2, 0, 17],
+            [43, 2, 64],
+            [26, 0, 56],
+            [46, 2, 9],
+            [25, 0, 19]
+          ],
+          [
+            [17, 0, 13],
+            [30, 0, 71],
+            [50, 2, 24],
+            [34, 1, 22],
+            [38, 1, 16],
+            [60, 5, 66],
+            [58, 4, 17],
+            [22, 0, 24],
+            [11, 0, 10],
+            [44, 2, 12],
+            [6, 0, 15],
+            [27, 0, 16],
+            [55, 3, 17]
+          ],
+          [
+            [39, 1, 9],
+            [37, 1, 10],
+            [24, 0, 15],
+            [59, 4, 24],
+            [16, 0, 11],
+            [53, 3, 14],
+            [49, 2, 24],
+            [0, 0, 9],
+            [18, 0, 13],
+            [35, 1, 51],
+            [4, 0, 18],
+            [19, 0, 14],
+            [41, 1, 20]
+          ],
+          [
+            [62, 5, 11],
+            [64, 5, 16],
+            [36, 1, 22],
+            [23, 0, 17],
+            [52, 3, 19],
+            [21, 0, 20],
+            [28, 0, 10],
+            [54, 3, 15],
+            [5, 0, 10],
+            [13, 0, 16],
+            [40, 1, 21],
+            [63, 5, 9],
+            [20, 0, 15]
+          ]
+        ]
+      },
+      "build": {
+        "tried": [
+          {
+            "phase": "candidate",
+            "k": 0,
+            "seed": 0,
+            "shuffle": 100,
+            "columnsSha256": "cd2a705213e7d7e521a079c8cd74c802cc482805128053cc24a4a81187b5c46b",
+            "greedy": [false, 38, 8]
+          },
+          {
+            "phase": "candidate",
+            "k": 1,
+            "seed": 7919,
+            "shuffle": 100,
+            "columnsSha256": "45ca1bd1324340b49c999eb28e4e8022ea3778a24edfed4a9951481cd992aa14",
+            "greedy": [false, 43, 7]
+          },
+          {
+            "phase": "candidate",
+            "k": 2,
+            "seed": 15838,
+            "shuffle": 100,
+            "columnsSha256": "a5b667a930104ae2e2283fcf798fe5e7dcbed7c1ba03e1ad83317ab24eedcecf",
+            "greedy": [false, 61, 6]
+          },
+          {
+            "phase": "fallback",
+            "k": 1,
+            "seed": 1,
+            "shuffle": 87.5,
+            "columnsSha256": "68a47772509fa25e0274c548130a1b87c4be8e104232395fa4ae4703c6c68c6c",
+            "greedy": [false, 22, 7]
+          },
+          {
+            "phase": "fallback",
+            "k": 2,
+            "seed": 2,
+            "shuffle": 75,
+            "columnsSha256": "b7b6c2d50ea142bfc2add762c0561b5ec9e135b213a0ad47ca669c6ebe328883",
+            "greedy": [false, 51, 7]
+          },
+          {
+            "phase": "fallback",
+            "k": 3,
+            "seed": 3,
+            "shuffle": 62.5,
+            "columnsSha256": "b132acfdfe697d4df5e6b1015b58199647bd99c1d36fcd513c859059387d5592",
+            "greedy": [false, 84, 8]
+          },
+          {
+            "phase": "fallback",
+            "k": 4,
+            "seed": 4,
+            "shuffle": 50,
+            "columnsSha256": "6f5b97a16489b48277774e93d412c1bfccb34f87ed3df00b9d807c96274bc8f4",
+            "greedy": [false, 50, 8]
+          },
+          {
+            "phase": "fallback",
+            "k": 5,
+            "seed": 5,
+            "shuffle": 37.5,
+            "columnsSha256": "5bf3f709e5213332f05091113557cffb963e4f51774b753dae9715467d24c800",
+            "greedy": [false, 18, 6]
+          },
+          {
+            "phase": "fallback",
+            "k": 6,
+            "seed": 6,
+            "shuffle": 25,
+            "columnsSha256": "eef2834c9cb4733e5dc06dcba3da7862b391c39f2a5dff90ab94e52d5ba36271",
+            "greedy": [false, 5, 5]
+          },
+          {
+            "phase": "fallback",
+            "k": 7,
+            "seed": 7,
+            "shuffle": 12.5,
+            "columnsSha256": "ecae1cb67573699c96f0d008f4abd5deee88dcf421793aafeb8eec2dc0d4ec7a",
+            "greedy": [false, 73, 10]
+          },
+          {
+            "phase": "fallback",
+            "k": 8,
+            "seed": 8,
+            "shuffle": 0,
+            "columnsSha256": "ff234656217c79200c8d420a100d9be5e5afe81a79d2ae94b289201299b7832d",
+            "greedy": [true, 294, 55]
+          }
+        ],
+        "result": {
+          "path": "fallback",
+          "tried": 10,
+          "winRate": 0.6666666666666666,
+          "greedy": [true, 294, 55],
+          "columns": [
+            [
+              [30, 1, 80],
+              [1, 0, 20],
+              [47, 4, 23],
+              [48, 4, 10],
+              [11, 0, 21],
+              [13, 0, 17],
+              [35, 2, 16],
+              [41, 3, 23],
+              [16, 0, 20],
+              [22, 0, 15],
+              [23, 0, 58]
+            ],
+            [
+              [32, 1, 71],
+              [45, 4, 10],
+              [4, 0, 9],
+              [7, 0, 24],
+              [50, 5, 20],
+              [53, 5, 22],
+              [15, 0, 75],
+              [43, 3, 24],
+              [39, 2, 19],
+              [18, 0, 21],
+              [27, 0, 18]
+            ],
+            [
+              [28, 1, 11],
+              [0, 0, 19],
+              [2, 0, 16],
+              [8, 0, 10],
+              [9, 0, 42],
+              [52, 5, 17],
+              [36, 2, 57],
+              [37, 2, 20],
+              [54, 5, 21],
+              [20, 0, 10],
+              [26, 0, 17]
+            ],
+            [
+              [31, 1, 12],
+              [46, 4, 15],
+              [33, 1, 10],
+              [6, 0, 12],
+              [10, 0, 16],
+              [14, 0, 17],
+              [40, 3, 13],
+              [38, 2, 71],
+              [17, 0, 17],
+              [21, 0, 24],
+              [25, 0, 22]
+            ],
+            [
+              [29, 1, 10],
+              [49, 5, 17],
+              [3, 0, 12],
+              [5, 0, 10],
+              [51, 5, 15],
+              [12, 0, 59],
+              [34, 2, 21],
+              [42, 3, 18],
+              [44, 3, 12],
+              [19, 0, 13],
+              [24, 0, 24]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "bands-fallback",
+      "description": "No candidate wins with greedy play; the shuffle is backed off and fallback k = 3 is the first the solver wins",
+      "picture": {
+        "width": 6,
+        "height": 6,
+        "palette": ["#000000", "#000001", "#000002", "#000003"],
+        "cells": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
+      },
+      "edges": "bottom",
+      "slotCount": 2,
+      "generation": {
+        "seed": 5,
+        "shuffle": 3,
+        "columns": 1,
+        "minBlock": 2,
+        "maxBlock": 4,
+        "candidates": 2
+      },
+      "generate": {
+        "columnsSha256": "bd82e432af288dc06f829d7cfaf743c444b541573f2a95e2b70d1f00dd95f82c",
+        "columns": [
+          [
+            [0, 0, 8],
+            [5, 3, 6],
+            [3, 1, 5],
+            [2, 1, 7],
+            [1, 0, 4],
+            [4, 2, 6]
+          ]
+        ]
+      },
+      "build": {
+        "tried": [
+          {
+            "phase": "candidate",
+            "k": 0,
+            "seed": 5,
+            "shuffle": 3,
+            "columnsSha256": "bd82e432af288dc06f829d7cfaf743c444b541573f2a95e2b70d1f00dd95f82c",
+            "greedy": [false, 2, 2]
+          },
+          {
+            "phase": "candidate",
+            "k": 1,
+            "seed": 7924,
+            "shuffle": 3,
+            "columnsSha256": "a09df6dba80891091e1412bf683d0c8d647011b4a4c786b37b20c2dd624e53c4",
+            "greedy": [false, 3, 2]
+          },
+          {
+            "phase": "fallback",
+            "k": 1,
+            "seed": 6,
+            "shuffle": 2.625,
+            "columnsSha256": "22e62f910e9663871a5ec08327fc7bf3928347ef9db943f62c9f6dc8809fcb2e",
+            "greedy": [false, 10, 4]
+          },
+          {
+            "phase": "fallback",
+            "k": 2,
+            "seed": 7,
+            "shuffle": 2.25,
+            "columnsSha256": "f0e940a6f77b190e3fba51b4cace96279b008db3d67c25e59643524a6249f5ed",
+            "greedy": [false, 7, 2]
+          },
+          {
+            "phase": "fallback",
+            "k": 3,
+            "seed": 8,
+            "shuffle": 1.875,
+            "columnsSha256": "89b152b7dc808c9a4a5975bee9ad1af71cbbbf2130c4ef1306ad921da63409d2",
+            "greedy": [true, 27, 6]
+          }
+        ],
+        "result": {
+          "path": "fallback",
+          "tried": 4,
+          "winRate": 1,
+          "greedy": [true, 27, 6],
+          "columns": [
+            [
+              [5, 3, 6],
+              [3, 1, 4],
+              [0, 0, 7],
+              [4, 2, 6],
+              [2, 1, 8],
+              [1, 0, 5]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "stripes-unverified",
+      "description": "Neither a candidate nor a fallback wins: buildLevel warns and returns the unshuffled tray, not verified",
+      "picture": {
+        "width": 4,
+        "height": 6,
+        "palette": ["#000000", "#000001", "#000002", "#000003"],
+        "cells": [0, 1, 2, 3, 1, 2, 3, 0, 2, 3, 0, 1, 3, 0, 1, 2, 0, 1, 2, 3, 1, 2, 3, 0]
+      },
+      "edges": "bottom",
+      "slotCount": 1,
+      "generation": {
+        "seed": 1,
+        "shuffle": 1,
+        "columns": 1,
+        "minBlock": 2,
+        "maxBlock": 4,
+        "candidates": 2
+      },
+      "generate": {
+        "columnsSha256": "8c822f538fd75970df7575f942b35ecdfc8ddbca8a2272ee0029e576a0f078e5",
+        "columns": [
+          [
+            [1, 1, 6],
+            [2, 2, 6],
+            [0, 0, 6],
+            [3, 3, 6]
+          ]
+        ]
+      },
+      "build": {
+        "tried": [
+          {
+            "phase": "candidate",
+            "k": 0,
+            "seed": 1,
+            "shuffle": 1,
+            "columnsSha256": "8c822f538fd75970df7575f942b35ecdfc8ddbca8a2272ee0029e576a0f078e5",
+            "greedy": [false, 1, 1]
+          },
+          {
+            "phase": "candidate",
+            "k": 1,
+            "seed": 7920,
+            "shuffle": 1,
+            "columnsSha256": "1e756f2f67cc0aff3a7290482fada10b0cf0434f1cbc28203dc486fe91d5a3d4",
+            "greedy": [false, 1, 1]
+          },
+          {
+            "phase": "fallback",
+            "k": 1,
+            "seed": 2,
+            "shuffle": 0.875,
+            "columnsSha256": "e1f6715f730ef1f5542cb3790065b68ce59057b4b480d8a6fe9f439bb02a2c3c",
+            "greedy": [false, 1, 1]
+          },
+          {
+            "phase": "fallback",
+            "k": 2,
+            "seed": 3,
+            "shuffle": 0.75,
+            "columnsSha256": "c1ac8d1af82b55218ec9f25032ab197ebfb036603e5c9ab512146ffe18371889",
+            "greedy": [false, 1, 1]
+          },
+          {
+            "phase": "fallback",
+            "k": 3,
+            "seed": 4,
+            "shuffle": 0.625,
+            "columnsSha256": "9adfdb4591bf372c6fecedc017ca6ca2de85f2c2538bb0ed523bb166c771814b",
+            "greedy": [false, 1, 1]
+          },
+          {
+            "phase": "fallback",
+            "k": 4,
+            "seed": 5,
+            "shuffle": 0.5,
+            "columnsSha256": "ef9f789ed777fcb9fe7bd40b042711a47f22cf3dfa3d74e3745b2ad8cc1c2741",
+            "greedy": [false, 1, 1]
+          },
+          {
+            "phase": "fallback",
+            "k": 5,
+            "seed": 6,
+            "shuffle": 0.375,
+            "columnsSha256": "3e881e9123835521225a8ffb771a5f96a4fc857b3265093b9470e21756a9ae53",
+            "greedy": [false, 1, 1]
+          },
+          {
+            "phase": "fallback",
+            "k": 6,
+            "seed": 7,
+            "shuffle": 0.25,
+            "columnsSha256": "a94059f9a04e16bb3c4c39a15ec3cafd7ec117414bc6169ac5578ec35e0a3691",
+            "greedy": [false, 1, 1]
+          },
+          {
+            "phase": "fallback",
+            "k": 7,
+            "seed": 8,
+            "shuffle": 0.125,
+            "columnsSha256": "0498724776f95b737555c0b2d99be824e6ce25a7feec96ed5344ba463fc7f89d",
+            "greedy": [false, 1, 1]
+          },
+          {
+            "phase": "fallback",
+            "k": 8,
+            "seed": 9,
+            "shuffle": 0,
+            "columnsSha256": "f1efaf89d43e4b6da46da5f20b5cf7e63023e72b1847bb85e0cf505f03975886",
+            "greedy": [false, 1, 1]
+          },
+          {
+            "phase": "unverified",
+            "k": 0,
+            "seed": 1,
+            "shuffle": 0,
+            "columnsSha256": "f1efaf89d43e4b6da46da5f20b5cf7e63023e72b1847bb85e0cf505f03975886",
+            "greedy": [false, 1, 1]
+          }
+        ],
+        "result": {
+          "path": "unverified",
+          "tried": 10,
+          "winRate": 0,
+          "greedy": [false, 1, 1],
+          "columns": [
+            [
+              [0, 0, 6],
+              [1, 1, 6],
+              [2, 2, 6],
+              [3, 3, 6]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "round-half-1275-cubes",
+      "description": "1275 cubes: total / 150 = 8.5, so minBlock is Math.round(8.5) = 9 (round half up), not 8 (C# Math.Round's default, half to even)",
+      "picture": {
+        "width": 51,
+        "height": 25,
+        "palette": ["#000000", "#000001", "#000002"],
+        "cells": [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0]
+      },
+      "edges": "bottom",
+      "slotCount": 5,
+      "generation": {
+        "seed": 2,
+        "shuffle": 0.3,
+        "candidates": 1
+      },
+      "generate": {
+        "columnsSha256": "1ccac475f55007f80d45f2a5ab282ab69d99e8a887978bb78954f71ed871a4b7",
+        "columns": [
+          [
+            [0, 0, 13],
+            [4, 0, 10],
+            [42, 2, 14],
+            [6, 0, 21],
+            [47, 2, 21],
+            [24, 1, 22],
+            [12, 0, 78],
+            [14, 0, 12],
+            [30, 1, 21],
+            [58, 2, 14],
+            [18, 0, 9],
+            [57, 2, 23]
+          ],
+          [
+            [20, 1, 80],
+            [36, 2, 15],
+            [43, 2, 9],
+            [41, 2, 12],
+            [9, 0, 9],
+            [21, 1, 79],
+            [45, 2, 20],
+            [13, 0, 18],
+            [31, 1, 13],
+            [28, 1, 18],
+            [29, 1, 9],
+            [17, 0, 40]
+          ],
+          [
+            [19, 1, 21],
+            [1, 0, 17],
+            [8, 0, 14],
+            [39, 2, 18],
+            [46, 2, 15],
+            [51, 2, 20],
+            [26, 1, 10],
+            [48, 2, 23],
+            [53, 2, 18],
+            [56, 2, 10],
+            [32, 1, 22],
+            [33, 1, 14]
+          ],
+          [
+            [40, 2, 19],
+            [38, 2, 15],
+            [37, 2, 22],
+            [7, 0, 11],
+            [10, 0, 9],
+            [11, 0, 47],
+            [27, 1, 23],
+            [25, 1, 15],
+            [52, 2, 13],
+            [16, 0, 61],
+            [15, 0, 14],
+            [35, 1, 9]
+          ],
+          [
+            [5, 0, 12],
+            [3, 0, 14],
+            [2, 0, 18],
+            [44, 2, 21],
+            [22, 1, 11],
+            [49, 2, 10],
+            [50, 2, 9],
+            [23, 1, 9],
+            [54, 2, 47],
+            [34, 1, 48],
+            [55, 2, 23],
+            [59, 2, 13]
+          ]
+        ]
+      },
+      "build": {
+        "tried": [
+          {
+            "phase": "candidate",
+            "k": 0,
+            "seed": 2,
+            "shuffle": 0.3,
+            "columnsSha256": "1ccac475f55007f80d45f2a5ab282ab69d99e8a887978bb78954f71ed871a4b7",
+            "greedy": [true, 260, 60],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          }
+        ],
+        "result": {
+          "path": "candidate",
+          "tried": 0,
+          "winRate": 1,
+          "greedy": [true, 260, 60],
+          "columns": [
+            [
+              [0, 0, 13],
+              [4, 0, 10],
+              [42, 2, 14],
+              [6, 0, 21],
+              [47, 2, 21],
+              [24, 1, 22],
+              [12, 0, 78],
+              [14, 0, 12],
+              [30, 1, 21],
+              [58, 2, 14],
+              [18, 0, 9],
+              [57, 2, 23]
+            ],
+            [
+              [20, 1, 80],
+              [36, 2, 15],
+              [43, 2, 9],
+              [41, 2, 12],
+              [9, 0, 9],
+              [21, 1, 79],
+              [45, 2, 20],
+              [13, 0, 18],
+              [31, 1, 13],
+              [28, 1, 18],
+              [29, 1, 9],
+              [17, 0, 40]
+            ],
+            [
+              [19, 1, 21],
+              [1, 0, 17],
+              [8, 0, 14],
+              [39, 2, 18],
+              [46, 2, 15],
+              [51, 2, 20],
+              [26, 1, 10],
+              [48, 2, 23],
+              [53, 2, 18],
+              [56, 2, 10],
+              [32, 1, 22],
+              [33, 1, 14]
+            ],
+            [
+              [40, 2, 19],
+              [38, 2, 15],
+              [37, 2, 22],
+              [7, 0, 11],
+              [10, 0, 9],
+              [11, 0, 47],
+              [27, 1, 23],
+              [25, 1, 15],
+              [52, 2, 13],
+              [16, 0, 61],
+              [15, 0, 14],
+              [35, 1, 9]
+            ],
+            [
+              [5, 0, 12],
+              [3, 0, 14],
+              [2, 0, 18],
+              [44, 2, 21],
+              [22, 1, 11],
+              [49, 2, 10],
+              [50, 2, 9],
+              [23, 1, 9],
+              [54, 2, 47],
+              [34, 1, 48],
+              [55, 2, 23],
+              [59, 2, 13]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "round-half-1040-cubes",
+      "description": "1040 cubes: total / 32 = 32.5 (bigMin 33, not 32) and total / 16 = 65 (maxBlock 65)",
+      "picture": {
+        "width": 52,
+        "height": 20,
+        "palette": ["#000000", "#000001", "#000002", "#000003"],
+        "cells": [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 0, 0, 0, 0, 1, 1, 1]
+      },
+      "edges": "all",
+      "slotCount": 5,
+      "generation": {
+        "seed": 6,
+        "shuffle": 0.3,
+        "candidates": 1
+      },
+      "generate": {
+        "columnsSha256": "6309237d0c84c567af6efe0ad6460319f65fb5a6fc7c06bfdf7274425a753bf6",
+        "columns": [
+          [
+            [33, 2, 8],
+            [18, 1, 17],
+            [0, 0, 7],
+            [4, 0, 9],
+            [38, 2, 38],
+            [36, 2, 10],
+            [53, 3, 12],
+            [24, 1, 9],
+            [43, 2, 36],
+            [55, 3, 7],
+            [59, 3, 15],
+            [45, 2, 15]
+          ],
+          [
+            [1, 0, 9],
+            [46, 3, 52],
+            [37, 2, 19],
+            [52, 3, 8],
+            [20, 1, 18],
+            [54, 3, 57],
+            [39, 2, 15],
+            [7, 0, 17],
+            [28, 1, 10],
+            [26, 1, 7],
+            [31, 1, 14],
+            [14, 0, 11]
+          ],
+          [
+            [15, 1, 19],
+            [2, 0, 7],
+            [21, 1, 18],
+            [47, 3, 16],
+            [22, 1, 14],
+            [50, 3, 13],
+            [8, 0, 13],
+            [41, 2, 14],
+            [11, 0, 19],
+            [57, 3, 12],
+            [29, 1, 11],
+            [58, 3, 17]
+          ],
+          [
+            [3, 0, 63],
+            [17, 1, 10],
+            [34, 2, 13],
+            [48, 3, 18],
+            [23, 1, 18],
+            [49, 3, 9],
+            [27, 1, 10],
+            [9, 0, 9],
+            [10, 0, 19],
+            [56, 3, 7],
+            [12, 0, 19],
+            [32, 1, 7]
+          ],
+          [
+            [35, 2, 47],
+            [19, 1, 14],
+            [16, 1, 14],
+            [6, 0, 34],
+            [5, 0, 11],
+            [40, 2, 18],
+            [51, 3, 13],
+            [25, 1, 11],
+            [42, 2, 16],
+            [30, 1, 41],
+            [44, 2, 7],
+            [13, 0, 19]
+          ]
+        ]
+      },
+      "build": {
+        "tried": [
+          {
+            "phase": "candidate",
+            "k": 0,
+            "seed": 6,
+            "shuffle": 0.3,
+            "columnsSha256": "6309237d0c84c567af6efe0ad6460319f65fb5a6fc7c06bfdf7274425a753bf6",
+            "greedy": [true, 232, 60],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          }
+        ],
+        "result": {
+          "path": "candidate",
+          "tried": 0,
+          "winRate": 1,
+          "greedy": [true, 232, 60],
+          "columns": [
+            [
+              [33, 2, 8],
+              [18, 1, 17],
+              [0, 0, 7],
+              [4, 0, 9],
+              [38, 2, 38],
+              [36, 2, 10],
+              [53, 3, 12],
+              [24, 1, 9],
+              [43, 2, 36],
+              [55, 3, 7],
+              [59, 3, 15],
+              [45, 2, 15]
+            ],
+            [
+              [1, 0, 9],
+              [46, 3, 52],
+              [37, 2, 19],
+              [52, 3, 8],
+              [20, 1, 18],
+              [54, 3, 57],
+              [39, 2, 15],
+              [7, 0, 17],
+              [28, 1, 10],
+              [26, 1, 7],
+              [31, 1, 14],
+              [14, 0, 11]
+            ],
+            [
+              [15, 1, 19],
+              [2, 0, 7],
+              [21, 1, 18],
+              [47, 3, 16],
+              [22, 1, 14],
+              [50, 3, 13],
+              [8, 0, 13],
+              [41, 2, 14],
+              [11, 0, 19],
+              [57, 3, 12],
+              [29, 1, 11],
+              [58, 3, 17]
+            ],
+            [
+              [3, 0, 63],
+              [17, 1, 10],
+              [34, 2, 13],
+              [48, 3, 18],
+              [23, 1, 18],
+              [49, 3, 9],
+              [27, 1, 10],
+              [9, 0, 9],
+              [10, 0, 19],
+              [56, 3, 7],
+              [12, 0, 19],
+              [32, 1, 7]
+            ],
+            [
+              [35, 2, 47],
+              [19, 1, 14],
+              [16, 1, 14],
+              [6, 0, 34],
+              [5, 0, 11],
+              [40, 2, 18],
+              [51, 3, 13],
+              [25, 1, 11],
+              [42, 2, 16],
+              [30, 1, 41],
+              [44, 2, 7],
+              [13, 0, 19]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "round-half-1000-cubes",
+      "description": "1000 cubes: total / 16 = 62.5, so maxBlock is 63, not 62",
+      "picture": {
+        "width": 40,
+        "height": 25,
+        "palette": ["#000000", "#000001"],
+        "cells": [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1]
+      },
+      "edges": "sides",
+      "slotCount": 5,
+      "generation": {
+        "seed": 8,
+        "shuffle": 0.3,
+        "candidates": 1
+      },
+      "generate": {
+        "columnsSha256": "2592a522189f68f8862598525a445a9e6cd6c3883edd2db69bf4a5ffe5fc8a19",
+        "columns": [
+          [
+            [7, 0, 18],
+            [8, 0, 8],
+            [29, 1, 8],
+            [37, 1, 55],
+            [13, 0, 13],
+            [18, 0, 16],
+            [17, 0, 13],
+            [39, 1, 17],
+            [48, 1, 13],
+            [26, 0, 32],
+            [53, 1, 12]
+          ],
+          [
+            [30, 1, 63],
+            [11, 0, 16],
+            [33, 1, 16],
+            [1, 0, 15],
+            [35, 1, 44],
+            [14, 0, 13],
+            [23, 0, 45],
+            [20, 0, 8],
+            [40, 1, 14],
+            [47, 1, 11],
+            [52, 1, 15]
+          ],
+          [
+            [2, 0, 12],
+            [3, 0, 9],
+            [28, 1, 9],
+            [12, 0, 45],
+            [10, 0, 12],
+            [38, 1, 10],
+            [21, 0, 18],
+            [22, 0, 11],
+            [42, 1, 8],
+            [25, 0, 17],
+            [50, 1, 10]
+          ],
+          [
+            [6, 0, 9],
+            [32, 1, 62],
+            [31, 1, 9],
+            [9, 0, 32],
+            [16, 0, 15],
+            [19, 0, 10],
+            [44, 1, 17],
+            [41, 1, 18],
+            [45, 1, 13],
+            [51, 1, 7]
+          ],
+          [
+            [0, 0, 14],
+            [4, 0, 7],
+            [5, 0, 7],
+            [15, 0, 59],
+            [34, 1, 12],
+            [36, 1, 15],
+            [43, 1, 11],
+            [24, 0, 18],
+            [46, 1, 15],
+            [49, 1, 16],
+            [27, 0, 8]
+          ]
+        ]
+      },
+      "build": {
+        "tried": [
+          {
+            "phase": "candidate",
+            "k": 0,
+            "seed": 8,
+            "shuffle": 0.3,
+            "columnsSha256": "2592a522189f68f8862598525a445a9e6cd6c3883edd2db69bf4a5ffe5fc8a19",
+            "greedy": [true, 205, 54],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          }
+        ],
+        "result": {
+          "path": "candidate",
+          "tried": 0,
+          "winRate": 1,
+          "greedy": [true, 205, 54],
+          "columns": [
+            [
+              [7, 0, 18],
+              [8, 0, 8],
+              [29, 1, 8],
+              [37, 1, 55],
+              [13, 0, 13],
+              [18, 0, 16],
+              [17, 0, 13],
+              [39, 1, 17],
+              [48, 1, 13],
+              [26, 0, 32],
+              [53, 1, 12]
+            ],
+            [
+              [30, 1, 63],
+              [11, 0, 16],
+              [33, 1, 16],
+              [1, 0, 15],
+              [35, 1, 44],
+              [14, 0, 13],
+              [23, 0, 45],
+              [20, 0, 8],
+              [40, 1, 14],
+              [47, 1, 11],
+              [52, 1, 15]
+            ],
+            [
+              [2, 0, 12],
+              [3, 0, 9],
+              [28, 1, 9],
+              [12, 0, 45],
+              [10, 0, 12],
+              [38, 1, 10],
+              [21, 0, 18],
+              [22, 0, 11],
+              [42, 1, 8],
+              [25, 0, 17],
+              [50, 1, 10]
+            ],
+            [
+              [6, 0, 9],
+              [32, 1, 62],
+              [31, 1, 9],
+              [9, 0, 32],
+              [16, 0, 15],
+              [19, 0, 10],
+              [44, 1, 17],
+              [41, 1, 18],
+              [45, 1, 13],
+              [51, 1, 7]
+            ],
+            [
+              [0, 0, 14],
+              [4, 0, 7],
+              [5, 0, 7],
+              [15, 0, 59],
+              [34, 1, 12],
+              [36, 1, 15],
+              [43, 1, 11],
+              [24, 0, 18],
+              [46, 1, 15],
+              [49, 1, 16],
+              [27, 0, 8]
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "single-cube",
+      "description": "The smallest picture: one cube, one crate",
+      "picture": {
+        "width": 1,
+        "height": 1,
+        "palette": ["#000000"],
+        "cells": [0]
+      },
+      "edges": "bottom",
+      "slotCount": 5,
+      "generation": {
+        "seed": 1,
+        "shuffle": 0
+      },
+      "generate": {
+        "columnsSha256": "53a49968fcedc168d50ff328e03a64458c4b4f6e6d25a87551286bb6fb52c6cd",
+        "columns": [
+          [],
+          [],
+          [],
+          [],
+          [
+            [0, 0, 1]
+          ]
+        ]
+      },
+      "build": {
+        "tried": [
+          {
+            "phase": "candidate",
+            "k": 0,
+            "seed": 1,
+            "shuffle": 0,
+            "columnsSha256": "53a49968fcedc168d50ff328e03a64458c4b4f6e6d25a87551286bb6fb52c6cd",
+            "greedy": [true, 1, 1],
+            "games": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "winRate": 1
+          }
+        ],
+        "result": {
+          "path": "candidate",
+          "tried": 0,
+          "winRate": 1,
+          "greedy": [true, 1, 1],
+          "columns": [
+            [],
+            [],
+            [],
+            [],
+            [
+              [0, 0, 1]
+            ]
+          ]
+        }
+      }
+    }
+  ]
+}
