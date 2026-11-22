@@ -225,6 +225,23 @@ namespace CubeHaul.Tests.Project
             CollectionAssert.IsEmpty(Directory.GetFiles(Path.Combine(Repo, "Assets"), "*.asset"), "rendering assets live in " + rendering);
         }
 
+        /// <summary>
+        /// Unity runs the tests with its own NUnit (com.unity.ext.nunit, NUnit 3.5), which ignores .Within() on a tuple
+        /// and compares it exactly; NUnit 3.14 here applies the tolerance to each item. Such a test passes here and fails
+        /// in Unity, so tolerances are written per value.
+        /// </summary>
+        [Test]
+        public void TestsDoNotPutAToleranceOnATuple()
+        {
+            var tupleWithin = new Regex(@"Is\.EqualTo\(\([^;]*,[^;]*\)\)\s*\.Within", RegexOptions.Multiline);
+            foreach (string file in Directory.GetFiles(Path.Combine(Root, "Tests"), "*.cs", SearchOption.AllDirectories))
+            {
+                string[] lines = File.ReadAllLines(file);
+                for (int k = 0; k < lines.Length; k++)
+                    Assert.That(tupleWithin.IsMatch(lines[k]), Is.False, $"{file}:{k + 1}: compare the values one by one with .Within");
+            }
+        }
+
         [Test]
         public void AssetsAreTextWithVisibleMetaFiles()
         {
