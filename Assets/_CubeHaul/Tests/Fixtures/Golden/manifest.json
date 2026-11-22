@@ -73,6 +73,126 @@
       "sha256": "66a8f03352fce524f5529f2472e3d61bf7c025ac223b7ff412dee6b5341caa22"
     },
     {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p01-strawberry-greedy-step.json",
+      "bytes": 43232,
+      "sha256": "68333854e7f28ae8f28c8c579521a91e1e75f6b7770c312aefd2be753bc471f7"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p02-strawberry-generated-delayed.json",
+      "bytes": 55574,
+      "sha256": "89808c3bcee7ffc9254a4b9b4a1d4d8d04e4dfda59eb21e522ca2a289889364e"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p03-strawberry-one-slot-random.json",
+      "bytes": 54090,
+      "sha256": "8650b2cd6ccbc1a9dde9ca2218ba11d28f30f1e63b2415b907ffbd9128709a96"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p04-mushroom-fifo.json",
+      "bytes": 78779,
+      "sha256": "9537f4891511649875265b65e9da10f262fbc9196741a3c8b448037139d6a2eb"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p05-mushroom-abuse.json",
+      "bytes": 61608,
+      "sha256": "b7a8c708d80751bbdd1fc82d9c94a5e0d8d7427b8e0c5c6ea335e7d8408afb7d"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p06-mushroom-all-edges-fifo0.json",
+      "bytes": 72978,
+      "sha256": "d90b0db5867e6678505083f40dc8469498abff134fb7208e3dcac4415c263203"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p07-sunset-random-step.json",
+      "bytes": 39056,
+      "sha256": "28419dcddf5470dd7a11c09af6d3f165352d3c187a4955c3fdb06fb0ab747937"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p08-sunset-built-sides-delayed.json",
+      "bytes": 82207,
+      "sha256": "9675822d0d5e8efa86c681c7a29d662981f9cfd5431bf9c677423389ff167ca7"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p09-sunset-six-slots-jam.json",
+      "bytes": 76725,
+      "sha256": "c83d7edf1700783a1abe0717f9da524fa85c9d9465024507b3cd387fe250c686"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p10-planet-greedy-step.json",
+      "bytes": 160816,
+      "sha256": "02172f5224c11d2770a2a4d9ea507ac02183533063b872528b3e3dbfc2f136d6"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p11-planet-generated-seven-slots-fifo.json",
+      "bytes": 76303,
+      "sha256": "5963476157b3149fc39b634e499ac7097ba513bc54afbde956ab8d64c8397629"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p12-cat-jam.json",
+      "bytes": 30401,
+      "sha256": "34a96f9539b06d662d10d2f407d1f0a0a194fc2255b78cc7c1a091f7f5394457"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p13-cat-generated-max-seed-random.json",
+      "bytes": 100114,
+      "sha256": "9d79bcbf5735c7643770165f15d8d2b872e491292f81e76a0cdcf42855a2701e"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p14-cat-reverse-collect.json",
+      "bytes": 75808,
+      "sha256": "c50cb9b9f2eb01d099ac0af3d3086865983b9302559f51ebfbe80a9528902485"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p15-cactus-delayed.json",
+      "bytes": 75956,
+      "sha256": "dea39dc587522997be85863006ac0b264ebe68d3cc61e694d4b06d240df70449"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p16-cactus-two-slots-greedy.json",
+      "bytes": 86181,
+      "sha256": "3d255cc5285050433825a3006998f5426b5c53f49e1df3df9f9ea1d36c135de7"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p17-rocket-random-step.json",
+      "bytes": 92843,
+      "sha256": "896f057659c43ab065ec5df33b0c183a4e56b804226cc19f31eabd89200409b4"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p18-rocket-generated-shuffle100-fifo.json",
+      "bytes": 78039,
+      "sha256": "37a1c388f142dca9a5be2a246c6a45ee21439a92307f125b97edbd803fc38542"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p19-duck-abuse.json",
+      "bytes": 62717,
+      "sha256": "3ca986d19e49a5b6930bb778c6b6321d93d6624156f00a46dce90a5b2be3009c"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p20-duck-built-greedy.json",
+      "bytes": 147598,
+      "sha256": "3a0ca2be9fc73e61538a94ea5b5523573c434132199e8cabb56d4ea5b297598c"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p21-icecream-sides-delayed.json",
+      "bytes": 61702,
+      "sha256": "a16d176dc7bfddf94309855fa72dd209a7c97743374718912ab2c3f19e3d2ab6"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p22-icecream-mostly-held.json",
+      "bytes": 66414,
+      "sha256": "30da7c83956b53924e08d4bdcc0bad1410e862bd757254bc867389346c915414"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p23-watermelon-greedy-step.json",
+      "bytes": 114658,
+      "sha256": "983cb16f566dc39afe21373804d01e8f853f87b847bdb013fd36a438dc4165e2"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/parity/p24-watermelon-one-slot-jam.json",
+      "bytes": 48475,
+      "sha256": "62804cc60ac25671870f1760fb0b2f8b57b1ee9eda87ccd603688f696c9ad15b"
+    },
+    {
       "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/peel-layers.json",
       "bytes": 61343,
       "sha256": "674d7689046d44df52e0497dbe34cdee62fe0ae525d51878b5a94858d83efed2"

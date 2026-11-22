@@ -26,7 +26,7 @@ npm run check:golden
 | `npm run export:golden` | Kaynağı sabit commit'ten çeker, tüm dosyaları üretir. Değişmeyen dosyalara dokunmaz, artık üretilmeyen eski dosyaları siler. Tekrar tekrar çalıştırılabilir |
 | `npm run check:golden` | Hiçbir şey yazmaz; eksik, farklı ya da eski bir dosya varsa listeler ve 1 ile çıkar (CI için) |
 
-Üretim yaklaşık 7 saniye sürer. Tüm rastgelelik `mulberry32` tohumlarından gelir; saat, `Math.random` ya da makineye
+Üretim yaklaşık 11 saniye sürer. Tüm rastgelelik `mulberry32` tohumlarından gelir; saat, `Math.random` ya da makineye
 bağlı hiçbir girdi kullanılmaz.
 
 ## 2. Dosyalar
@@ -40,6 +40,7 @@ bağlı hiçbir girdi kullanılmaz.
 | `…/Golden/build.json` | `buildLevel`'in tam izi: denenen her aday (tohum, kolon özeti, açgözlü çözücü sonucu, 24 rastgele oyunun tek tek sonucu, kazanma oranı), seçilen aday | G-06, G-07 |
 | `…/Golden/generator-cases.json` | Yerleşik bölümlerin ulaşmadığı üretim durumları (Görev 09): elle verilen seçenekler, büyük seed'ler, `buildLevel`'in yedek ve doğrulanamadı yolları; her durum için tam `generateLevel` tepsisi, `buildLevel`'in denediği her tepsi ve döndürdüğü tepsi | G-05, G-06, G-07 |
 | `…/Golden/scenarios/*.json` | 10 senaryo: her işlemden sonra oyunun tam durumu | G-08 |
+| `…/Golden/parity/p01…p24-*.json` | 24 eşdeğerlik senaryosu (Görev 10): 10 bölüm, farklı tepsi seed'leri, kenarlar, slot sayıları ve girdi politikaları; her çağrıdan sonra kuralların bildirdiği durum ([PARITY.md](PARITY.md)) | G-08 |
 | `…/Golden/manifest.json` | Diğer tüm dosyaların boyutu ve SHA-256'sı | — |
 
 Bölüm kimlikleri ve sıra: `strawberry`, `mushroom`, `sunset`, `ringed-planet`, `cat`, `cactus`, `rocket`,
@@ -152,6 +153,7 @@ ve kazanma oranı), `build.result` (yol, seçilen deneme, kazanma oranı, açgö
 |---|---|
 | `Tools/ts-reference › tests/golden.test.ts` (28) | Diskteki dosyalar dışa aktarıcının çıktısıyla bayt bayt aynı; eski dosya yok; ikinci üretim aynı; manifest doğru; 10 bölüm geçerli ve resmi, paleti, tepsisi TS'tekiyle aynı; `rng.json` = `mulberry32`; `build.json`'da seçilen aday bölüm dosyasının tepsisi ve oyun sonuçlarının ortalaması kazanma oranı; **her senaryo yalnızca kaydedilen hamlelerden yeni bir `Game` üzerinde birebir aynı durumları veriyor** ve her adımda invariantlar sağlanıyor |
 | `Assets/_CubeHaul/Tests/EditMode › GeneratorGoldenTests` (35, Görev 09) | `rng`, `generate`, `build`, `generator-cases` dosyalarının C# RNG, üretici ve çözücülerle birebir tutması; 10 bölüm dosyasının generation ayarlarından byte byte yeniden üretilmesi ([LEVEL_GENERATION §6](LEVEL_GENERATION.md#6-doğrulama)) |
+| `Assets/_CubeHaul/Tests/EditMode › Parity/ParityTests` (41, Görev 10) | 24 eşdeğerlik senaryosu adım adım, bölüm başına kabul testi, ilk farkı gösteren rapor, kapsam ve tekrarlanabilirlik ([PARITY.md](PARITY.md)) |
 | `Tools/dotnet/CubeHaul.Tests › GoldenFixtureTests` (25) | Manifest SHA-256'ları ve boyutları tutuyor (satır sonu değişirse yakalar), 10 bölüm C# okuyucusuyla hatasız okunuyor, tüm dosyalar ayrıştırılıyor, senaryolar iyi biçimli, `fnv1a` tanımı iki dilde aynı |
 
 `.gitattributes` JSON dosyalarını LF satır sonuyla sabitler. Windows'ta git'in satır sonlarını CRLF'e çevirmesi

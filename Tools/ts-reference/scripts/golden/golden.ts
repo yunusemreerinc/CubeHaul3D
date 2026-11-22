@@ -16,6 +16,7 @@ import { readLevelDefinition } from "../../../level-format/src/validate";
 import { builtInDefinition } from "../level-examples";
 import { columnsSha256, sha256 } from "./hash";
 import { stringify, toFile } from "./json";
+import { parityFiles } from "./parity";
 import { Recorder } from "./snapshot";
 
 export const SOURCE = {
@@ -41,7 +42,7 @@ export const LEVEL_IDS = [
 export const levelFile = (i: number) => `${LEVELS_DIR}/level-${String(i + 1).padStart(2, "0")}-${LEVEL_IDS[i]}.level.json`;
 
 const ref = { builtInLevels, buildLevel, solveGreedy };
-const header = (kind: string, description: string) => ({ format: `cubehaul.golden.${kind}`, version: 1, source: SOURCE, description });
+export const header = (kind: string, description: string) => ({ format: `cubehaul.golden.${kind}`, version: 1, source: SOURCE, description });
 
 /** A static LevelDefinition as a cube-hunt Level. */
 export function toLevel(d: LevelDefinition): Level {
@@ -612,6 +613,7 @@ export function buildGoldenFiles(): Record<string, string> {
   files[`${GOLDEN_DIR}/build.json`] = toFile(buildFixture());
   files[`${GOLDEN_DIR}/generator-cases.json`] = toFile(genCasesFixture(files));
   for (const s of SCENARIOS) files[`${GOLDEN_DIR}/scenarios/${s.name}.json`] = toFile(runScenario(s, files));
+  Object.assign(files, parityFiles(files));
   const manifest = {
     ...header("manifest", "Every golden file with its sha256 and size in bytes (UTF-8, LF line endings). Regenerate with `npm run export:golden` in Tools/ts-reference."),
     files: Object.keys(files)
