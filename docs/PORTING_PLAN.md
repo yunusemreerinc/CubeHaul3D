@@ -566,7 +566,19 @@ Böylece bu katmanlar istenirse Unity dışında, `dotnet test` ile de çalışt
 > değiştirmez): renk başına `Set` yerine konum dizinli diziler; `ReachableCells` artan sırada döner; `OpensUp` claim
 > edilmiş hücre listesinden başlar; flood/mesafe/`OpensUp` tamponları bir kez ayrılır — ilk kurulumdan sonra
 > `PickTarget`, `Claim`, `Eat`, `OpensUp` hiç bellek ayırmaz (46×46 tahta ≈ 124 KB). `OpenSides` bayrak (`SideMask`),
-> `Neighbors` çağıranın dizisine yazar. `Game` bir sonraki adım.
+> `Neighbors` çağıranın dizisine yazar.
+>
+> **Durum (Görev 08):** `Game`, `GameState` + `GameEngine` olarak yazıldı — `Assets/_CubeHaul/Domain/GameState.cs`,
+> `GameEngine.cs`, `Crate.cs`; bölümden oyun: `LevelDefinition.CreateGame()` (`Levels/Scripts/GameFactory.cs`).
+> `GameState` salt okunur sorgular (`Front`, `CanTap`, `SlotCanEat`, `SlotBlocked`, `IsStuck`, `TrayCount`, `Status`,
+> kolon/slot erişimi), `GameEngine` durumu değiştiren çağrılar (`Tap`, `Tick(ready)`, `Collect`, `Step`, `AddSlot`).
+> Zamanlama sözleşmesi korunur: `Tick` küpü yalnızca **claim** eder (küp tahtada kalır, arkasını kapatır, `Pending`
+> artar), küp ancak `Collect` gelince silinir; `Step` = `Tick` + hepsini hemen topla. 10 golden senaryo yalnızca
+> kaydedilen çağrılardan yeni bir `GameEngine` üzerinde tekrar oynatılıyor; her çağrının sonucu (slot, gönderilen
+> kamyonlar) ve sonraki durumun her alanı (status, kolonlar, slotlar, tahta, tüm sorgular) TS ile aynı. F-2 (küpsüz
+> bölüm `Playing` başlar), F-3 (`Collect` claim şartı aramaz) ve sınırsız `AddSlot` aynen korundu. Her kare yapılan
+> çağrılar (`Tick` önbelleğe alınmış `ready` ve yeniden kullanılan liste ile, `Collect`, `Tap`, sorgular) bellek
+> ayırmaz.
 
 | C# türü | TS karşılığı | Tasarım notu |
 |---|---|---|
@@ -579,7 +591,8 @@ Böylece bu katmanlar istenirse Unity dışında, `dotnet test` ile de çalışt
 | `sealed class Board` | `Board` | Aşağıda |
 | `enum GameStatus { Playing, Won, Stuck }` | `Status` | |
 | `readonly struct Dispatch` (`Slot`, `Cell`, `Color`) | `Dispatch` | |
-| `sealed class Game` | `Game` | Aşağıda |
+| `readonly struct CrateSpec` (`Id`, `Color`, `Count`) | `Block` (veri) | Motorun kurucusuna verilen tepsi; motor kopyalar |
+| `sealed class GameState` + `sealed class GameEngine` | `Game` | Aşağıda; sorgular `GameState`'te, değişiklikler `GameEngine`'de |
 
 **`Board` genel arayüzü** (TS ile aynı adlar, PascalCase):
 
@@ -602,23 +615,30 @@ void Claim(int i); void Eat(int i)
 `PickTarget` sonucu kümenin gezinme sırasından bağımsızdır (eşitlikte küçük indeks), bu yüzden `HashSet` güvenlidir;
 yine de sıraya bağlı hiçbir dış davranış `HashSet` sırasına dayanmamalıdır (R-06).
 
-**`Game` genel arayüzü:**
+**`Game` genel arayüzü** (Görev 08'de yazıldığı şekliyle):
 
 ```text
-Game(Level level)
-Level Level; Board Board; List<List<Crate>> Columns; List<Crate?> Slots; GameStatus Status
-Crate? Front(int col); bool HasFreeSlot(); bool CanTap(int col)
+GameEngine(Board board, IReadOnlyList<IReadOnlyList<CrateSpec>> columns, int slotCount)   // F-2: durum güncellenmez
+LevelDefinition.CreateGame()                // yeni Board + statik tepsinin kopyası; bölüm değişmez (B-16)
+GameState State; Board Board; GameStatus Status
 int Tap(int col)                            // slot indeksi ya da -1
-bool SlotCanEat(int slot); bool SlotBlocked(int slot)
-void AddSlot()
 int Tick(Func<int,bool> ready, List<Dispatch> output)    // tahsis yapmayan; null ready = hepsi hazır
-void Collect(int cell)
-int Step(List<Dispatch> output)
-bool IsStuck(); int TrayCount()
+List<Dispatch> Tick(); List<Dispatch> Tick(Func<int,bool> ready)   // kolaylık, yeni liste
+void Collect(int cell)                      // Board.Eat; claim şartı yok (F-3)
+int Step(List<Dispatch> output); List<Dispatch> Step(); int StepQuietly()
+void AddSlot()                              // sınır yok; Stuck → Playing (B-30 oturumda)
+
+GameState:
+Board Board; GameStatus Status
+int ColumnCount; int ColumnLength(int col); Crate CrateAt(int col, int row); Crate Front(int col)
+int SlotCount; Crate SlotAt(int slot); bool HasFreeSlot(); int FirstFreeSlot(); bool CanTap(int col)
+bool SlotCanEat(int slot); bool SlotBlocked(int slot); bool IsStuck(); int TrayCount()
 ```
 
-Kolonlar `List<Crate>` olarak kalır (önden çıkarma `RemoveAt(0)`; kolonlar en fazla ~15 kasa), çünkü görünüm
-arka sıradaki kasaları da çizer. `Tick` çıktıyı çağıranın listesine yazar, kare başına çöp üretmez.
+Var olmayan kolon/slot için sorgular `null`/`0`/`false` döner (TS'te `undefined`). `Crate.Count` dışarıdan
+değiştirilemez (`internal set`). `ready` yalnızca dolu slotlar için, slot sırasıyla sorulur. Kolonlar `List<Crate>`
+olarak kalır (önden çıkarma `RemoveAt(0)`; kolonlar en fazla ~15 kasa), çünkü görünüm arka sıradaki kasaları da çizer.
+`Tick` çıktıyı çağıranın listesine yazar, kare başına çöp üretmez.
 
 ### 3.3 Levels — bölüm üretimi (`CubeHaul.Levels`)
 
@@ -818,9 +838,9 @@ C# yolları `Assets/_CubeHaul/` altına görelidir. "—" = taşınmaz.
 | | `Level`, `cloneLevel` | `Core/Level.cs` | `sealed class Level`, `Level.Clone()` | Veri modeli `LevelDefinition` + `DeepCopy()`, `LevelRepository` **yazıldı (Görev 06)**; [LEVEL_FORMAT §9](LEVEL_FORMAT.md#9-c-veri-modeli-görev-06) |
 | `core/board.ts` | `Side` | `Core/OpenEdges.cs` | `enum Side` | |
 | | `Board` | `Domain/Board.cs` | `sealed class Board` | **Yazıldı (Görev 07)**; genel üyeler aynı adla (`PickTarget`, `Claim`, `Eat`, `OpensUp`, …), §3.2 |
-| `core/game.ts` | `Status` | `Core/GameStatus.cs` | `enum GameStatus` | |
-| | `Dispatch` | `Core/Dispatch.cs` | `readonly struct Dispatch` | |
-| | `Game` | `Core/Game.cs` | `sealed class Game` | `Tick` çıktı listesi alır |
+| `core/game.ts` | `Status` | `Domain/GameStatus.cs` | `enum GameStatus` | **Yazıldı** |
+| | `Dispatch` | `Domain/Crate.cs` | `readonly struct Dispatch` | **Yazıldı (Görev 08)** |
+| | `Game` | `Domain/GameState.cs`, `Domain/GameEngine.cs` | `sealed class GameState`, `sealed class GameEngine` | **Yazıldı (Görev 08)**; `Tick` çıktı listesi alır, §3.2. `new Game(level)` → `LevelDefinition.CreateGame()` |
 
 **Üretim (`src/levels`) → `CubeHaul.Levels`, `CubeHaul.Data`, araçlar**
 
@@ -891,8 +911,10 @@ C# yolları `Assets/_CubeHaul/` altına görelidir. "—" = taşınmaz.
 |---|---|
 | `tests/core.test.ts › Board`, `sealed gaps` | `BoardTests.cs` |
 | `› Board edges` | `BoardEdgeTests.cs` |
-| `› Game` | `GameTests.cs` |
-| `› claimed cubes` | `ClaimTests.cs` |
+| `› Game`, `› claimed cubes` (oyun düzeyi), `› cubes next to the road first` (oyun düzeyi) | `GameRuleTests.cs` (**yazıldı, Görev 08**) |
+| `Tools/ts-reference/tests/game.edge.test.ts`, `timing.test.ts › the rules have no clock`, F-2/F-3 | `GameRuleTests.cs` (**yazıldı, Görev 08**) |
+| `Tools/ts-reference/tests/invariants.test.ts` | `GameInvariants.cs` (yardımcı), `GameInvariantTests.cs` (**yazıldı, Görev 08**) |
+| golden senaryolar (oyun düzeyi) | `GameGoldenTests.cs` (**yazıldı, Görev 08**) |
 | `› cubes next to the road first` | `TargetingTests.cs` |
 | `› levels` | `BuiltInLevelTests.cs`, `GeneratorTests.cs` |
 | `› quantize` | `ImageQuantizerTests.cs` |

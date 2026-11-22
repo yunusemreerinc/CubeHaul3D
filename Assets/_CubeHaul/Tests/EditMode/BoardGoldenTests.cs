@@ -17,29 +17,16 @@ namespace CubeHaul.Tests.EditMode
     /// </summary>
     public class BoardGoldenTests
     {
-        const string GoldenDir = "Assets/_CubeHaul/Tests/Fixtures/Golden";
-
-        static JsonValue Json(string path) => JsonParser.Parse(File.ReadAllText(ProjectPaths.Of(path), Encoding.UTF8));
-
-        static IEnumerable<string> Scenarios() =>
-            Directory.GetFiles(ProjectPaths.Of(GoldenDir + "/scenarios"), "*.json").Select(Path.GetFileName).OrderBy(f => f, StringComparer.Ordinal);
-
-        static LevelDefinition LevelOf(JsonValue scenario)
-        {
-            LevelReadResult r = scenario.Has("level")
-                ? LevelValidator.Validate(scenario.Get("level"))
-                : LevelDefinitionReader.Read(File.ReadAllText(ProjectPaths.Of(scenario.Get("levelFile").String), Encoding.UTF8));
-            Assert.That(r.Ok, Is.True, r.Describe());
-            return r.Level;
-        }
-
-        static int[] Ints(JsonValue array) => array.Items.Select(v => (int)v.Number).ToArray();
+        static JsonValue Json(string path) => GoldenScenarios.Json(path);
+        static IEnumerable<string> Scenarios() => GoldenScenarios.Files();
+        static int[] Ints(JsonValue array) => GoldenScenarios.Ints(array);
+        const string GoldenDir = GoldenScenarios.GoldenDir;
 
         [TestCaseSource(nameof(Scenarios))]
         public void BoardReplaysTheScenarioExactly(string file)
         {
-            JsonValue scenario = Json(GoldenDir + "/scenarios/" + file);
-            Board board = LevelOf(scenario).CreateBoard();
+            JsonValue scenario = GoldenScenarios.Load(file);
+            Board board = GoldenScenarios.LevelOf(scenario).CreateBoard();
             bool detail = scenario.Get("detail").Boolean;
             int[] previous = null;
             IReadOnlyList<JsonValue> steps = scenario.Get("steps").Items;
@@ -65,34 +52,13 @@ namespace CubeHaul.Tests.EditMode
                 else if (op == "collect") board.Eat((int)step.Get("cell").Number);
 
                 Compare(step.Get("state"), board, previous, detail, where);
-                previous = new int[board.CellCount];
-                board.CopyCells(previous);
+                previous = GoldenScenarios.CellsOf(board);
             }
         }
 
         static void Compare(JsonValue state, Board board, int[] previous, bool detail, string where)
         {
-            int n = board.CellCount;
-            Assert.That(board.Remaining, Is.EqualTo((int)state.Get("remaining").Number), where + ": remaining");
-            Assert.That(board.Pending, Is.EqualTo((int)state.Get("pending").Number), where + ": pending");
-            CollectionAssert.AreEqual(Ints(state.Get("claimed")), Enumerable.Range(0, n).Where(board.IsClaimed), where + ": claimed");
-            if (previous != null)
-                CollectionAssert.AreEqual(Ints(state.Get("emptied")), Enumerable.Range(0, n).Where(i => previous[i] != Cells.Empty && board.Cell(i) == Cells.Empty), where + ": emptied");
-
-            int colors = board.ColorCount;
-            CollectionAssert.AreEqual(Ints(state.Get("reachableCount")), Enumerable.Range(0, colors).Select(board.ReachableCount), where + ": reachableCount");
-            CollectionAssert.AreEqual(Ints(state.Get("pickTarget")), Enumerable.Range(0, colors).Select(board.PickTarget), where + ": pickTarget");
-            if (detail)
-            {
-                IReadOnlyList<JsonValue> reachable = state.Get("reachable").Items;
-                for (int c = 0; c < colors; c++) CollectionAssert.AreEqual(Ints(reachable[c]), board.ReachableCells(c), where + ": reachable " + c);
-            }
-            Assert.That(GoldenHash.Fnv1a(Enumerable.Range(0, colors).SelectMany(c => board.ReachableCells(c).Concat(new[] { -1 }))),
-                Is.EqualTo(state.Get("reachableHash").String), where + ": reachableHash");
-            IEnumerable<int> boardValues = Enumerable.Range(0, n).Select(board.Cell)
-                .Concat(Enumerable.Range(0, n).Select(i => board.IsOpen(i) ? 1 : 0))
-                .Concat(Enumerable.Range(0, n).Select(i => board.IsClaimed(i) ? 1 : 0));
-            Assert.That(GoldenHash.Fnv1a(boardValues), Is.EqualTo(state.Get("boardHash").String), where + ": boardHash (cells, open, claimed)");
+            GoldenScenarios.CompareBoard(state, board, previous, detail, where);
 
             // slotCanEat and slotBlocked depend only on the board and the slot's color: they check ReachableCount and OpensUp.
             IReadOnlyList<JsonValue> slots = state.Get("slots").Items;
