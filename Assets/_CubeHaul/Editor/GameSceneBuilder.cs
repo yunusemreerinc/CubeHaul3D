@@ -76,6 +76,8 @@ namespace CubeHaul.EditorTools
             scenes.Insert(0, new EditorBuildSettingsScene(ScenePath, true));
             EditorBuildSettings.scenes = scenes.ToArray();
             AssetDatabase.SaveAssets();
+            if (EditorBuildSettings.scenes.Length == 0 || EditorBuildSettings.scenes[0].path != ScenePath)
+                Debug.LogWarning("CubeHaul: could not put " + ScenePath + " first in Build Settings; add it in File > Build Profiles > Scene List.");
             Debug.Log("CubeHaul: " + ScenePath + " created. Commit it with its .meta, ProjectSettings/EditorBuildSettings.asset and " + LibraryPath + ".");
         }
 

@@ -108,7 +108,10 @@ namespace CubeHaul.UI
             if (library != null)
             {
                 LevelRepository repo = library.Load();
-                if (!repo.HasErrors && repo.Count > 0)
+                if (repo.HasErrors || repo.Count == 0)
+                    Debug.LogWarning($"CubeHaul: the level library \"{library.name}\" gave {repo.Count} levels; the top bar keeps its placeholder title."
+                        + (repo.HasErrors ? "\n" + new LevelLoadException(repo.Errors).Message : ""));
+                else
                 {
                     LevelDefinition first = repo.GetAt(0);
                     title = $"1/{repo.Count} · {first.Name}";

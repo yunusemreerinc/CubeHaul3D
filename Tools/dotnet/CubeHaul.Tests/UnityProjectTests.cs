@@ -225,6 +225,49 @@ namespace CubeHaul.Tests.Project
             CollectionAssert.IsEmpty(Directory.GetFiles(Path.Combine(Repo, "Assets"), "*.asset"), "rendering assets live in " + rendering);
         }
 
+        static string Guid(string metaPath) =>
+            Regex.Match(File.ReadAllText(metaPath), @"^guid: ([0-9a-f]{32})\s*$", RegexOptions.Multiline).Groups[1].Value;
+
+        /// <summary>The scene the Editor builder makes (docs/SCENE_LAYOUT.md §4), once it is committed.</summary>
+        [Test]
+        public void TheGameSceneIsFirstInTheBuild()
+        {
+            string scene = Path.Combine(Root, "Scenes", "GameScene.unity");
+            if (!File.Exists(scene)) Assert.Ignore("GameScene.unity is not committed yet");
+            string settings = File.ReadAllText(Path.Combine(Repo, "ProjectSettings", "EditorBuildSettings.asset"));
+            Match first = Regex.Match(settings, @"m_Scenes:\s*\n\s*- enabled: (\d)\s*\n\s*path: (\S+)\s*\n\s*guid: ([0-9a-f]{32})");
+            Assert.That(first.Success, Is.True, "EditorBuildSettings.asset lists no scene; open GameScene and save the project, or run CubeHaul > Setup > Create Game Scene");
+            Assert.That((first.Groups[1].Value, first.Groups[2].Value), Is.EqualTo(("1", "Assets/_CubeHaul/Scenes/GameScene.unity")));
+            Assert.That(first.Groups[3].Value, Is.EqualTo(Guid(scene + ".meta")), "the build list points at GameScene.unity's guid");
+        }
+
+        [Test]
+        public void TheGameSceneHoldsTheCompositionAndNoPreviewGeometry()
+        {
+            string scene = Path.Combine(Root, "Scenes", "GameScene.unity");
+            if (!File.Exists(scene)) Assert.Ignore("GameScene.unity is not committed yet");
+            string text = File.ReadAllText(scene);
+            string[] names = Regex.Matches(text, @"^\s*m_Name: (.+)$", RegexOptions.Multiline).Cast<Match>().Select(m => m.Groups[1].Value.Trim()).ToArray();
+            foreach (string expected in new[] { "Game", "Main Camera", "Directional Light", "World", "Layout Preview", "UI", "Safe Area", "Top Bar", "Bottom Bar", "Add Slot", "EventSystem" })
+                CollectionAssert.Contains(names, expected);
+            foreach (string generated in new[] { "Board", "Field", "Ramp", "Slot 0", "Crate 0,0" })
+                CollectionAssert.DoesNotContain(names, generated, "LayoutPreview geometry is built at runtime, never saved");
+            string library = Path.Combine(Root, "Levels", "LevelLibrary.asset");
+            StringAssert.Contains("library: {fileID: 11400000, guid: " + Guid(library + ".meta"), text, "the preview uses LevelLibrary.asset");
+            StringAssert.Contains("m_ReferenceResolution: {x: 420, y: 900}", text);
+            StringAssert.Contains("m_ScreenMatchMode: 1", text, "CanvasScaler Expand");
+        }
+
+        [Test]
+        public void TheLevelLibraryListsEveryLevelFileInPlayOrder()
+        {
+            string library = Path.Combine(Root, "Levels", "LevelLibrary.asset");
+            if (!File.Exists(library)) Assert.Ignore("LevelLibrary.asset is not committed yet");
+            string[] listed = Regex.Matches(File.ReadAllText(library), @"- \{fileID: 4900000, guid: ([0-9a-f]{32}), type: 3\}").Cast<Match>().Select(m => m.Groups[1].Value).ToArray();
+            string[] files = Directory.GetFiles(Path.Combine(Root, "Levels", "Content"), "*.level.json").OrderBy(f => f, StringComparer.Ordinal).ToArray();
+            CollectionAssert.AreEqual(files.Select(f => Guid(f + ".meta")), listed);
+        }
+
         /// <summary>
         /// Unity runs the tests with its own NUnit (com.unity.ext.nunit, NUnit 3.5), which ignores .Within() on a tuple
         /// and compares it exactly; NUnit 3.14 here applies the tolerance to each item. Such a test passes here and fails
