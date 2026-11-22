@@ -142,6 +142,9 @@ SHA-256'ları bozacağı için bu gereklidir.
    `GreedySolver`, `RandomPlayer`. Sorun çıkarsa `build.json`'daki aday izi farkın hangi adayda başladığını gösterir.
 3. `scenarios/*.json` → C# `Game` üzerinde hamleleri tekrar oynat, her adımda `state`'in her alanını karşılaştır.
    `boardHash` ve `reachableHash` aynı `fnv1a` tanımıyla hesaplanır.
+   **Görev 07:** tahta düzeyindeki alanlar (`remaining`, `pending`, `claimed`, `emptied`, `reachableCount`, `pickTarget`,
+   `reachable`, `reachableHash`, `boardHash`, `slotCanEat`, `slotBlocked`) ve her dispatch'in hedefi C# `Board` ile
+   karşılaştırılıyor (`Assets/_CubeHaul/Tests/EditMode/BoardGoldenTests.cs`); `peel-layers.json` de öyle.
 4. Bölüm dosyaları Unity'de `TextAsset` olarak oyunun gerçek içeriğidir.
 
 Kaynak cube-hunt'ta bir kural değişirse dışa aktarıcı yeniden çalıştırılır; fark, `check:golden` ve testlerde görünür.

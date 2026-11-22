@@ -100,7 +100,7 @@ Her assembly'de, ileride büyüyecek küçük ama gerçek bir başlangıç tür�
 
 | Assembly | Tür | İçerik |
 |---|---|---|
-| Domain | `Cells`, `GameStatus`, `OpenEdges` | `Cells.Empty = -1`; `Playing / Won / Stuck`; açık kenarlar (Görev 06) |
+| Domain | `Cells`, `GameStatus`, `OpenEdges`, `Board` | `Cells.Empty = -1`; `Playing / Won / Stuck`; açık kenarlar (Görev 06); `board.ts`'nin C# portu (Görev 07) |
 | Levels | `LevelDefinition`, `PictureDefinition`, `BlockDefinition`, `LevelValidator`, `LevelRepository`, `LevelDefinitionWriter` | Bölüm formatı ve C# veri modeli (Görev 03, 06; [LEVEL_FORMAT §9](LEVEL_FORMAT.md#9-c-veri-modeli-görev-06)) |
 | Gameplay | `SimConstants` | `main.ts`'deki zamanlama ve yerleşim sabitleri (kamyon hızı 200, slot aralığı 0.15 s, uçuş 1/3.8 s, 3 rampa şeridi, en fazla 6 slot …) |
 | Presentation | `WorldMapper`, `LevelLibrary` | Tasarım alanı (420×900, y aşağı) → dünya (XZ düzlemi; rampa tarafı kameraya yakın, ayna yok); `LevelLibrary` (ScriptableObject) bölüm `TextAsset`'lerini `LevelRepository`'ye verir |
@@ -170,7 +170,7 @@ EditMode testleri proje kökünü çalışma dizininden bulur (`ProjectPaths`). 
    `Library/`'yi kurar; ilk açılış birkaç dakika sürer.
 3. **Console** penceresinde derleme hatası olmamalı. Paket sürümüyle ilgili bir uyarı çıkarsa
    **Window ▸ Package Manager**'da önerilen sürüme güncelleyin.
-4. **Window ▸ General ▸ Test Runner** › **EditMode** › **Run All**: 76 testin hepsi yeşil olmalı
+4. **Window ▸ General ▸ Test Runner** › **EditMode** › **Run All**: 124 testin hepsi yeşil olmalı (Görev 07 itibarıyla; Board için 48 test dahil)
    (Görev 05'in 9 testi ve Görev 06'nın veri modeli testleri: `NoDataLossTests`, `RealLevelTests`, `DeepCopyTests`,
    `LevelRepositoryTests`, `ErrorReportTests`, `JsonWriterTests`).
 5. Aynı pencerede **PlayMode** › **Run All**: 2 test yeşil olmalı.
@@ -206,7 +206,7 @@ node Tools/unity/metas.mjs --check
   `netstandard2.1` + C# 9 ile, **UnityEngine olmadan** derler; proje başvuruları asmdef başvurularıyla aynıdır
   (test edilir).
 - `Tools/dotnet/CubeHaul.Tests`: Unity EditMode testlerini (`Assets/_CubeHaul/Tests/EditMode`) aynen derleyip koşturur;
-  bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **262 / 262 geçti**, EditMode'un 76 testi dahil.
+  bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **314 / 314 geçti**, EditMode'un 124 testi dahil (Görev 07).
 - Presentation, UI, Editor ve PlayMode kodu Unity API'si kullandığı için burada derlenemez. Bu yüzden yalnızca yerleşik,
   uzun süredir değişmeyen API'ler kullanıldı (`Vector3`, `Color32`, `GameObject`, `Time.frameCount`, `MenuItem`,
   `Debug.Log`, `UnityTest`). Kesin doğrulama §5'teki adımlardır.
