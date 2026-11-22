@@ -145,6 +145,11 @@ SHA-256'ları bozacağı için bu gereklidir.
    **Görev 07:** tahta düzeyindeki alanlar (`remaining`, `pending`, `claimed`, `emptied`, `reachableCount`, `pickTarget`,
    `reachable`, `reachableHash`, `boardHash`, `slotCanEat`, `slotBlocked`) ve her dispatch'in hedefi C# `Board` ile
    karşılaştırılıyor (`Assets/_CubeHaul/Tests/EditMode/BoardGoldenTests.cs`); `peel-layers.json` de öyle.
+   **Görev 08:** senaryoların tamamı C# `GameEngine` üzerinde tekrar oynatılıyor
+   (`Assets/_CubeHaul/Tests/EditMode/GameGoldenTests.cs`): `tap` sonucu, `tick(ready)`/`step` dispatch listesi ve her
+   adımdan sonra `state`'in **her** alanı (`status`, `trayCount`, `columns`, `slots`, `slotCanEat`, `slotBlocked`,
+   `isStuck` ve tahta alanları). Ayrıca her `tick`'ten sonra gönderilen küplerin tahtada, claim edilmiş durduğu ve
+   ancak `collect` ile silindiği sınanır.
 4. Bölüm dosyaları Unity'de `TextAsset` olarak oyunun gerçek içeriğidir.
 
 Kaynak cube-hunt'ta bir kural değişirse dışa aktarıcı yeniden çalıştırılır; fark, `check:golden` ve testlerde görünür.

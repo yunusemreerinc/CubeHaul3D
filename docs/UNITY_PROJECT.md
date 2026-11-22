@@ -170,7 +170,7 @@ EditMode testleri proje kökünü çalışma dizininden bulur (`ProjectPaths`). 
    `Library/`'yi kurar; ilk açılış birkaç dakika sürer.
 3. **Console** penceresinde derleme hatası olmamalı. Paket sürümüyle ilgili bir uyarı çıkarsa
    **Window ▸ Package Manager**'da önerilen sürüme güncelleyin.
-4. **Window ▸ General ▸ Test Runner** › **EditMode** › **Run All**: 124 testin hepsi yeşil olmalı (Görev 07 itibarıyla; Board için 48 test dahil)
+4. **Window ▸ General ▸ Test Runner** › **EditMode** › **Run All**: 198 testin hepsi yeşil olmalı (Görev 08 itibarıyla; Board için 48, Game için 73 test dahil)
    (Görev 05'in 9 testi ve Görev 06'nın veri modeli testleri: `NoDataLossTests`, `RealLevelTests`, `DeepCopyTests`,
    `LevelRepositoryTests`, `ErrorReportTests`, `JsonWriterTests`).
 5. Aynı pencerede **PlayMode** › **Run All**: 2 test yeşil olmalı.
@@ -206,7 +206,8 @@ node Tools/unity/metas.mjs --check
   `netstandard2.1` + C# 9 ile, **UnityEngine olmadan** derler; proje başvuruları asmdef başvurularıyla aynıdır
   (test edilir).
 - `Tools/dotnet/CubeHaul.Tests`: Unity EditMode testlerini (`Assets/_CubeHaul/Tests/EditMode`) aynen derleyip koşturur;
-  bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **314 / 314 geçti**, EditMode'un 124 testi dahil (Görev 07).
+  bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **390 / 390 geçti**, EditMode'un 198 testi dahil (Görev 08). Bellek ayırmama testleri (`BoardAllocationTests`,
+  `GameAllocationTests`) yalnızca burada koşar: `GC.GetAllocatedBytesForCurrentThread` Unity profilinde yok.
 - Presentation, UI, Editor ve PlayMode kodu Unity API'si kullandığı için burada derlenemez. Bu yüzden yalnızca yerleşik,
   uzun süredir değişmeyen API'ler kullanıldı (`Vector3`, `Color32`, `GameObject`, `Time.frameCount`, `MenuItem`,
   `Debug.Log`, `UnityTest`). Kesin doğrulama §5'teki adımlardır.
