@@ -14,7 +14,7 @@ namespace CubeHaul.Tests.EditMode
 {
     /// <summary>
     /// The C# road planner against cube-hunt's RoadMap with main.ts's geometry (roads.json, docs/ROADS.md): 56 board
-    /// states (the ten levels fresh, peeled and with claimed cubes, other edge modes, small hand-made boards), 1183
+    /// states (the ten levels fresh, peeled and with claimed cubes, other edge modes, small hand-made boards), 1235
     /// targets. Every lane's cost, the lane a truck takes and every point of its route must be the same doubles.
     /// </summary>
     public class RoadGoldenTests
