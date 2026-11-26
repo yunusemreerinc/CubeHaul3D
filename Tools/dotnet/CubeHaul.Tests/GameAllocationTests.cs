@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using CubeHaul.Domain;
 using CubeHaul.Gameplay.Grid;
+using CubeHaul.Gameplay.Roads;
+using CubeHaul.Gameplay.Trucks;
 using CubeHaul.Levels;
 using CubeHaul.Tests.LevelFormat;
 using NUnit.Framework;
@@ -114,6 +116,33 @@ namespace CubeHaul.Tests.Domain
             Assert.That(game.Status, Is.EqualTo(GameStatus.Won));
             Assert.That(field.VisibleCount, Is.EqualTo(0));
             Assert.That(allocated, Is.EqualTo(0), $"{levelId}: {allocated} bytes allocated while following the board");
+        }
+
+        /// <summary>A truck moving every frame allocates nothing (GC.GetAllocatedBytesForCurrentThread is not in Unity's profile).</summary>
+        [Test]
+        public void MovingATruckAllocatesNothing()
+        {
+            Board board = repo.Get("strawberry").CreateBoard();
+            for (int r = 0; r < 6; r++)
+                for (int c = 0; c < board.ColorCount; c++)
+                {
+                    int t = board.PickTarget(c);
+                    if (t >= 0) board.Eat(t);
+                }
+            RoadPathPlanner roads = RoadPathPlanner.ForBoard(board);
+            int cell = board.PickTarget(0);
+            var truck = new TruckMotion(roads.PlanTruck(cell), roads.Center(cell), roads.CellSize, roads.Ring);
+            truck.Advance(1 / 60.0);
+            long before = GC.GetAllocatedBytesForCurrentThread();
+            double sink = 0;
+            while (truck.State != TruckState.Gone)
+            {
+                truck.Advance(1 / 60.0);
+                sink += truck.Pose().X + truck.Fade + truck.DrawScale;
+            }
+            long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+            Assert.That(sink, Is.Not.NaN);
+            Assert.That(allocated, Is.EqualTo(0), allocated + " bytes allocated while driving");
         }
     }
 }

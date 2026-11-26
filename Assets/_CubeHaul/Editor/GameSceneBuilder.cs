@@ -73,7 +73,7 @@ namespace CubeHaul.EditorTools
                 Debug.LogError("CubeHaul: could not load " + LibraryPath + "; the scene was not built.");
                 return;
             }
-            GameSceneComposer.Compose(library, EnsureCubeMaterial());
+            GameSceneComposer.Compose(library, EnsureCubeMaterial(), TruckPrefabBuilder.EnsurePrefab());
             EditorSceneManager.SaveScene(scene, ScenePath);
             if (!openAfterwards)
             {
@@ -86,7 +86,7 @@ namespace CubeHaul.EditorTools
             AssetDatabase.SaveAssets();
             if (EditorBuildSettings.scenes.Length == 0 || EditorBuildSettings.scenes[0].path != ScenePath)
                 Debug.LogWarning("CubeHaul: could not put " + ScenePath + " first in Build Settings; add it in File > Build Profiles > Scene List.");
-            Debug.Log("CubeHaul: " + ScenePath + " created. Commit it with its .meta, ProjectSettings/EditorBuildSettings.asset, " + LibraryPath + " and " + CubeMaterialPath + ".");
+            Debug.Log("CubeHaul: " + ScenePath + " created. Commit it with its .meta, ProjectSettings/EditorBuildSettings.asset, " + LibraryPath + ", " + CubeMaterialPath + " and " + TruckPrefabBuilder.PrefabPath + " (with its materials).");
         }
 
         /// <summary>The cubes' base material: URP Lit, GPU instancing on. The grid makes one copy per palette color.</summary>

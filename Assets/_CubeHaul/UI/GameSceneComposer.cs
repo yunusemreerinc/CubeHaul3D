@@ -4,6 +4,7 @@ using CubeHaul.Levels;
 using CubeHaul.Presentation;
 using CubeHaul.Presentation.Grid;
 using CubeHaul.Presentation.Roads;
+using CubeHaul.Presentation.Trucks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
@@ -34,6 +35,7 @@ namespace CubeHaul.UI
             public GridPresenter Grid;
             public GridDemoDriver Demo;
             public RoadDebugGizmos Roads;
+            public TruckFleetView Trucks;
             public Canvas Canvas;
             public CanvasScaler Scaler;
             public SafeAreaFitter SafeArea;
@@ -43,7 +45,7 @@ namespace CubeHaul.UI
             public List<RectTransform> Controls = new List<RectTransform>();
         }
 
-        public static Composition Compose(LevelLibrary library = null, Material cubeMaterial = null)
+        public static Composition Compose(LevelLibrary library = null, Material cubeMaterial = null, TruckVisual truckPrefab = null)
         {
             var c = new Composition { Root = new GameObject("Game") };
 
@@ -78,8 +80,13 @@ namespace CubeHaul.UI
             c.Grid = gridGo.AddComponent<GridPresenter>();
             c.Grid.Library = library;
             c.Grid.CubeMaterial = cubeMaterial;
+            var trucksGo = new GameObject("Trucks");
+            trucksGo.transform.SetParent(world.transform, false);
+            c.Trucks = trucksGo.AddComponent<TruckFleetView>();
+            c.Trucks.Prefab = truckPrefab;
+
             c.Demo = gridGo.AddComponent<GridDemoDriver>();
-            c.Demo.Configure(c.Grid, library);
+            c.Demo.Configure(c.Grid, library, c.Trucks);
             gridGo.SetActive(true);
 
             var roadsGo = new GameObject("Road Debug");
