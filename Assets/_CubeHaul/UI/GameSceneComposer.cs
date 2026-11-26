@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using CubeHaul.Gameplay.Layout;
 using CubeHaul.Levels;
 using CubeHaul.Presentation;
+using CubeHaul.Presentation.Grid;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
@@ -29,6 +30,8 @@ namespace CubeHaul.UI
             public Camera Camera;
             public GameCameraRig Rig;
             public LayoutPreview Preview;
+            public GridPresenter Grid;
+            public GridDemoDriver Demo;
             public Canvas Canvas;
             public CanvasScaler Scaler;
             public SafeAreaFitter SafeArea;
@@ -38,7 +41,7 @@ namespace CubeHaul.UI
             public List<RectTransform> Controls = new List<RectTransform>();
         }
 
-        public static Composition Compose(LevelLibrary library = null)
+        public static Composition Compose(LevelLibrary library = null, Material cubeMaterial = null)
         {
             var c = new Composition { Root = new GameObject("Game") };
 
@@ -64,7 +67,18 @@ namespace CubeHaul.UI
             previewGo.SetActive(false);
             c.Preview = previewGo.AddComponent<LayoutPreview>();
             c.Preview.Library = library;
+            c.Preview.ShowField = false; // the GridPresenter draws the cubes
             previewGo.SetActive(true);
+
+            var gridGo = new GameObject("Grid");
+            gridGo.transform.SetParent(world.transform, false);
+            gridGo.SetActive(false);
+            c.Grid = gridGo.AddComponent<GridPresenter>();
+            c.Grid.Library = library;
+            c.Grid.CubeMaterial = cubeMaterial;
+            c.Demo = gridGo.AddComponent<GridDemoDriver>();
+            c.Demo.Configure(c.Grid, library);
+            gridGo.SetActive(true);
 
             BuildUi(c, library);
 

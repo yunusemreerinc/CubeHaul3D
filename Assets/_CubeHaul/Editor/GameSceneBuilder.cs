@@ -19,6 +19,7 @@ namespace CubeHaul.EditorTools
     {
         public const string ScenePath = "Assets/_CubeHaul/Scenes/GameScene.unity";
         public const string LibraryPath = "Assets/_CubeHaul/Levels/LevelLibrary.asset";
+        public const string CubeMaterialPath = "Assets/_CubeHaul/Art/Materials/Cube.mat";
         const string LevelsFolder = "Assets/_CubeHaul/Levels/Content";
         const string AutoKey = "CubeHaul.GameSceneBuilder.AutoChecked";
 
@@ -72,7 +73,7 @@ namespace CubeHaul.EditorTools
                 Debug.LogError("CubeHaul: could not load " + LibraryPath + "; the scene was not built.");
                 return;
             }
-            GameSceneComposer.Compose(library);
+            GameSceneComposer.Compose(library, EnsureCubeMaterial());
             EditorSceneManager.SaveScene(scene, ScenePath);
             if (!openAfterwards)
             {
@@ -85,7 +86,25 @@ namespace CubeHaul.EditorTools
             AssetDatabase.SaveAssets();
             if (EditorBuildSettings.scenes.Length == 0 || EditorBuildSettings.scenes[0].path != ScenePath)
                 Debug.LogWarning("CubeHaul: could not put " + ScenePath + " first in Build Settings; add it in File > Build Profiles > Scene List.");
-            Debug.Log("CubeHaul: " + ScenePath + " created. Commit it with its .meta, ProjectSettings/EditorBuildSettings.asset and " + LibraryPath + ".");
+            Debug.Log("CubeHaul: " + ScenePath + " created. Commit it with its .meta, ProjectSettings/EditorBuildSettings.asset, " + LibraryPath + " and " + CubeMaterialPath + ".");
+        }
+
+        /// <summary>The cubes' base material: URP Lit, GPU instancing on. The grid makes one copy per palette color.</summary>
+        public static Material EnsureCubeMaterial()
+        {
+            var material = AssetDatabase.LoadAssetAtPath<Material>(CubeMaterialPath);
+            if (material != null) return material;
+            Shader lit = Shader.Find("Universal Render Pipeline/Lit");
+            if (lit == null)
+            {
+                Debug.LogWarning("CubeHaul: URP Lit shader not found; the cubes will pick a shader at runtime.");
+                return null;
+            }
+            material = new Material(lit) { name = "Cube", enableInstancing = true };
+            material.SetFloat("_Smoothness", 0.25f);
+            AssetDatabase.CreateAsset(material, CubeMaterialPath);
+            AssetDatabase.SaveAssets();
+            return material;
         }
 
         /// <summary>The LevelLibrary asset listing every level file in play order (their names start with the number).</summary>

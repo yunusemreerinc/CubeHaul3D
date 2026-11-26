@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using CubeHaul.Domain;
+using CubeHaul.Gameplay.Grid;
 using CubeHaul.Levels;
 using CubeHaul.Tests.LevelFormat;
 using NUnit.Framework;
@@ -79,6 +80,40 @@ namespace CubeHaul.Tests.Domain
             long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
             Assert.That(game.Status, Is.EqualTo(GameStatus.Won));
             Assert.That(allocated, Is.EqualTo(0), $"{levelId}: {allocated} bytes allocated while playing");
+        }
+
+        [TestCase("strawberry")]
+        [TestCase("ringed-planet")]
+        public void FollowingTheBoardWithTheCubeFieldAllocatesNothing(string levelId)
+        {
+            LevelDefinition level = repo.Get(levelId);
+            var changed = new List<int>(level.Picture.Cells.Length);
+            var sent = new List<Dispatch>(64);
+            void Play(GameEngine g, CubeField f)
+            {
+                for (int guard = 0; g.Status == GameStatus.Playing && guard < 100_000; guard++)
+                {
+                    for (int c = 0; c < g.State.ColumnCount && g.State.HasFreeSlot(); c++) g.Tap(c);
+                    g.Tick(null, sent);
+                    changed.Clear();
+                    f.Sync(g.Board, changed); // claims
+                    for (int k = 0; k < sent.Count; k++) g.Collect(sent[k].Cell);
+                    changed.Clear();
+                    f.Sync(g.Board, changed); // collects
+                    if (g.Status == GameStatus.Stuck) g.AddSlot();
+                }
+            }
+            Play(level.CreateGame(), new CubeField(level.Picture)); // warm up
+
+            GameEngine game = level.CreateGame();
+            var field = new CubeField(level.Picture);
+            game.AddSlot(); // the slot list's one growth, before measuring
+            long before = GC.GetAllocatedBytesForCurrentThread();
+            Play(game, field);
+            long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+            Assert.That(game.Status, Is.EqualTo(GameStatus.Won));
+            Assert.That(field.VisibleCount, Is.EqualTo(0));
+            Assert.That(allocated, Is.EqualTo(0), $"{levelId}: {allocated} bytes allocated while following the board");
         }
     }
 }
