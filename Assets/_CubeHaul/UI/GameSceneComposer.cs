@@ -3,6 +3,7 @@ using CubeHaul.Gameplay.Layout;
 using CubeHaul.Levels;
 using CubeHaul.Presentation;
 using CubeHaul.Presentation.Grid;
+using CubeHaul.Presentation.Roads;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
@@ -32,6 +33,7 @@ namespace CubeHaul.UI
             public LayoutPreview Preview;
             public GridPresenter Grid;
             public GridDemoDriver Demo;
+            public RoadDebugGizmos Roads;
             public Canvas Canvas;
             public CanvasScaler Scaler;
             public SafeAreaFitter SafeArea;
@@ -79,6 +81,11 @@ namespace CubeHaul.UI
             c.Demo = gridGo.AddComponent<GridDemoDriver>();
             c.Demo.Configure(c.Grid, library);
             gridGo.SetActive(true);
+
+            var roadsGo = new GameObject("Road Debug");
+            roadsGo.transform.SetParent(world.transform, false);
+            c.Roads = roadsGo.AddComponent<RoadDebugGizmos>();
+            c.Roads.Configure(c.Grid, library);
 
             BuildUi(c, library);
 

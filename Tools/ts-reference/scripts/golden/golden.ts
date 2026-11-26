@@ -17,6 +17,7 @@ import { builtInDefinition } from "../level-examples";
 import { columnsSha256, sha256 } from "./hash";
 import { stringify, toFile } from "./json";
 import { parityFiles } from "./parity";
+import { roadsFile } from "./roads";
 import { Recorder } from "./snapshot";
 
 export const SOURCE = {
@@ -614,6 +615,7 @@ export function buildGoldenFiles(): Record<string, string> {
   files[`${GOLDEN_DIR}/generator-cases.json`] = toFile(genCasesFixture(files));
   for (const s of SCENARIOS) files[`${GOLDEN_DIR}/scenarios/${s.name}.json`] = toFile(runScenario(s, files));
   Object.assign(files, parityFiles(files));
+  Object.assign(files, roadsFile(files));
   const manifest = {
     ...header("manifest", "Every golden file with its sha256 and size in bytes (UTF-8, LF line endings). Regenerate with `npm run export:golden` in Tools/ts-reference."),
     files: Object.keys(files)

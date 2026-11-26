@@ -203,6 +203,11 @@
       "sha256": "7ac6b74e8d4f08803addbbebb76d80c369d52acc2d4e3e568b682d013714bbd2"
     },
     {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/roads.json",
+      "bytes": 389154,
+      "sha256": "2bf430cee2e70d7372eb6c04c7a39a038e00aa37697d715602a253745850968f"
+    },
+    {
       "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/scenarios/all-edges-top-row.json",
       "bytes": 7019,
       "sha256": "611ceea3ae42d525d7abefb1d713f91f6181f8aed61049213a4518f98fef58e2"
