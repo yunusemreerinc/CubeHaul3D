@@ -18,8 +18,13 @@ namespace CubeHaul.Presentation
         [SerializeField, Min(0)] int levelIndex;
         [SerializeField, Range(1, 7)] int slots = 5;
         [SerializeField] int trayColumns = 5;
+        [SerializeField, Tooltip("Draw the level's grid as a flat texture. Off when a GridPresenter draws the cubes.")]
+        bool showField = true;
 
         public const float CrateHeight = 30f;
+        /// <summary>The board box: its top is where the cubes stand (GridPresenter.BoardTop).</summary>
+        public const float BoardHeight = 2f;
+        public static readonly Color32 BoardColor = new Color32(0xe9, 0xdc, 0xc6, 0xff);
         public const float SlotPadHeight = 4f;
 
         readonly List<Object> created = new List<Object>();
@@ -28,6 +33,17 @@ namespace CubeHaul.Presentation
 
         /// <summary>Every placeholder renderer, for layout tests.</summary>
         public IReadOnlyList<Renderer> Renderers => renderers;
+
+        public bool ShowField
+        {
+            get => showField;
+            set
+            {
+                if (showField == value) return;
+                showField = value;
+                if (isActiveAndEnabled) Rebuild();
+            }
+        }
 
         public LevelLibrary Library
         {
@@ -59,9 +75,8 @@ namespace CubeHaul.Presentation
             lit = Keep(new Material(litShader) { name = "Layout Preview Lit" });
             unlit = Keep(new Material(unlitShader) { name = "Layout Preview Field" });
 
-            PictureDefinition picture = Picture();
-            Box("Board", DesignLayout.Board, 2, new Color32(0xe9, 0xdc, 0xc6, 0xff));
-            Field(picture);
+            Box("Board", DesignLayout.Board, BoardHeight, BoardColor);
+            if (showField) Field(Picture());
             Box("Ramp", DesignLayout.Tunnel, 2, new Color32(0x56, 0x5c, 0x68, 0xff));
             for (int i = 0; i < slots; i++) Box("Slot " + i, DesignLayout.SlotRect(i, slots), SlotPadHeight, new Color32(0xd8, 0xc8, 0xb0, 0xff));
             for (int row = 0; row < DesignLayout.TrayRows; row++)

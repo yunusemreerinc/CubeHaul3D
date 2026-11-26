@@ -60,7 +60,8 @@ Game
 ├─ Main Camera        Camera (Solid Color #f6efe4), AudioListener, GameCameraRig
 ├─ Directional Light
 ├─ World
-│  └─ Layout Preview  LayoutPreview: tahta + ilk bölümün ızgarası, rampa, 5 slot, 5×3 tepsi (yer tutucu kutular)
+│  ├─ Layout Preview  LayoutPreview: tahta, rampa, 5 slot, 5×3 tepsi (yer tutucu kutular)
+│  └─ Grid            GridPresenter + GridDemoDriver: bölümün 3D küpleri (Görev 12, GRID_VIEW.md)
 ├─ UI                 Canvas, CanvasScaler, GraphicRaycaster
 │  └─ Safe Area       SafeAreaFitter
 │     ├─ Top Bar      Restart, Previous, Next, Speed, Title, Difficulty
