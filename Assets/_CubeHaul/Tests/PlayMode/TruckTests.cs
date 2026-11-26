@@ -135,6 +135,22 @@ namespace CubeHaul.Tests.PlayMode
             Assert.That((fleet.Pool.InUseCount, fleet.Pool.FreeCount, fleet.ActiveCount), Is.EqualTo((0, 1, 0)));
         }
 
+        [Test]
+        public void AHiddenTruckStillGoesBackToThePool()
+        {
+            // A truck sinking into the tunnel is hidden (inactive) before it is released; it must still be pooled.
+            var root = new GameObject("pool test");
+            extra.Add(root);
+            var pool = new TruckPool(root.transform, null);
+            TruckVisual a = pool.Get();
+            a.gameObject.SetActive(false);
+            pool.Release(a);
+            pool.Release(a); // twice: still once in the pool
+            Assert.That((pool.FreeCount, pool.InUseCount), Is.EqualTo((1, 0)));
+            Assert.That(pool.Get(), Is.SameAs(a), "the same truck comes back");
+            Assert.That(pool.CreatedCount, Is.EqualTo(1));
+        }
+
         [UnityTest]
         public IEnumerator TrucksComeFromThePool()
         {

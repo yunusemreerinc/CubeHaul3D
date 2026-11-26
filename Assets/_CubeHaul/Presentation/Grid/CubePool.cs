@@ -14,6 +14,7 @@ namespace CubeHaul.Presentation.Grid
         readonly Transform parent;
         readonly Mesh mesh;
         readonly Stack<GameObject> free = new Stack<GameObject>();
+        readonly HashSet<GameObject> inPool = new HashSet<GameObject>();
         readonly List<GameObject> all = new List<GameObject>();
 
         public CubePool(Transform parent, Mesh mesh)
@@ -30,6 +31,7 @@ namespace CubeHaul.Presentation.Grid
         public GameObject Get(string name, Material material)
         {
             GameObject go = free.Count > 0 ? free.Pop() : Create();
+            inPool.Remove(go);
             go.name = name;
             go.GetComponent<MeshRenderer>().sharedMaterial = material;
             go.SetActive(true);
@@ -38,7 +40,7 @@ namespace CubeHaul.Presentation.Grid
 
         public void Release(GameObject go)
         {
-            if (go == null || !go.activeSelf) return;
+            if (go == null || !inPool.Add(go)) return; // the pool tracks what it holds, not whether it is active
             go.SetActive(false);
             free.Push(go);
         }
@@ -54,6 +56,7 @@ namespace CubeHaul.Presentation.Grid
             }
             all.Clear();
             free.Clear();
+            inPool.Clear();
         }
 
         GameObject Create()
