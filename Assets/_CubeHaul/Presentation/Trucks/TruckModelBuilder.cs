@@ -12,6 +12,8 @@ namespace CubeHaul.Presentation.Trucks
     public static class TruckModelBuilder
     {
         public const float WheelRadius = 2.2f;
+        /// <summary>Wheel centers from the middle, and tire width, model units.</summary>
+        public const float WheelOffset = 4.75f, TireWidth = 1.3f;
 
         /// <summary>The model's materials. Null ones fall back to a URP Lit material of a fixed color.</summary>
         public sealed class Materials
@@ -56,8 +58,10 @@ namespace CubeHaul.Presentation.Trucks
             // Four wheels, axles along X so they roll about it.
             Transform wheelRoot = Group("Wheels", root.transform);
             var wheels = new List<Transform>();
+            // Wheel centers 4.75 out, tires 1.3 wide: they stick out of the 10.2-wide body by a little, and the truck
+            // stays 10.8 wide, within cube-hunt's 11.4 (a truck must fit beside a cube).
             foreach (float z in new[] { -6.6f, 5.6f })
-                foreach (float x in new[] { -5.3f, 5.3f })
+                foreach (float x in new[] { -WheelOffset, WheelOffset })
                     wheels.Add(Wheel(x < 0 ? (z < 0 ? "Wheel RL" : "Wheel FL") : (z < 0 ? "Wheel RR" : "Wheel FR"), wheelRoot, new Vector3(x, WheelRadius, z), tire));
 
             var visual = root.AddComponent<TruckVisual>();
@@ -90,7 +94,7 @@ namespace CubeHaul.Presentation.Trucks
             hub.localPosition = center;
             GameObject tire = Primitive(PrimitiveType.Cylinder, "Tire", hub);
             tire.transform.localRotation = Quaternion.Euler(0, 0, 90);
-            tire.transform.localScale = new Vector3(WheelRadius * 2, 1.2f, WheelRadius * 2);
+            tire.transform.localScale = new Vector3(WheelRadius * 2, TireWidth / 2, WheelRadius * 2);
             tire.GetComponent<MeshRenderer>().sharedMaterial = material;
             return hub;
         }

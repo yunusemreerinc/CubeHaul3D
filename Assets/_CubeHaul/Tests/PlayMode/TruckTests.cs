@@ -70,7 +70,8 @@ namespace CubeHaul.Tests.PlayMode
             Bounds b = new Bounds(t.position, Vector3.zero);
             foreach (Renderer r in truck.GetComponentsInChildren<Renderer>(true)) if (r.gameObject.activeInHierarchy) b.Encapsulate(r.bounds);
             Assert.That(b.size.z, Is.EqualTo(21.4f).Within(0.6f));
-            Assert.That(b.size.x, Is.EqualTo(11.4f).Within(1.2f));
+            Assert.That(b.size.x, Is.LessThanOrEqualTo(11.4f), "no wider than cube-hunt's truck, so it fits beside a cube");
+            Assert.That(b.size.x, Is.GreaterThan(10f));
             Assert.That(b.min.y, Is.EqualTo(0f).Within(0.01f));
             Assert.That(t.Find("Cabin/Hood").position.z, Is.GreaterThan(t.Find("Bed/Floor").position.z), "cabin in front, bed behind");
         }
