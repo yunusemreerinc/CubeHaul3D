@@ -62,6 +62,7 @@ Game
 ├─ World
 │  ├─ Layout Preview  LayoutPreview: tahta, rampa, 5 slot, 5×3 tepsi (yer tutucu kutular)
 │  ├─ Grid            GridPresenter + GridDemoDriver: bölümün 3D küpleri (Görev 12, GRID_VIEW.md)
+│  ├─ Trucks          TruckFleetView: havuzlanmış kamyonlar (Görev 14, TRUCKS.md)
 │  └─ Road Debug      RoadDebugGizmos: kamyon rotaları gizmo olarak (Görev 13, ROADS.md)
 ├─ UI                 Canvas, CanvasScaler, GraphicRaycaster
 │  └─ Safe Area       SafeAreaFitter
