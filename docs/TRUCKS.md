@@ -59,7 +59,7 @@ zamanlarını, dolayısıyla hangi küplerin ne zaman açılacağını değişti
 |---|---|---|
 | `TruckMotionTests` (12) | EditMode + `dotnet test` | Kamyon rotasının uzunluğu / hız sürede varıyor, 0,42 sn yüklüyor, aynı yoldan dönüp tünel noktasında bitiyor. Her karede rotanın üstünde ve dönüşü 14 rad/sn'yi geçmiyor (40 rotada). Yüklerken küpe dönüyor. Yolda sağ şeritte, tarlada ortada. Tünelde görünmüyor. Küp %78'de kasada. `turnToward` kısa yönden dönüyor. Rocket bölümü baştan sona: küp başına bir kamyon, hepsi eve dönüyor |
 | `GameAllocationTests.MovingATruckAllocatesNothing` | `dotnet test` | Kamyon hareketi bellek ayırmıyor |
-| `TruckTests` (4) | **PlayMode** | Modelde gövde, kabin, kasa, yük ve 4 teker var, collider yok, ölçüler doğru. Sahnede bir kamyon kasanın rengine boyanıyor, rotasını izliyor (model konumu ve yönü hareketle aynı), varınca küp toplanıyor, rampadan tünele iniyor ve havuza dönüyor. Üç tur gönderimde aynı kamyonlar kullanılıyor. Çilek kamyonlarla baştan sona oynanıyor |
+| `TruckTests` (5) | **PlayMode** | Modelde gövde, kabin, kasa, yük ve 4 teker var, collider yok, ölçüler doğru. Sahnede bir kamyon kasanın rengine boyanıyor, rotasını izliyor (model konumu ve yönü hareketle aynı), varınca küp toplanıyor, rampadan tünele iniyor ve havuza dönüyor. Üç tur gönderimde aynı kamyonlar kullanılıyor; tünelde gizlenmiş kamyon da havuza dönüyor. Çilek kamyonlarla baştan sona oynanıyor |
 
 ## 6. Elle doğrulama
 

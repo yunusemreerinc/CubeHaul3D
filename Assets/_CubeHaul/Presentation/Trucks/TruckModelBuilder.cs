@@ -98,9 +98,8 @@ namespace CubeHaul.Presentation.Trucks
         static GameObject Primitive(PrimitiveType type, string name, Transform parent)
         {
             GameObject go = GameObject.CreatePrimitive(type);
-            Collider c = go.GetComponent<Collider>();
-            if (Application.isPlaying) Object.Destroy(c);
-            else Object.DestroyImmediate(c);
+            // Immediately, also in Play mode: Destroy would leave the collider until the end of the frame.
+            Object.DestroyImmediate(go.GetComponent<Collider>());
             go.name = name;
             go.transform.SetParent(parent, false);
             return go;

@@ -12,6 +12,7 @@ namespace CubeHaul.Presentation.Trucks
         readonly Transform parent;
         readonly TruckVisual prefab;
         readonly Stack<TruckVisual> free = new Stack<TruckVisual>();
+        readonly HashSet<TruckVisual> inPool = new HashSet<TruckVisual>();
         readonly List<TruckVisual> all = new List<TruckVisual>();
 
         public TruckPool(Transform parent, TruckVisual prefab)
@@ -27,15 +28,20 @@ namespace CubeHaul.Presentation.Trucks
         public TruckVisual Get()
         {
             TruckVisual t = free.Count > 0 ? free.Pop() : Create();
+            inPool.Remove(t);
             t.ResetWheels();
             t.SetCargo(false);
             t.gameObject.SetActive(true);
             return t;
         }
 
+        /// <summary>
+        /// Gives a truck back. Whether it is active says nothing (a truck sinking into the tunnel is already hidden);
+        /// the pool keeps track of which trucks it holds.
+        /// </summary>
         public void Release(TruckVisual t)
         {
-            if (t == null || !t.gameObject.activeSelf) return;
+            if (t == null || !inPool.Add(t)) return;
             t.gameObject.SetActive(false);
             free.Push(t);
         }
@@ -50,6 +56,7 @@ namespace CubeHaul.Presentation.Trucks
             }
             all.Clear();
             free.Clear();
+            inPool.Clear();
         }
 
         TruckVisual Create()
