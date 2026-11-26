@@ -883,8 +883,8 @@ C# yolları `Assets/_CubeHaul/` altına görelidir. "—" = taşınmaz.
 
 | TS kaynağı | TS sembolü | C# dosyası | C# türü / üyesi |
 |---|---|---|---|
-| `view/roads.ts` | `Pt`, `Ring` | `Simulation/Pt.cs`, `Simulation/Ring.cs` | `readonly struct Pt`, `readonly struct Ring` |
-| | `RoadMap` (`center`, `beside`, `roadPoint`, `along`, `roadDistance`, `roadPath`, `route`, `routeFrom`) | `Simulation/RoadMap.cs` | `sealed class RoadMap` (aynı adlar) |
+| `view/roads.ts` | `Pt`, `Ring` | `Gameplay/Roads/PointD.cs`, `RoadLayout.cs` | `readonly struct PointD`, `readonly struct RoadRing` — **yazıldı (Görev 13)** |
+| | `RoadMap` (`center`, `beside`, `roadPoint`, `along`, `roadDistance`, `roadPath`, `route`, `routeFrom`) | `Gameplay/Roads/RoadPathPlanner.cs` | `sealed class RoadPathPlanner` (aynı adlar) + `PlanTruck` → `TruckRoute` (sendTruck, dönüş) — **yazıldı (Görev 13)**, [ROADS.md](ROADS.md) |
 | `main.ts` | `CAR_SPEED`, `CONVOY_GAP`, `POP_INTERVAL`, `LOAD_TIME`, `FLY_SPEED`, `RAMP_LANES`, `BOARD`, `FIELD_INSET`, `ROAD_GAP`, `TUNNEL`, `MAX_SLOTS` | `Simulation/SimConstants.cs` | `static class SimConstants` |
 | | `cellSize`, `cellCenter`, `ring` hesabı, `carScale` | `Simulation/FieldLayout.cs` | `sealed class FieldLayout` |
 | | `slotTimer`, `ready`, uçuş kapısı | `Simulation/DispatchScheduler.cs` | `sealed class DispatchScheduler` |
@@ -936,7 +936,7 @@ C# yolları `Assets/_CubeHaul/` altına görelidir. "—" = taşınmaz.
 | `› levels`, `Tools/ts-reference/tests/generator.test.ts`, `solver.test.ts` | `GeneratorRuleTests.cs` (**yazıldı, Görev 09**) |
 | golden `rng`, `generate`, `build`, `generator-cases` ve bölüm dosyaları | `GeneratorGoldenTests.cs` (**yazıldı, Görev 09**) |
 | `› quantize` | `ImageQuantizerTests.cs` |
-| `tests/roads.test.ts` | `RoadMapTests.cs`, `RoadMapLevelTests.cs` |
+| `tests/roads.test.ts` | `RoadRuleTests.cs`, `RoadGoldenTests.cs` (**yazıldı, Görev 13**) |
 | (yeni) §4 invariantları | `InvariantChecker.cs` (test yardımcısı), `InvariantFuzzTests.cs` |
 | (yeni) golden | `GoldenRngTests.cs`, `GoldenGeneratorTests.cs`, `GoldenReplayTests.cs`, `GoldenRouteTests.cs` |
 
