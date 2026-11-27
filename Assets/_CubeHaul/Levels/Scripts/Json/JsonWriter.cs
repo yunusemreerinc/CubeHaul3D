@@ -138,7 +138,7 @@ namespace CubeHaul.Levels.Json
         /// <summary>
         /// Number.prototype.toString / JSON.stringify of a number: the shortest digits that read back as the same double,
         /// then JavaScript's layout rules (plain up to 1e21, exponent below 1e-6). Found by trying 1..17 significant
-        /// digits with the "E" format, which every .NET runtime (Unity's Mono and IL2CPP included) rounds correctly.
+        /// digits with the "E" format, read back with <see cref="JsonNumber"/> (Mono's double.Parse can be a last bit off).
         /// </summary>
         public static string FormatNumber(double d)
         {
@@ -151,7 +151,7 @@ namespace CubeHaul.Levels.Json
             for (int p = 1; p <= 17; p++)
             {
                 string e = a.ToString("E" + (p - 1).ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture);
-                if (double.Parse(e, NumberStyles.Float, CultureInfo.InvariantCulture) != a && p < 17) continue;
+                if (JsonNumber.Parse(e) != a && p < 17) continue; // Mono's double.Parse is not always correctly rounded
                 int at = e.IndexOf('E');
                 digits = e.Substring(0, at).Replace(".", "");
                 exponent = int.Parse(e.Substring(at + 1), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
