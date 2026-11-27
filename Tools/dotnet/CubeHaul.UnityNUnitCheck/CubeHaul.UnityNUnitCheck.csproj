@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Build-only check (nothing runs): the Unity EditMode tests compiled the way Unity compiles them, against NUnit 3.5
+    (com.unity.ext.nunit) on .NET Framework, with C# 9. CubeHaul.Tests runs the same tests on NUnit 3.14, which has APIs
+    Unity's NUnit lacks (Is.AnyOf, Assert.Multiple, ...); a test that uses one passes there and breaks Unity's compile.
+      dotnet build Tools/dotnet/CubeHaul.UnityNUnitCheck
+  -->
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <OutputType>Library</OutputType>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../../Assets/_CubeHaul/Domain/**/*.cs" />
+    <Compile Include="../../../Assets/_CubeHaul/Levels/**/*.cs" />
+    <Compile Include="../../../Assets/_CubeHaul/Gameplay/**/*.cs" />
+    <Compile Include="../../../Assets/_CubeHaul/Tests/EditMode/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.5.0" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

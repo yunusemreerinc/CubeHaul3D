@@ -206,6 +206,10 @@ cd Tools/dotnet/CubeHaul.Tests && dotnet test
 node Tools/unity/metas.mjs --check
 ```
 
+```bash
+dotnet build Tools/dotnet/CubeHaul.UnityNUnitCheck
+```
+
 - `Tools/dotnet/CubeHaul.Domain`, `CubeHaul.Levels`, `CubeHaul.Gameplay`: `Assets` altındaki kaynakları
   `netstandard2.1` + C# 9 ile, **UnityEngine olmadan** derler; proje başvuruları asmdef başvurularıyla aynıdır
   (test edilir).
@@ -213,6 +217,10 @@ node Tools/unity/metas.mjs --check
   bölüm formatı, golden fixture ve proje yapısı testleri de buradadır. **924 / 924 geçti**, EditMode'un 718 testi dahil (Görev 16). Bellek ayırmama testleri (`BoardAllocationTests`,
   `GameAllocationTests`) yalnızca burada koşar: `GC.GetAllocatedBytesForCurrentThread` Unity profilinde yok.
   `GeneratorTimingTests` bölüm başına üretim süresini yazar ([LEVEL_GENERATION §5](LEVEL_GENERATION.md#5-önceden-üretim-ve-çalışma-zamanı)).
+- `Tools/dotnet/CubeHaul.UnityNUnitCheck`: yalnızca derleme, test koşmaz. EditMode testlerini Unity'nin derlediği gibi
+  derler: Unity'nin NUnit'i (`com.unity.ext.nunit`, NUnit 3.5), .NET Framework, C# 9. `CubeHaul.Tests` NUnit 3.14 ile
+  koşar; 3.14'te olup Unity'de olmayan bir API (`Is.AnyOf`, `Assert.Multiple`…) orada geçer, Unity'nin derlemesini
+  bozar (Görev 16'da oldu). Bu proje onu burada yakalar.
 - Presentation, UI, Editor ve PlayMode kodu Unity API'si kullandığı için burada derlenemez. Bu yüzden yalnızca yerleşik,
   uzun süredir değişmeyen API'ler kullanıldı (`Vector3`, `Color32`, `GameObject`, `Time.frameCount`, `MenuItem`,
   `Debug.Log`, `UnityTest`). Kesin doğrulama §5'teki adımlardır.
