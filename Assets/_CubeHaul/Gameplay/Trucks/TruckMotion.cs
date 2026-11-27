@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CubeHaul.Gameplay.Roads;
+using CubeHaul.Levels.Generation;
 
 namespace CubeHaul.Gameplay.Trucks
 {
@@ -72,10 +73,22 @@ namespace CubeHaul.Gameplay.Trucks
             Angle = -Math.PI / 2;
             path = route.Out;
             State = TruckState.Out;
+            Snapshot();
+        }
+
+        /// <param name="slot">The slot that sent it, and the color it hauls (a GameSession sets these).</param>
+        public TruckMotion(TruckRoute route, PointD cube, double cellSize, RoadRing ring, int slot, int color)
+            : this(route, cube, cellSize, ring)
+        {
+            Slot = slot;
+            Color = color;
         }
 
         public TruckRoute Route => route;
         public int Cell => route.Target;
+        /// <summary>The slot that sent it and the palette color it hauls; -1 when sent by hand.</summary>
+        public int Slot { get; } = -1;
+        public int Color { get; } = -1;
         public PointD Cube { get; }
         public double CarScale { get; }
 
@@ -96,6 +109,12 @@ namespace CubeHaul.Gameplay.Trucks
 
         public IReadOnlyList<PointD> Path => path;
 
+        /// <summary>Where it was before the last <see cref="Advance"/> (for drawing between simulation steps).</summary>
+        public double PreviousX { get; private set; }
+        public double PreviousY { get; private set; }
+        public double PreviousAngle { get; private set; }
+        public double PreviousFade { get; private set; }
+
         /// <summary>main.ts carScale: trucks shrink with the cubes so one still fits beside each cube (11 wide).</summary>
         public static double ScaleFor(double cellSize) => Math.Min(1, Math.Max(0.5, cellSize / 13));
 
@@ -107,6 +126,7 @@ namespace CubeHaul.Gameplay.Trucks
         {
             if (dt < 0) throw new ArgumentOutOfRangeException(nameof(dt));
             var events = TruckEvents.None;
+            Snapshot();
             if (State == TruckState.Gone) return events;
             if (State == TruckState.Load)
             {
@@ -161,6 +181,37 @@ namespace CubeHaul.Gameplay.Trucks
             }
             State = TruckState.Gone;
             return TruckEvents.Gone;
+        }
+
+        void Snapshot()
+        {
+            PreviousX = X;
+            PreviousY = Y;
+            PreviousAngle = Angle;
+            PreviousFade = Fade;
+        }
+
+        /// <summary>
+        /// The drawn pose <paramref name="alpha"/> (0..1) of the way from before the last step to now: the lane pose of
+        /// the blended position and heading (the short way round), and the blended fade. alpha 1 is <see cref="Pose"/>.
+        /// </summary>
+        public void Interpolate(double alpha, out PointD pose, out double angle, out double fade)
+        {
+            alpha = Math.Max(0, Math.Min(1, alpha));
+            if (alpha >= 1)
+            {
+                pose = Pose();
+                angle = Angle;
+                fade = Fade;
+                return;
+            }
+            double x = PreviousX + (X - PreviousX) * alpha;
+            double y = PreviousY + (Y - PreviousY) * alpha;
+            angle = TurnToward(PreviousAngle, Angle, double.PositiveInfinity);
+            angle = PreviousAngle + (angle - PreviousAngle) * alpha;
+            double lane = Lane * CarScale * LaneShare(x, y);
+            pose = new PointD(x - Math.Sin(angle) * lane, y + Math.Cos(angle) * lane);
+            fade = PreviousFade + (Fade - PreviousFade) * alpha;
         }
 
         /// <summary>main.ts turnToward: from one heading toward another by at most maxStep, the short way round.</summary>
@@ -219,6 +270,6 @@ namespace CubeHaul.Gameplay.Trucks
         /// <summary>The cube shows in the bed: from LAND_AT through the load on.</summary>
         public bool CargoVisible => HasCargo && (State != TruckState.Load || LoadProgress >= LandAt);
 
-        static double Hypot(double x, double y) => Math.Sqrt(x * x + y * y);
+        static double Hypot(double x, double y) => JsMath.Hypot(x, y);
     }
 }

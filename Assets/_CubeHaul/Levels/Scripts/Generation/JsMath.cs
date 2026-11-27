@@ -17,6 +17,31 @@ namespace CubeHaul.Levels.Generation
             return x - r >= 0.5 ? r + 1 : r;
         }
 
+        /// <summary>
+        /// JavaScript <c>Math.hypot(x, y)</c> as V8 computes it: both values scaled by the larger one, the squares
+        /// summed with Kahan compensation, the root scaled back. <c>Math.Sqrt(x * x + y * y)</c> differs from it in the
+        /// last bit for about 40% of inputs, and a truck's position is the sum of thousands of such steps.
+        /// </summary>
+        public static double Hypot(double x, double y)
+        {
+            if (double.IsInfinity(x) || double.IsInfinity(y)) return double.PositiveInfinity;
+            if (double.IsNaN(x) || double.IsNaN(y)) return double.NaN;
+            double a = Math.Abs(x), b = Math.Abs(y);
+            double max = Math.Max(a, b);
+            if (max == 0) return 0;
+            double sum = 0, compensation = 0;
+            double n = a / max;
+            double summand = n * n - compensation;
+            double preliminary = sum + summand;
+            compensation = preliminary - sum - summand;
+            sum = preliminary;
+            n = b / max;
+            summand = n * n - compensation;
+            preliminary = sum + summand;
+            sum = preliminary;
+            return Math.Sqrt(sum) * max;
+        }
+
         /// <summary><see cref="Round"/> of a value known to fit an int.</summary>
         public static int RoundToInt(double x) => checked((int)Round(x));
     }

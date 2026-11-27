@@ -256,6 +256,96 @@
       "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/scenarios/stuck-addslot-won.json",
       "bytes": 6486,
       "sha256": "c498fc422d4458daf36cc30a914dd932bd48a5067b589fc4225547e0df938e56"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-01-strawberry-1x-120fps.json",
+      "bytes": 339066,
+      "sha256": "8a79f058c3dfc60d005ac4780ce25a2c03dd16ff1ecaf108075e3dd8039b17e9"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-01-strawberry-1x-30fps.json",
+      "bytes": 261708,
+      "sha256": "baa19b1e2ce7220ebe9b167bda574d84a6800a6d12b6f356140fcea9a6b8dd52"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-01-strawberry-1x-60fps.json",
+      "bytes": 342439,
+      "sha256": "03a8359c2f23b1b0c68162d62b2ffccafcae579d99bccd42c22564e05d032e54"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-01-strawberry-2x-60fps.json",
+      "bytes": 181463,
+      "sha256": "b3fc3bbcefdea84f79789a2f458ced854263fcf9fcbd87a260fa28cc1cd90394"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-01-strawberry-3x-144fps.json",
+      "bytes": 128514,
+      "sha256": "24a1a9766f15817e3f103f56c15ef16bb84fcab44891c43947ec6c6385b978a5"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-01-strawberry-3x-60fps.json",
+      "bytes": 126270,
+      "sha256": "1828bdf9227d84c7a01e7dac81ba82da8a134629c5981cb25cd0d505d98bdee8"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-02-mushroom-1x-60fps.json",
+      "bytes": 55797,
+      "sha256": "9b4dce2388337ca97afb97bef5b1f9a27ef51a5746989a9b7041d4d0fff9dc23"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-03-sunset-1x-60fps.json",
+      "bytes": 55628,
+      "sha256": "7f821ebdf2ad4af685694f479d6eb7f354e6ed46636b82b9d438529af65b3a61"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-04-ringed-planet-1x-60fps.json",
+      "bytes": 91188,
+      "sha256": "10c9b0a2c52f2452d358e47931407759b347ab21fee015565f18739c00e45ae6"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-04-ringed-planet-3x-60fps.json",
+      "bytes": 91102,
+      "sha256": "5fd0b34e151a990900c3d5c2615214fbeb67aed73c38e1380e7ad39b525e33f0"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-05-cat-1x-60fps.json",
+      "bytes": 79596,
+      "sha256": "0e3950e31f5b789d9d93d817609af2c8f3c217049e4f89630e2cfd6e94af391e"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-06-cactus-1x-60fps.json",
+      "bytes": 74222,
+      "sha256": "052efcc741cc4431371e4a54cad36592c03fab3d8e7f44664de04eb864ae5e50"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-07-rocket-1x-60fps.json",
+      "bytes": 52158,
+      "sha256": "992910e58e048fb7e20b0891b0b90a504cb572053a9f7c0dcc928b0ed18029e7"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-07-rocket-2x-60fps.json",
+      "bytes": 50911,
+      "sha256": "fd233c1e9b20bb172cc1b4117b1e3fe3af3fdbf96582700fd91eaa25d3b06ef1"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-08-rubber-duck-1x-60fps.json",
+      "bytes": 79546,
+      "sha256": "e681c3a89011303407575035e1f35eea50b10eac3a3e8c8f1ec28a6a64108668"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-09-ice-cream-1x-60fps.json",
+      "bytes": 71304,
+      "sha256": "b0e05fac3322387f1cfab03c1e290d64b3139a279c65d6ddcb525f55d87a766d"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-10-watermelon-1x-60fps.json",
+      "bytes": 69364,
+      "sha256": "54922ad54f61227174b4e2d33e59896c866064dee3355050e3e91dd7d312345f"
+    },
+    {
+      "path": "Assets/_CubeHaul/Tests/Fixtures/Golden/sessions/s-10-watermelon-2x-60fps.json",
+      "bytes": 69271,
+      "sha256": "47f551d03298d5dd6eb7e5a46a4ae6fd73ad2df820a81531bf871b91ce4a269d"
     }
   ]
 }

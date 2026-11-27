@@ -4,6 +4,7 @@ using CubeHaul.Levels;
 using CubeHaul.Presentation;
 using CubeHaul.Presentation.Grid;
 using CubeHaul.Presentation.Roads;
+using CubeHaul.Presentation.Session;
 using CubeHaul.Presentation.Trucks;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -33,7 +34,9 @@ namespace CubeHaul.UI
             public GameCameraRig Rig;
             public LayoutPreview Preview;
             public GridPresenter Grid;
-            public GridDemoDriver Demo;
+            /// <summary>The game loop: a GameSession of the library's first level, auto-played until the tray takes touches.</summary>
+            public GameSessionDriver Session;
+            public SessionControls SessionControls;
             public RoadDebugGizmos Roads;
             public TruckFleetView Trucks;
             public Canvas Canvas;
@@ -85,9 +88,12 @@ namespace CubeHaul.UI
             c.Trucks = trucksGo.AddComponent<TruckFleetView>();
             c.Trucks.Prefab = truckPrefab;
 
-            c.Demo = gridGo.AddComponent<GridDemoDriver>();
-            c.Demo.Configure(c.Grid, library, c.Trucks);
             gridGo.SetActive(true);
+
+            var sessionGo = new GameObject("Game Loop");
+            sessionGo.transform.SetParent(c.Root.transform, false);
+            c.Session = sessionGo.AddComponent<GameSessionDriver>();
+            c.Session.Configure(c.Grid, c.Trucks, library);
 
             var roadsGo = new GameObject("Road Debug");
             roadsGo.transform.SetParent(world.transform, false);
@@ -130,7 +136,8 @@ namespace CubeHaul.UI
             c.Controls.Add(Button(c.Header, "Restart", "R", new Vector2(0, 1), new Vector2(30, -32), new Vector2(34, 34), ButtonBlue, 18));
             c.Controls.Add(Button(c.Header, "Previous", "<", new Vector2(0, 1), new Vector2(70, -32), new Vector2(30, 30), ButtonBlue, 18));
             c.Controls.Add(Button(c.Header, "Next", ">", new Vector2(1, 1), new Vector2(-120, -32), new Vector2(30, 30), ButtonBlue, 18));
-            c.Controls.Add(Button(c.Header, "Speed", "1x", new Vector2(1, 1), new Vector2(-53, -33), new Vector2(82, 38), ButtonBlue, 17));
+            RectTransform speed = Button(c.Header, "Speed", "1x", new Vector2(1, 1), new Vector2(-53, -33), new Vector2(82, 38), ButtonBlue, 17);
+            c.Controls.Add(speed);
             string title = "1/10 · Level";
             DifficultyLabel label = DifficultyLabel.Easy;
             if (!ReferenceEquals(library, null) && library == null)
@@ -164,6 +171,10 @@ namespace CubeHaul.UI
             c.Footer.anchoredPosition = Vector2.zero;
             RectTransform slot = Button(c.Footer, "Add Slot", "+1 Slot", new Vector2(0.5f, 0), new Vector2(0, 6 + 27), new Vector2(176, 54), ButtonGreen, 20);
             c.Controls.Add(slot);
+
+            c.SessionControls = c.Canvas.gameObject.AddComponent<SessionControls>();
+            c.SessionControls.Configure(c.Session, speed.GetComponent<Button>(), speed.Find("Label").GetComponent<Text>(),
+                c.Header.Find("Restart").GetComponent<Button>(), slot.GetComponent<Button>());
         }
 
         static RectTransform Rect(string name, Transform parent)

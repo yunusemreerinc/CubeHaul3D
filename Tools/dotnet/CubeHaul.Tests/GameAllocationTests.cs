@@ -4,6 +4,7 @@ using System.IO;
 using CubeHaul.Domain;
 using CubeHaul.Gameplay.Grid;
 using CubeHaul.Gameplay.Roads;
+using CubeHaul.Gameplay.Session;
 using CubeHaul.Gameplay.Trucks;
 using CubeHaul.Levels;
 using CubeHaul.Tests.LevelFormat;
@@ -143,6 +144,40 @@ namespace CubeHaul.Tests.Domain
             long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
             Assert.That(sink, Is.Not.NaN);
             Assert.That(allocated, Is.EqualTo(0), allocated + " bytes allocated while driving");
+        }
+
+        /// <summary>
+        /// A whole level through the session loop at 1x and 3x: a frame in which no truck is sent (driving, loading,
+        /// returning, cooldowns, ramp lanes, crate flights, the auto player) allocates nothing. Sending a truck allocates
+        /// its motion and planned route only.
+        /// </summary>
+        [TestCase("strawberry", 1)]
+        [TestCase("ringed-planet", 3)]
+        public void ASessionFrameWithoutNewTrucksAllocatesNothing(string levelId, int speed)
+        {
+            var loop = new SessionLoop(GameSession.For(repo.Get(levelId))) { AutoPlay = true };
+            loop.Session.SetSpeed(speed);
+            int sent = 0;
+            loop.Session.TruckSent += _ => sent++;
+            loop.Frame(1 / 60.0);
+            long quiet = 0, quietFrames = 0, withTrucks = 0;
+            for (int f = 0; f < 100_000 && loop.Outcome == AutoPlayOutcome.Playing; f++)
+            {
+                int before = sent;
+                long bytes = GC.GetAllocatedBytesForCurrentThread();
+                loop.Frame(1 / 60.0);
+                bytes = GC.GetAllocatedBytesForCurrentThread() - bytes;
+                if (sent == before)
+                {
+                    quiet += bytes;
+                    quietFrames++;
+                }
+                else withTrucks += bytes;
+            }
+            Assert.That(loop.Outcome, Is.EqualTo(AutoPlayOutcome.Won));
+            Assert.That(quietFrames, Is.GreaterThan(100));
+            Assert.That(quiet, Is.EqualTo(0), $"{quiet} bytes in {quietFrames} frames without new trucks");
+            Assert.That(withTrucks / (double)sent, Is.LessThan(4096), "bytes per truck sent");
         }
     }
 }

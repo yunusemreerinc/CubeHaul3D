@@ -769,7 +769,7 @@ classDiagram
 | `LevelLibrary` | ScriptableObject | Katalog ve seviye `TextAsset` referansları (Android'de `StreamingAssets` okuma karmaşasından kaçınmak için) |
 | ~~`LevelBuildService`~~ | — | *v1 sonrası:* özel resim için `Task.Run(LevelGenerator.Build)`, iptal, ana iş parçacığına aktarma |
 | ~~`ImagePickerService`~~ | — | *v1 sonrası:* galeriden resim, `Texture2D` → GPU ile küçültme → `byte[] rgba` |
-| `GameController` | MonoBehaviour | `Update()` → `session.Advance(Time.unscaledDeltaTime)`; olayları görünümlere dağıtır |
+| `GameController` | MonoBehaviour | `Update()` → `session.Advance(Time.unscaledDeltaTime)`; olayları görünümlere dağıtır. **Görev 15:** `GameSessionDriver` (Presentation) + `GameSession`, `DispatchScheduler`, `TruckFleet`, `SessionLoop`, `FixedStepClock`, `AutoPlayer` (Gameplay) olarak yazıldı; sabit 1/60 s adım; [SESSION.md](SESSION.md) |
 | `WorldMapper` | C# | Tasarım pikseli (x, y-aşağı) → dünya `(x·s, 0, −y·s)`; tek yerde, test edilebilir |
 | `BoardView` | MonoBehaviour | Küpleri renk başına **GPU instancing** ile çizer (`Graphics.RenderMeshInstanced` ya da BRG); alınan küp yerine "soket". **Görev 12:** `GridPresenter` + `CubeField` + `CubePool` olarak yazıldı (havuzlanmış küpler, renk başına ortak materyal, SRP Batcher); [GRID_VIEW.md](GRID_VIEW.md) |
 | `RoadView`, `WallView`, `RampView` | MonoBehaviour | Halkaya göre yol mesh'i, kapalı kenarlarda tuğla duvar (bottom: üst+yanlar; sides: yalnızca üst), rampa |
@@ -1064,6 +1064,7 @@ C# testleri aynı girdileri çalıştırıp çıktıyı **tam eşitlikle** karş
 | G-08 | `replays/*.json` | Hamle izleri: `tap/tick(ready maskesi)/collect/addSlot` dizisi ve her adımdan sonra dispatch'ler, `status`, `pending`, `remaining`, her slot için `SlotBlocked` | ✔ `scenarios/*.json` (10 senaryo, her adımda tam durum) |
 | G-09 | `routes.json` | Örnek dispatch'ler için `RoadMap.RouteFrom` ara noktaları ve maliyet (tolerans 1e-9) | — Henüz yok |
 | G-10 | `quantize.json` | Sabit RGBA girdileri (düz renk, gradyan, saydam) için `quantize` sonucu | — Henüz yok |
+| G-11 | `sessions/*.json` | `App.update` mantığı görünümsüz (`tests/appModel.ts`), sabit `dt` ile: tap/claim/collect/+1 Slot sırası ve karesi, kamyon konumları | ✔ 18 oturum (Görev 15, [SESSION.md](SESSION.md)) |
 
 G-08 izleri, TS tarafında tohumlu rastgele bir oyuncu ile her bölümde birkaç yüz adım oynatılarak üretilir
 (gecikmeli `collect` dahil); böylece `tick`/`collect` ayrımı ve `opensUp` gibi nadir durumlar da kapsanır.

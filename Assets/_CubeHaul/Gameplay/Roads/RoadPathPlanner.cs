@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CubeHaul.Domain;
+using CubeHaul.Levels.Generation;
 
 namespace CubeHaul.Gameplay.Roads
 {
@@ -262,13 +263,8 @@ namespace CubeHaul.Gameplay.Roads
             }
         }
 
-        /// <summary>JavaScript Math.hypot for the cases routing uses: one of the two is 0 except in the fallback.</summary>
-        static double Hypot(double x, double y)
-        {
-            if (x == 0) return Math.Abs(y);
-            if (y == 0) return Math.Abs(x);
-            return Math.Sqrt(x * x + y * y);
-        }
+        /// <summary>JavaScript Math.hypot (V8's algorithm; plain Sqrt(x² + y²) differs in the last bit).</summary>
+        static double Hypot(double x, double y) => JsMath.Hypot(x, y);
     }
 
     /// <summary>A truck's trip (main.ts sendTruck and the "home" leg).</summary>

@@ -61,10 +61,11 @@ Game
 ├─ Directional Light
 ├─ World
 │  ├─ Layout Preview  LayoutPreview: tahta, rampa, 5 slot, 5×3 tepsi (yer tutucu kutular)
-│  ├─ Grid            GridPresenter + GridDemoDriver: bölümün 3D küpleri (Görev 12, GRID_VIEW.md)
+│  ├─ Grid            GridPresenter: bölümün 3D küpleri (Görev 12, GRID_VIEW.md)
 │  ├─ Trucks          TruckFleetView: havuzlanmış kamyonlar (Görev 14, TRUCKS.md)
 │  └─ Road Debug      RoadDebugGizmos: kamyon rotaları gizmo olarak (Görev 13, ROADS.md)
-├─ UI                 Canvas, CanvasScaler, GraphicRaycaster
+├─ Game Loop          GameSessionDriver: oyun döngüsü, motor + kamyonlar (Görev 15, SESSION.md)
+├─ UI                 Canvas, CanvasScaler, GraphicRaycaster, SessionControls (hız, Restart, +1 Slot)
 │  └─ Safe Area       SafeAreaFitter
 │     ├─ Top Bar      Restart, Previous, Next, Speed, Title, Difficulty
 │     └─ Bottom Bar   Add Slot

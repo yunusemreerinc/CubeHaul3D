@@ -130,6 +130,7 @@ namespace CubeHaul.Presentation.Grid
             {
                 int cell = changed[k];
                 if (field.StateOf(cell) != CubeState.Empty) continue; // claimed: the cube stays where it is
+                if (cubes[cell] == null) continue; // taken by its truck (TakeCube)
                 pool.Release(cubes[cell]);
                 cubes[cell] = null;
             }
@@ -138,6 +139,23 @@ namespace CubeHaul.Presentation.Grid
 
         /// <summary>The cube shown for this cell, or null (empty cell, or already collected).</summary>
         public GameObject CubeAt(int cell) => field != null && cell >= 0 && cell < cubes.Length ? cubes[cell] : null;
+
+        /// <summary>
+        /// Hands this cell's cube over, e.g. to the truck loading it (Task 15): from now on the caller moves it, and gives
+        /// it back with <see cref="ReturnCube"/>. Null when the cell has no cube shown.
+        /// </summary>
+        public GameObject TakeCube(int cell)
+        {
+            GameObject go = CubeAt(cell);
+            if (go != null) cubes[cell] = null;
+            return go;
+        }
+
+        /// <summary>A cube taken with <see cref="TakeCube"/> goes back to the pool.</summary>
+        public void ReturnCube(GameObject cube)
+        {
+            if (cube != null) pool?.Release(cube);
+        }
 
         /// <summary>The center of the top face of this cell's cube, world units.</summary>
         public Vector3 TopCenter(int cell)
