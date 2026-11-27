@@ -20,6 +20,8 @@ namespace CubeHaul.Presentation
         [SerializeField] int trayColumns = 5;
         [SerializeField, Tooltip("Draw the level's grid as a flat texture. Off when a GridPresenter draws the cubes.")]
         bool showField = true;
+        [SerializeField, Tooltip("Draw placeholder boxes for the slots and the tray. Off when the UI draws them (Task 16).")]
+        bool showDockAndTray = true;
 
         public const float CrateHeight = 30f;
         /// <summary>The board box: its top is where the cubes stand (GridPresenter.BoardTop).</summary>
@@ -41,6 +43,17 @@ namespace CubeHaul.Presentation
             {
                 if (showField == value) return;
                 showField = value;
+                if (isActiveAndEnabled) Rebuild();
+            }
+        }
+
+        public bool ShowDockAndTray
+        {
+            get => showDockAndTray;
+            set
+            {
+                if (showDockAndTray == value) return;
+                showDockAndTray = value;
                 if (isActiveAndEnabled) Rebuild();
             }
         }
@@ -78,6 +91,7 @@ namespace CubeHaul.Presentation
             Box("Board", DesignLayout.Board, BoardHeight, BoardColor);
             if (showField) Field(Picture());
             Box("Ramp", DesignLayout.Tunnel, 2, new Color32(0x56, 0x5c, 0x68, 0xff));
+            if (!showDockAndTray) return;
             for (int i = 0; i < slots; i++) Box("Slot " + i, DesignLayout.SlotRect(i, slots), SlotPadHeight, new Color32(0xd8, 0xc8, 0xb0, 0xff));
             for (int row = 0; row < DesignLayout.TrayRows; row++)
                 for (int col = 0; col < trayColumns; col++)

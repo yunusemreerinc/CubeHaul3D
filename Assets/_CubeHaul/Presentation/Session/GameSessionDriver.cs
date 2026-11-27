@@ -11,8 +11,8 @@ namespace CubeHaul.Presentation.Session
     /// The game loop in the scene (Task 15, docs/SESSION.md): plays a level of the <see cref="LevelLibrary"/> as a
     /// <see cref="GameSession"/>. Every frame the frame time goes into a <see cref="SessionLoop"/> (whole 1/60 s steps,
     /// as cube-hunt at 60 Hz); the <see cref="GridPresenter"/> follows the board, the <see cref="TruckFleetView"/> draws
-    /// the trucks and the cubes they load, in between steps. Until the tray takes touches, <see cref="AutoPlay"/> taps
-    /// the crates. 1x / 2x / 3x through <see cref="CycleSpeed"/> (the top bar's speed button).
+    /// the trucks and the cubes they load, in between steps. The player taps the tray (Task 16); <see cref="AutoPlay"/> taps
+    /// the crates by themselves instead (demos, tests). 1x / 2x / 3x through <see cref="CycleSpeed"/> (the top bar's speed button).
     /// </summary>
     public sealed class GameSessionDriver : MonoBehaviour
     {
@@ -20,8 +20,8 @@ namespace CubeHaul.Presentation.Session
         [SerializeField] TruckFleetView trucks;
         [SerializeField] LevelLibrary library;
         [SerializeField, Min(0)] int levelIndex;
-        [SerializeField, Tooltip("Tap the crates by themselves (cube-hunt's reference policy) until the tray takes touches.")]
-        bool autoPlay = true;
+        [SerializeField, Tooltip("Tap the crates by themselves (cube-hunt's reference policy): demos and tests. The tray takes touches.")]
+        bool autoPlay;
         [SerializeField, Range(1, 3), Tooltip("1x, 2x or 3x.")]
         int speed = 1;
         [SerializeField, Tooltip("Start the level when Play mode starts. Off: call LoadLevel.")]
@@ -132,6 +132,13 @@ namespace CubeHaul.Presentation.Session
             speed = Mathf.Clamp(value, 1, 3);
             loop?.Session.SetSpeed(speed);
         }
+
+        /// <summary>
+        /// A tap on a tray column (main.ts tapColumn): its front crate goes to the first free slot through
+        /// GameSession.Tap → GameEngine.Tap. Returns the slot, or -1 (empty column, game over, or every slot full; the
+        /// last is reported by GameSession.TapRefused).
+        /// </summary>
+        public int Tap(int column) => loop != null ? loop.Session.Tap(column) : -1;
 
         /// <summary>The +1 Slot booster (once per level).</summary>
         public bool AddSlot() => loop != null && loop.Session.AddSlot();

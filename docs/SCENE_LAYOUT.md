@@ -60,12 +60,13 @@ Game
 ├─ Main Camera        Camera (Solid Color #f6efe4), AudioListener, GameCameraRig
 ├─ Directional Light
 ├─ World
-│  ├─ Layout Preview  LayoutPreview: tahta, rampa, 5 slot, 5×3 tepsi (yer tutucu kutular)
+│  ├─ Layout Preview  LayoutPreview: tahta ve rampa (yer tutucu kutular; slotları ve tepsiyi Görev 16'dan beri UI çizer)
 │  ├─ Grid            GridPresenter: bölümün 3D küpleri (Görev 12, GRID_VIEW.md)
 │  ├─ Trucks          TruckFleetView: havuzlanmış kamyonlar (Görev 14, TRUCKS.md)
 │  └─ Road Debug      RoadDebugGizmos: kamyon rotaları gizmo olarak (Görev 13, ROADS.md)
 ├─ Game Loop          GameSessionDriver: oyun döngüsü, motor + kamyonlar (Görev 15, SESSION.md)
 ├─ UI                 Canvas, CanvasScaler, GraphicRaycaster, SessionControls (hız, Restart, +1 Slot)
+│  ├─ Play Area       PlayAreaView: dokunmatik tepsi ve slotlar (Görev 16, TRAY_UI.md)
 │  └─ Safe Area       SafeAreaFitter
 │     ├─ Top Bar      Restart, Previous, Next, Speed, Title, Difficulty
 │     └─ Bottom Bar   Add Slot
