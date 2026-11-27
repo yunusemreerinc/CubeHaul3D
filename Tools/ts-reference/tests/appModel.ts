@@ -96,6 +96,16 @@ export class AppModel {
     return this.cars.length + this.ramp.reduce((n, q) => n + q.length, 0);
   }
 
+  /** Trucks on the road, in update order: the cell each one hauls and where it is (its route's center line). */
+  carPoses(): { cell: number; x: number; y: number; state: Car["state"] }[] {
+    return this.cars.map((c) => ({ cell: c.cell, x: c.x, y: c.y, state: c.state }));
+  }
+
+  /** Trucks waiting in each ramp lane's queue, oldest first, by the cell each one hauls. */
+  rampQueues(): number[][] {
+    return this.ramp.map((q) => q.map((c) => c.cell));
+  }
+
   isFlying(slot: number): boolean {
     return this.flyers.some((f) => f.slot === slot);
   }

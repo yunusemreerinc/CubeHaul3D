@@ -50,8 +50,10 @@ zamanlarını, dolayısıyla hangi küplerin ne zaman açılacağını değişti
 
 ## 4. Sahnede
 
-- **Bileşen:** `World ▸ Trucks` (`TruckFleetView`). `Send(route, cube, cellSize, ring, color)` bir kamyon gönderir. Her karede (`AutoStep`) ya da `Step(saniye)` ile ilerler. `Arrived` olayı oyunun `Collect`'ini çağırmak içindir.
-- **Otomatik oynatıcı:** `World ▸ Grid › Grid Demo Driver › Auto Play` artık kamyonlarla oynuyor. Her claim bir kamyon gönderiyor, küp kamyon varınca toplanıyor.
+- **Bileşen:** `World ▸ Trucks` (`TruckFleetView`).
+- **Oyunda (Görev 15):** `Bind(session, grid)` ile bir `GameSession`'ın kamyonlarını gösterir. Kamyonları oturum hareket ettirir, `Render(alpha)` çizer. Varışta küp ızgaradan alınıp kasaya uçar ([SESSION.md](SESSION.md)).
+- **Elle:** `Send(route, cube, cellSize, ring, color)` bir kamyon gönderir. Her karede (`AutoStep`) ya da `Step(saniye)` ile ilerler. `Arrived` olayı oyunun `Collect`'ini çağırmak içindir (testler).
+- **Otomatik oynatıcı:** Görev 15'ten beri `Game ▸ Game Loop` (`GameSessionDriver › Auto Play`, varsayılan açık).
 
 ## 5. Testler
 
@@ -64,5 +66,5 @@ zamanlarını, dolayısıyla hangi küplerin ne zaman açılacağını değişti
 ## 6. Elle doğrulama
 
 1. **CubeHaul ▸ Setup ▸ Create Game Scene** → Rebuild. `Art/Prefabs/Truck.prefab` ve `Truck*.mat` oluşur, sahneye `World ▸ Trucks` eklenir.
-2. `World ▸ Grid` › **Auto Play**'i işaretle, Play. Kamyonlar rampadan çıkıp yolu izliyor, küplere gidiyor; küpler kamyon varınca kayboluyor, kamyonlar küp kasada geri dönüp rampaya iniyor.
-3. Commit etmeden Auto Play'i kapat. Commit: sahne, `Truck.prefab` ve `Truck*.mat` (hepsi `.meta` dosyalarıyla).
+2. Play (Görev 15'ten beri bölüm kendiliğinden oynanır, [SESSION.md §7](SESSION.md#7-elle-doğrulama)). Kamyonlar rampadan çıkıp yolu izliyor, küplere gidiyor; küpler kamyon varınca kasaya uçuyor, kamyonlar küp kasada geri dönüp rampaya iniyor.
+3. Commit: sahne, `Truck.prefab` ve `Truck*.mat` (hepsi `.meta` dosyalarıyla).

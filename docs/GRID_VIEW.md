@@ -13,7 +13,7 @@ hiçbir kararda kullanılmıyor.
 | Presentation | `GridPresenter` | `CubeField`'i küplere çevirir: konum, ölçek, renk başına materyal; her karede tahtayı izler |
 | Presentation | `CubePool` | Küp GameObject'lerini yeniden kullanır |
 | Presentation | `CubeMesh` | 24 köşeli, düz gölgeli birim küp |
-| Presentation | `GridDemoDriver` | Geçici oyun döngüsü: `AutoPlay` açıksa Play modunda bölümü açgözlü oynar; claim edilen küpe kamyon gönderir, küp kamyon varınca toplanır (Görev 14; kamyon filosu yoksa bir süre sonra) |
+| Presentation | `GridPresenter.TakeCube` / `ReturnCube` | Görev 15: kamyon varınca küpü yükleme animasyonu için ızgaradan alır, kasaya inince havuza geri verir. Oyun döngüsü `GameSessionDriver`, [SESSION.md](SESSION.md) |
 | Editor | `GameSceneBuilder` | `Art/Materials/Cube.mat`'i (URP Lit, GPU instancing açık) oluşturur, sahneye `World/Grid`'i ekler |
 
 ## 2. Hücre ↔ küp eşlemesi

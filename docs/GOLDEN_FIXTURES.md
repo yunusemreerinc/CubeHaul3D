@@ -41,6 +41,7 @@ bağlı hiçbir girdi kullanılmaz.
 | `…/Golden/generator-cases.json` | Yerleşik bölümlerin ulaşmadığı üretim durumları (Görev 09): elle verilen seçenekler, büyük seed'ler, `buildLevel`'in yedek ve doğrulanamadı yolları; her durum için tam `generateLevel` tepsisi, `buildLevel`'in denediği her tepsi ve döndürdüğü tepsi | G-05, G-06, G-07 |
 | `…/Golden/scenarios/*.json` | 10 senaryo: her işlemden sonra oyunun tam durumu | G-08 |
 | `…/Golden/roads.json` | Kamyon rotaları (Görev 13): 56 tahta durumunda 1235 hedef için üç şeridin maliyeti, seçilen şerit ve rota; cube-hunt `RoadMap` + `main.ts` geometrisi ([ROADS.md](ROADS.md)) | B-34 |
+| `…/Golden/sessions/s-NN-<id>-<hız>x-<fps>fps.json` | 18 oyun oturumu (Görev 15): main.ts zamanlamasıyla (`tests/appModel.ts`) referans politikanın baştan sona oynadığı bölümler; her tap, claim, collect ve +1 Slot karesiyle, seçili karelerde kamyon konumları ([SESSION.md](SESSION.md)) | G-11 |
 | `…/Golden/parity/p01…p24-*.json` | 24 eşdeğerlik senaryosu (Görev 10): 10 bölüm, farklı tepsi seed'leri, kenarlar, slot sayıları ve girdi politikaları; her çağrıdan sonra kuralların bildirdiği durum ([PARITY.md](PARITY.md)) | G-08 |
 | `…/Golden/manifest.json` | Diğer tüm dosyaların boyutu ve SHA-256'sı | — |
 
