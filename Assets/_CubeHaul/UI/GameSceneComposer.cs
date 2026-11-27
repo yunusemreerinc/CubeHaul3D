@@ -5,6 +5,7 @@ using CubeHaul.Presentation;
 using CubeHaul.Presentation.Grid;
 using CubeHaul.Presentation.Roads;
 using CubeHaul.Presentation.Session;
+using CubeHaul.UI.Hud;
 using CubeHaul.Presentation.Trucks;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -37,6 +38,8 @@ namespace CubeHaul.UI
             /// <summary>The game loop: a GameSession of the library's first level, auto-played until the tray takes touches.</summary>
             public GameSessionDriver Session;
             public SessionControls SessionControls;
+            /// <summary>The touchable tray and the slots (Task 16), under the bars.</summary>
+            public PlayAreaView PlayArea;
             public RoadDebugGizmos Roads;
             public TruckFleetView Trucks;
             public Canvas Canvas;
@@ -75,6 +78,7 @@ namespace CubeHaul.UI
             c.Preview = previewGo.AddComponent<LayoutPreview>();
             c.Preview.Library = library;
             c.Preview.ShowField = false; // the GridPresenter draws the cubes
+            c.Preview.ShowDockAndTray = false; // the UI draws the slots and the tray
             previewGo.SetActive(true);
 
             var gridGo = new GameObject("Grid");
@@ -120,6 +124,11 @@ namespace CubeHaul.UI
             c.Scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             c.Scaler.referenceResolution = new Vector2((float)DesignLayout.Width, (float)DesignLayout.Height);
             c.Scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+
+            // The tray and the slots first, so the bars draw over them. Laid out where the world shows them, not in the safe area.
+            RectTransform play = Rect("Play Area", canvasGo.transform);
+            c.PlayArea = play.gameObject.AddComponent<PlayAreaView>();
+            c.PlayArea.Configure(c.Session, c.Rig);
 
             RectTransform safe = Rect("Safe Area", canvasGo.transform);
             Stretch(safe);

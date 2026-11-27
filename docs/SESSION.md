@@ -13,7 +13,7 @@ Hız 1x / 2x / 3x seçilebiliyor. Aynı hamleler aynı kare süresiyle cube-hunt
 | Gameplay | `GameSession` | Bir bölüm oyunu. `Advance(dt)` main.ts `update`'in bir karesi (§2). `Tap`, `AddSlot` (bölüm başına bir kez, en fazla 6), `SetSpeed` / `CycleSpeed`. Olaylar: `CrateTapped`, `TapRefused`, `CrateLanded`, `TruckSent`, `TruckLaunched`, `CubeCollected`, `TruckLoaded`, `TruckReturned`, `CrateEmptied`, `SlotAdded`, `SpeedChanged` |
 | Gameplay | `DispatchScheduler` | Slot bekleme süreleri (`POP_INTERVAL` = 0,15 s simülasyon zamanı) ve slotuna uçan kasalar (1/3,8 s **gerçek** zaman). `Ready`, `GameEngine.Tick`'e verilen önbellekli temsilci |
 | Gameplay | `TruckFleet` | `sendTruck`: en ucuz rotalı rampa şeridi, şerit kuyruğu. Şerit aralığı `30 · carScale / 200` s. Yoldaki kamyonlar; varışta `Collect` |
-| Gameplay | `AutoPlayer` | cube-hunt referans politikası (`Tools/ts-reference/tests/appModel.ts` `play`). Tepsi dokunuş almaya başlayana kadar oyuncunun yerini tutar |
+| Gameplay | `AutoPlayer` | cube-hunt referans politikası (`Tools/ts-reference/tests/appModel.ts` `play`). Demolar ve testler için oyuncunun yerini tutar (Görev 16'dan beri tepsi dokunuş alıyor) |
 | Gameplay | `FixedStepClock`, `SessionLoop` | Cihaz kare süresi → tam 1/60 s adımlar (en fazla 0,05 s/kare, main.ts gibi). `Alpha` iki adım arası çizim için |
 | Gameplay | `CubeLoad` | main.ts `drawLoading` eğrisi: gevşeme ve yükselme (`LIFT_END` = 0,22), kavis, kasaya iniş (`LAND_AT` = 0,78) |
 | Presentation | `GameSessionDriver` | Sahnedeki döngü (`Game ▸ Game Loop`). Kütüphaneden bölümü açar, her kare `SessionLoop.Frame`, sonra `TruckFleetView.Render(alpha)` |
@@ -105,7 +105,7 @@ eksenlere paralel olduğu için iki yöntem aynı sonucu veriyor; çapraz bir ba
 
 1. **CubeHaul ▸ Setup ▸ Create Game Scene** → Rebuild. Sahneye `Game ▸ Game Loop` (`GameSessionDriver`) eklenir; eski
    `Grid Demo Driver` kalkar.
-2. Play. İlk bölüm kendiliğinden oynanır (`Auto Play` varsayılan olarak açık, tepsi henüz dokunuş almıyor). Kamyonlar
+2. `Game ▸ Game Loop › Auto Play`'i aç (Görev 16'dan beri varsayılan kapalı: tepsi dokunuş alıyor, [TRAY_UI.md](TRAY_UI.md)), Play. İlk bölüm kendiliğinden oynanır. Kamyonlar
    rampadan sırayla çıkar ve küplerine gider. Küpler kamyon varınca kasaya uçar. Kamyonlar yükle döner. Son kamyon
    inince Console'da "Strawberry: won after … s" yazar.
 3. Sağ üstteki **1x** düğmesi 2x ve 3x'e geçirir. **R** baştan başlatır. **+1 Slot** bir kez çalışır.

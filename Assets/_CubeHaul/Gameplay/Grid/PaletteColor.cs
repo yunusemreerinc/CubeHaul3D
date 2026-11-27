@@ -38,6 +38,22 @@ namespace CubeHaul.Gameplay.Grid
             return -1000;
         }
 
+        /// <summary>
+        /// cube-hunt view/draw.ts shade: mixes toward black (amount &lt; 0) or white (amount &gt; 0), each channel rounded
+        /// like Math.round.
+        /// </summary>
+        public PaletteColor Shade(double amount)
+        {
+            byte Mix(byte v) => (byte)Levels.Generation.JsMath.RoundToInt(amount < 0 ? v * (1 + amount) : v + (255 - v) * amount);
+            return new PaletteColor(Mix(R), Mix(G), Mix(B));
+        }
+
+        /// <summary>draw.ts luminance: 0 (black) .. 1 (white), Rec. 601 weights.</summary>
+        public double Luminance => (0.299 * R + 0.587 * G + 0.114 * B) / 255;
+
+        /// <summary>Light colors get dark lettering and fills (draw.ts: luminance &gt; 0.72).</summary>
+        public bool IsLight => Luminance > 0.72;
+
         public bool Equals(PaletteColor o) => R == o.R && G == o.G && B == o.B;
         public override bool Equals(object obj) => obj is PaletteColor o && Equals(o);
         public override int GetHashCode() => (R << 16) | (G << 8) | B;

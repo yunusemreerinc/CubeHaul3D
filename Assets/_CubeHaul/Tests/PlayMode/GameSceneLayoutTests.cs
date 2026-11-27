@@ -105,7 +105,7 @@ namespace CubeHaul.Tests.PlayMode
             ScreenLayout layout = scene.Rig.Layout;
             Assert.That(layout.Fits, Is.True, layout.ToString());
             Rect region = ToRect(layout.WorldRegion);
-            Assert.That(scene.Preview.Renderers.Count, Is.GreaterThan(10));
+            Assert.That(scene.Preview.Renderers.Count, Is.GreaterThanOrEqualTo(2), "the board and the ramp (the UI draws the slots and the tray)");
             foreach (Renderer r in scene.Preview.Renderers)
             {
                 Rect onScreen = ScreenRect(r.bounds);
@@ -149,6 +149,47 @@ namespace CubeHaul.Tests.PlayMode
                 (double ex, double ey) = layout.DesignToScreen(x, y, h);
                 Assert.That(p.x, Is.EqualTo((float)ex).Within(0.5f), $"design ({x}, {y}, {h}) x");
                 Assert.That(p.y, Is.EqualTo((float)ey).Within(0.5f), $"design ({x}, {y}, {h}) y");
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator TheTrayAndTheSlotsStayBetweenTheBars([ValueSource(nameof(Screens))] ScreenCase s)
+        {
+            yield return Build(s);
+            var driver = scene.Session;
+            driver.PlayOnStart = false;
+            driver.enabled = false;
+            driver.Play(CubeHaul.Levels.LevelRepository.LoadDirectory("Assets/_CubeHaul/Levels/Content").ThrowIfErrors().Get("strawberry"));
+            driver.Tap(0);
+            driver.Tap(1);
+            yield return null;
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+            ScreenLayout layout = scene.Rig.Layout;
+            var map = new CubeHaul.Gameplay.Hud.HudLayout(layout);
+            Rect region = ToRect(layout.WorldRegion), safe = s.Safe;
+            var shown = new List<RectTransform> { scene.PlayArea.Dock };
+            for (int col = 0; col < 5; col++)
+            {
+                var target = (RectTransform)scene.PlayArea.TargetOf(col).transform;
+                Rect r = ScreenRect(target);
+                Rect expected = ToRect(map.Rect(scene.PlayArea.Model.FrontBox(col)));
+                Assert.That(Mathf.Abs(r.xMin - expected.xMin) + Mathf.Abs(r.yMin - expected.yMin) + Mathf.Abs(r.xMax - expected.xMax) + Mathf.Abs(r.yMax - expected.yMax),
+                    Is.LessThan(2f), $"{s}: column {col}'s tap target {r} is its front crate {expected}");
+                Assert.That(r.width / layout.CanvasScale, Is.GreaterThanOrEqualTo(44f), $"{s}: column {col} is a fingertip wide");
+                shown.Add(target);
+                for (int row = 0; row < 3; row++)
+                {
+                    RectTransform crate = scene.PlayArea.TrayCrate(col, row);
+                    if (crate.gameObject.activeSelf) shown.Add(crate);
+                }
+            }
+            foreach (RectTransform rt in shown)
+            {
+                Rect r = ScreenRect(rt);
+                Assert.That(Inside(region, r, 3f), Is.True, $"{s}: {rt.name} at {r} leaves the play region {region}");
+                Assert.That(Inside(safe, r, 3f), Is.True, $"{s}: {rt.name} at {r} leaves the safe area {safe}");
+                Assert.That(r.Overlaps(ScreenRect(scene.Header)) || r.Overlaps(ScreenRect(scene.Footer)), Is.False, $"{s}: {rt.name} under a bar");
             }
         }
 

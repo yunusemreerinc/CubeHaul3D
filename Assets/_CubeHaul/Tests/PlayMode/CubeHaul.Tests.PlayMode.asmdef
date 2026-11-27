@@ -9,7 +9,8 @@
         "CubeHaul.Gameplay",
         "CubeHaul.Presentation",
         "CubeHaul.UI",
-        "UnityEngine.UI"
+        "UnityEngine.UI",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
