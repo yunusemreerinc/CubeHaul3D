@@ -96,7 +96,7 @@ namespace CubeHaul.Tests.EditMode
                     }
                     if (c == null)
                     {
-                        Assert.That(look.Shows, Is.AnyOf(SlotShows.Empty, SlotShows.Leaving), $"frame {frames} slot {i}");
+                        Assert.That(look.Shows == SlotShows.Empty || look.Shows == SlotShows.Leaving, Is.True, $"frame {frames} slot {i}: {look.Shows}");
                         continue;
                     }
                     Assert.That(look.Shows, Is.EqualTo(SlotShows.Crate));
