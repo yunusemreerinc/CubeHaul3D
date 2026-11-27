@@ -79,6 +79,14 @@ ile en çok aynı anda yolda olan kamyon sayısının aynı olmasını istiyor. 
 durur. Kasıtlı bozmalar (slot süresi 0,1, şerit aralığında `carScale` yok, kasa uçuşu simülasyon zamanında)
 yakalanıyor.
 
+**JSON sayıları:** Unity'nin Mono'su .NET Framework'ün `double.Parse`'ını kullanır. Bu, 16–17 basamaklı sayılarda
+son bitte yanılabilir (ör. 435.27586206896723 → 435.27586206896717). Golden kamyon konumları bu yüzden Unity'de bir bit
+farklı okunuyordu. `JsonNumber.Parse` en yakın double'ı (eşitlikte çift olanı) her çalışma zamanında aynı veriyor:
+kısa sayılarda Clinger'ın kesin hızlı yolu, diğerlerinde BigInteger ile kesin bölme. `JsonParser` ve `JsonWriter`
+bunu kullanıyor. `JsonNumberTests` (EditMode, Unity'de de koşar) Node'un bitleriyle karşılaştırıyor;
+`JsonNumberFuzzTests` (`dotnet test`) .NET 8'in doğru `double.Parse`'ına karşı 660 bin girdiyi deniyor (tam yarı yol
+noktaları dahil).
+
 **`Math.hypot`:** JavaScript'in (V8) `Math.hypot`'u, `Math.Sqrt(x² + y²)`'den rastgele girdilerin ~%40'ında son bitte
 farklı. `JsMath.Hypot` V8'in algoritmasının portu; kamyon hareketi ve rota planlayıcı bunu kullanıyor. Bugünkü rotalar
 eksenlere paralel olduğu için iki yöntem aynı sonucu veriyor; çapraz bir bacak eklenirse eşdeğerlik bozulmaz.

@@ -192,16 +192,8 @@ namespace CubeHaul.Levels.Json
                 if (!IsDigit(Peek())) throw Error("bad number");
                 while (IsDigit(Peek())) pos++;
             }
-            string raw = text.Substring(start, pos - start);
-            try
-            {
-                return double.Parse(raw, NumberStyles.Float, CultureInfo.InvariantCulture);
-            }
-            catch (OverflowException)
-            {
-                // Older runtimes (Mono) throw where .NET Core and JavaScript return infinity.
-                return raw[0] == '-' ? double.NegativeInfinity : double.PositiveInfinity;
-            }
+            // Not double.Parse: on Unity's Mono it can be a last bit off for 16-17 digit numbers (JsonNumber).
+            return JsonNumber.Parse(text.Substring(start, pos - start));
         }
 
         void Expect(string word)
