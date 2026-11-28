@@ -70,6 +70,7 @@ Game
 │  └─ Safe Area       SafeAreaFitter
 │     ├─ Top Bar      Restart, Previous, Next, Speed, Title, Difficulty
 │     └─ Bottom Bar   Add Slot
+│  └─ Overlay         GameFlowView: başlangıç, kazanma ve tıkanma panelleri (Görev 17, GAME_FLOW.md)
 └─ EventSystem        EventSystem, InputSystemUIInputModule
 ```
 
