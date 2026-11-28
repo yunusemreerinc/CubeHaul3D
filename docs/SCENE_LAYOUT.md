@@ -65,11 +65,11 @@ Game
 │  ├─ Trucks          TruckFleetView: havuzlanmış kamyonlar (Görev 14, TRUCKS.md)
 │  └─ Road Debug      RoadDebugGizmos: kamyon rotaları gizmo olarak (Görev 13, ROADS.md)
 ├─ Game Loop          GameSessionDriver: oyun döngüsü, motor + kamyonlar (Görev 15, SESSION.md)
-├─ UI                 Canvas, CanvasScaler, GraphicRaycaster, SessionControls (hız, Restart, +1 Slot)
+├─ UI                 Canvas, CanvasScaler, GraphicRaycaster, SessionControls (üst ve alt çubuk)
 │  ├─ Play Area       PlayAreaView: dokunmatik tepsi ve slotlar (Görev 16, TRAY_UI.md)
-│  └─ Safe Area       SafeAreaFitter
-│     ├─ Top Bar      Restart, Previous, Next, Speed, Title, Difficulty
-│     └─ Bottom Bar   Add Slot
+│  ├─ Safe Area       SafeAreaFitter
+│  │  ├─ Top Bar      Restart, Previous, Next, Speed, Title, Difficulty
+│  │  └─ Bottom Bar   Add Slot
 │  └─ Overlay         GameFlowView: başlangıç, kazanma ve tıkanma panelleri (Görev 17, GAME_FLOW.md)
 └─ EventSystem        EventSystem, InputSystemUIInputModule
 ```
