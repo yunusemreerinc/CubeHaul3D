@@ -60,9 +60,13 @@ namespace CubeHaul.Gameplay.Session
         public int TrucksOut => Fleet.Count;
         /// <summary>Won or stuck, and every truck is home.</summary>
         public bool IsOver => Game.Status != GameStatus.Playing && Fleet.Count == 0;
-        /// <summary>The end panel would be showing (main.ts: overlayDelay over 0.4 s).</summary>
-        public bool ShowsEndPanel => OverlayDelay > SimConstants.EndPanelDelay;
-        public bool CanAddSlot => !SlotBoostUsed && Game.State.SlotCount < SimConstants.MaxSlots;
+        /// <summary>The end panel would be showing (main.ts: overlayDelay has reached 0.4 s).</summary>
+        public bool ShowsEndPanel => OverlayDelay >= SimConstants.EndPanelDelay;
+        /// <summary>
+        /// The +1 Slot booster is still there: once per level, up to MAX_SLOTS, not after a win (main.ts canSlot, B-30).
+        /// Free for now: no ad or purchase stands in front of it (Task 17).
+        /// </summary>
+        public bool CanAddSlot => !SlotBoostUsed && Game.State.SlotCount < SimConstants.MaxSlots && Game.Status != GameStatus.Won;
 
         /// <summary>A crate was tapped from a column into a slot (it now flies there).</summary>
         public event Action<int, int> CrateTapped;

@@ -40,6 +40,8 @@ namespace CubeHaul.UI
             public SessionControls SessionControls;
             /// <summary>The touchable tray and the slots (Task 16), under the bars.</summary>
             public PlayAreaView PlayArea;
+            /// <summary>The start, won and stuck screens over everything (Task 17).</summary>
+            public GameFlowView Flow;
             public RoadDebugGizmos Roads;
             public TruckFleetView Trucks;
             public Canvas Canvas;
@@ -165,7 +167,8 @@ namespace CubeHaul.UI
                     if (first.DifficultyMetadata != null) label = first.DifficultyMetadata.Label;
                 }
             }
-            c.Controls.Add(Label(c.Header, "Title", title, new Vector2(0.5f, 1), new Vector2(-25, -24), new Vector2(190, 24), 18, Ink));
+            RectTransform titleRect = Label(c.Header, "Title", title, new Vector2(0.5f, 1), new Vector2(-25, -24), new Vector2(190, 24), 18, Ink);
+            c.Controls.Add(titleRect);
             RectTransform chip = Button(c.Header, "Difficulty", DifficultyLabels.ToJson(label), new Vector2(0.5f, 1), new Vector2(-25, -46.5f), new Vector2(64, 17),
                 DifficultyChipColors.For(label), 11);
             Object.DestroyImmediate(chip.GetComponent<Button>());
@@ -184,7 +187,67 @@ namespace CubeHaul.UI
             c.SessionControls = c.Canvas.gameObject.AddComponent<SessionControls>();
             c.SessionControls.Configure(c.Session, speed.GetComponent<Button>(), speed.Find("Label").GetComponent<Text>(),
                 c.Header.Find("Restart").GetComponent<Button>(), slot.GetComponent<Button>());
+            c.SessionControls.ConfigureLevels(c.Header.Find("Previous").GetComponent<Button>(), c.Header.Find("Next").GetComponent<Button>(),
+                titleRect.GetComponent<Text>(), chip.GetComponent<Image>(), chip.Find("Label").GetComponent<Text>());
+
+            BuildOverlay(c, canvasGo.transform);
         }
+
+        static readonly Color PanelCard = new Color32(0xfb, 0xf4, 0xe8, 0xff);
+        static readonly Color PanelBody = new Color32(0x8a, 0x64, 0x40, 0xff);
+        static readonly Color Purple = new Color32(0x8f, 0x7c, 0xf0, 0xff);
+        static readonly Color Red = new Color32(0xe8, 0x42, 0x4f, 0xff);
+
+        /// <summary>
+        /// main.ts drawOverlay / panel, in design units: the dim layer over the whole screen (it takes every touch), and a
+        /// 320-wide card 60 above the middle with its title, a line of text and its buttons (54 high, 74 from the bottom).
+        /// </summary>
+        static void BuildOverlay(Composition c, Transform canvas)
+        {
+            RectTransform overlay = Rect("Overlay", canvas);
+            Stretch(overlay);
+            RectTransform dim = Rect("Blocker", overlay);
+            Stretch(dim);
+            var dimImage = dim.gameObject.AddComponent<Image>();
+            dimImage.color = new Color(40 / 255f, 25 / 255f, 10 / 255f, 0.45f);
+            dimImage.raycastTarget = true;
+
+            RectTransform start = Panel(overlay, "Start Panel", "1/10 · Level", "Tap a crate at the front of the tray: its trucks haul away the cubes of its color.", Purple, out Text startTitle);
+            RectTransform play = PanelButton(start, "Play", "Play", ButtonGreen, 0, 200);
+            RectTransform won = Panel(overlay, "Won Panel", "Picture complete!", "Every cube was hauled away.", ButtonGreen, out _);
+            RectTransform next = PanelButton(won, "Next Level", "Next level", ButtonGreen, 0, 200);
+            RectTransform stuck = Panel(overlay, "Stuck Panel", "Out of moves", "Every slot is waiting for a color that can't be reached.", Red, out _);
+            RectTransform addSlot = PanelButton(stuck, "Add Slot", "+1 Slot", ButtonGreen, -73, 130);
+            RectTransform retry = PanelButton(stuck, "Retry", "Retry", Purple, 73, 130);
+
+            c.Flow = overlay.gameObject.AddComponent<GameFlowView>();
+            c.Flow.Configure(c.Session, dim.gameObject, start.gameObject, won.gameObject, stuck.gameObject, startTitle,
+                play.GetComponent<Button>(), next.GetComponent<Button>(), next.Find("Label").GetComponent<Text>(),
+                addSlot.GetComponent<Button>(), retry.GetComponent<Button>());
+            // Hidden until the game asks for them (GameFlowView shows the one for the current screen).
+            foreach (RectTransform panel in new[] { start, won, stuck }) panel.gameObject.SetActive(false);
+            dim.gameObject.SetActive(false);
+        }
+
+        static RectTransform Panel(RectTransform parent, string name, string title, string body, Color tone, out Text titleText)
+        {
+            const float w = 320, h = 220;
+            RectTransform card = Rect(name, parent);
+            card.anchorMin = card.anchorMax = new Vector2(0.5f, 0.5f);
+            card.pivot = new Vector2(0.5f, 0.5f);
+            card.sizeDelta = new Vector2(w, h);
+            card.anchoredPosition = new Vector2(0, 60);
+            var image = card.gameObject.AddComponent<Image>();
+            image.color = PanelCard;
+            RectTransform t = Label(card, "Title", title, new Vector2(0.5f, 1), new Vector2(0, -44), new Vector2(w - 36, 36), 27, tone);
+            titleText = t.GetComponent<Text>();
+            RectTransform b = Label(card, "Body", body, new Vector2(0.5f, 1), new Vector2(0, -92), new Vector2(w - 40, 44), 15, PanelBody);
+            b.GetComponent<Text>().fontStyle = FontStyle.Normal;
+            return card;
+        }
+
+        static RectTransform PanelButton(RectTransform card, string name, string text, Color color, float x, float width) =>
+            Button(card, name, text, new Vector2(0.5f, 0), new Vector2(x, 74 - 27), new Vector2(width, 54), color, 20);
 
         static RectTransform Rect(string name, Transform parent)
         {

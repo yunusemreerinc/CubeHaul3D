@@ -80,6 +80,7 @@ namespace CubeHaul.Tests.PlayMode
             yield return null;
             InputSystem.QueueStateEvent(mouse, new MouseState { position = at });
             yield return null;
+            yield return null; // let the UI module finish with this pointer before the next gesture
         }
 
         int touchId = 1;
@@ -91,6 +92,7 @@ namespace CubeHaul.Tests.PlayMode
             yield return null;
             InputSystem.QueueStateEvent(touchscreen, new TouchState { touchId = id, phase = UnityEngine.InputSystem.TouchPhase.Ended, position = at });
             yield return null;
+            yield return null; // an ended touch is dropped by the UI module a frame later
         }
 
         static string Snapshot(GameSession s)
@@ -109,13 +111,16 @@ namespace CubeHaul.Tests.PlayMode
             GameSession s = scene.Session.Session;
             s.CrateTapped += (col, slot) => moves.Add($"tap {col} -> {slot}");
             s.TapRefused += col => moves.Add($"refused {col}");
-            scene.PlayArea.ColumnTapped += (col, slot, pointer) => pointers.Add(pointer);
+            // The view outlives a restart: listen only while this sequence plays.
+            System.Action<int, int, string> onTap = (col, slot, pointer) => pointers.Add(pointer);
+            scene.PlayArea.ColumnTapped += onTap;
             foreach (int col in new[] { 0, 2, 4, 1, 3, 0, 2 })
             {
                 Vector2 at = ScreenCenter(col);
                 yield return touch ? Touch(at) : Click(at);
                 states.Add(Snapshot(s));
             }
+            scene.PlayArea.ColumnTapped -= onTap;
         }
 
         [UnityTest]
