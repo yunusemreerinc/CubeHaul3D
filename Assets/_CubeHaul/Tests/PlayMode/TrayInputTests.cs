@@ -172,7 +172,10 @@ namespace CubeHaul.Tests.PlayMode
             Assert.That(rim.r, Is.GreaterThan(0.85f));
             Assert.That(rim.g, Is.LessThan(0.6f), "red, not the usual white rim");
             Assert.That(scene.PlayArea.Model.Shake, Is.GreaterThan(0), "the slots are shaking");
-            for (int k = 0; k < 40; k++) yield return null;
+            // The shake lasts 0.35 s of real time, however many frames that is.
+            yield return new WaitForSecondsRealtime(0.5f);
+            yield return null;
+            Assert.That(scene.PlayArea.Model.Shake, Is.Zero);
             Assert.That(scene.PlayArea.DockEdge.color.g, Is.GreaterThan(0.9f), "the warning fades");
             Assert.That(Snapshot(s), Is.EqualTo(before));
         }

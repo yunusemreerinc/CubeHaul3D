@@ -119,7 +119,8 @@ namespace CubeHaul.Tests.PlayMode
             int frames = 0;
             while (driver.Screen == FlowScreen.Playing && frames++ < 600) driver.Frame(Dt);
             Assert.That(driver.Screen, Is.EqualTo(FlowScreen.Stuck));
-            Assert.That(frames, Is.GreaterThanOrEqualTo(16 + 24), "0.26 s of flight, then 0.4 s");
+            // The crate lands in frame 16; the 0.4 s (24 frames) count from that frame on: the panel opens in frame 39.
+            Assert.That(frames, Is.EqualTo(16 + 24 - 1), "0.26 s of flight, then 0.4 s");
             yield return null;
             Assert.That(flow.StuckPanel.activeSelf && flow.Blocker.activeSelf, Is.True, "Out of moves");
             Assert.That(flow.AddSlotButton.gameObject.activeSelf && flow.RetryButton.gameObject.activeSelf, Is.True, "+1 Slot and Retry");
